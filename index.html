@@ -16,6 +16,7 @@
     body { margin: 0; }
     @keyframes vs-pulse { 0% { transform: scale(1); opacity: .55; } 100% { transform: scale(1.9); opacity: 0; } }
     @keyframes vs-dot { 0%,100% { opacity: 1; } 50% { opacity: .35; } }
+    @keyframes vs-spin { to { transform: rotate(360deg); } }
     ::selection { background: #FDB813; color: #0B1E33; }
   </style>
 </helmet>
@@ -33,65 +34,62 @@
       <a href="#catalogo" style="text-decoration: none; color: #0B1E33; font-size: 14px; font-weight: 500; letter-spacing: .02em;">Catálogo</a>
       <a href="#contato" style="text-decoration: none; color: #0B1E33; font-size: 14px; font-weight: 500; letter-spacing: .02em;">Contato</a>
     </div>
-    <div style="display: flex; align-items: center; gap: 10px;">
-      <a href="https://wa.me/553193168184?text=Olá! Quero comprar uma camisa importada com a Versatte Sports." target="_blank" rel="noopener" style="text-decoration: none; display: inline-flex; align-items: center; gap: 9px; padding: 10px 18px; border-radius: 999px; background: linear-gradient(135deg, #FDB813, #F26522); color: #fff; font-weight: 600; font-size: 13.5px; letter-spacing: .01em; box-shadow: 0 8px 20px rgba(242,101,34,.28);">
-        <span style="width: 8px; height: 8px; border-radius: 50%; background: #fff; animation: vs-dot 1.6s ease-in-out infinite;"></span>
-        WhatsApp
-      </a>
-      <button id="navtoggle" aria-label="Menu" style="display: none; border: 1px solid #E4E7EB; background: #fff; width: 42px; height: 42px; border-radius: 12px; cursor: pointer; padding: 0; align-items: center; justify-content: center;">
-        <span style="display: block; width: 18px; height: 2px; background: #0B1E33; box-shadow: 0 -6px 0 #0B1E33, 0 6px 0 #0B1E33;"></span>
-      </button>
-    </div>
+    <a href="https://wa.me/553193168184?text=Olá! Quero comprar uma camisa importada com a Versatte Sports." target="_blank" rel="noopener" style="text-decoration: none; display: inline-flex; align-items: center; gap: 9px; padding: 10px 18px; border-radius: 999px; background: linear-gradient(135deg, #FDB813, #F26522); color: #fff; font-weight: 600; font-size: 13.5px; letter-spacing: .01em; box-shadow: 0 8px 20px rgba(242,101,34,.28);">
+      <span style="width: 8px; height: 8px; border-radius: 50%; background: #fff; animation: vs-dot 1.6s ease-in-out infinite;"></span>
+      WhatsApp
+    </a>
   </nav>
-  <!-- Mobile drawer -->
-  <div id="navdrawer" style="display: none; position: fixed; top: 68px; left: 0; right: 0; z-index: 49; background: #fff; border-bottom: 1px solid #F0F0F0; padding: 18px clamp(18px, 5vw, 56px); flex-direction: column; gap: 16px; box-shadow: 0 12px 24px rgba(11,30,51,.06);">
-    <a href="#sobre" data-navlink style="text-decoration: none; color: #0B1E33; font-size: 16px; font-weight: 600;">Sobre</a>
-    <a href="#categorias" data-navlink style="text-decoration: none; color: #0B1E33; font-size: 16px; font-weight: 600;">Coleções</a>
-    <a href="#catalogo" data-navlink style="text-decoration: none; color: #0B1E33; font-size: 16px; font-weight: 600;">Catálogo</a>
-    <a href="#contato" data-navlink style="text-decoration: none; color: #0B1E33; font-size: 16px; font-weight: 600;">Contato</a>
-  </div>
 
   <span id="top"></span>
 
   <!-- SCROLLYTELLING HERO + SOBRE -->
-  <section id="sobre" data-screen-label="Hero / Sobre" ref="{{ scrollyRef }}" style="position: relative; height: 380vh; scroll-margin-top: 80px;">
-    <div style="position: sticky; top: 0; height: 100vh; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+  <!-- CANVAS 3D FIXO — persiste enquanto o usuário rola pelos heros -->
+  <div id="fixed3d" style="position: fixed; inset: 0; z-index: 0; pointer-events: none; transition: opacity .35s ease;">
+    <canvas ref="{{ canvasRef }}" style="position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: pan-y;"></canvas>
+    <div ref="{{ loaderRef }}" style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none;">
+      <div style="width: 46px; height: 46px; border-radius: 50%; border: 3px solid rgba(11,30,51,.12); border-top-color: #F26522; animation: vs-spin 1s linear infinite;"></div>
+    </div>
+  </div>
 
-      <video ref="{{ videoRef }}" src="assets/camisa-turntable.mp4" poster="assets/poster.jpg" preload="auto" muted playsinline style="height: 108%; width: 108%; object-fit: cover; display: block; -webkit-mask-image: radial-gradient(78% 78% at 50% 48%, #000 62%, rgba(0,0,0,0) 92%); mask-image: radial-gradient(78% 78% at 50% 48%, #000 62%, rgba(0,0,0,0) 92%); filter: contrast(1.03) brightness(1.03) saturate(1.03); will-change: transform;"></video>
+  <!-- HERO STACK — 3 seções em fluxo normal, canvas fica fixo atrás -->
+  <section id="sobre" data-screen-label="Hero / Sobre" ref="{{ scrollyRef }}" style="position: relative; z-index: 1; scroll-margin-top: 80px;">
 
-      <!-- HERO copy (left) -->
-      <div data-step="hero" data-side="left" data-center="0" data-width="0.15" style="position: absolute; top: 50%; left: 7vw; transform: translateY(-50%); max-width: 24ch; pointer-events: none;">
+    <!-- Hero 1: Vista a sua paixão -->
+    <div style="height: 100vh; display: flex; align-items: center; padding: 80px 7vw 0; box-sizing: border-box; position: relative;">
+      <div data-step="hero" data-side="left" style="max-width: 24ch; pointer-events: none;">
         <div style="font-weight: 600; font-size: 13px; letter-spacing: .3em; color: #F26522; text-transform: uppercase; margin-bottom: 18px;">Importadas da Tailândia</div>
         <h1 style="font-family: 'Anton', sans-serif; font-weight: 400; font-size: clamp(52px, 8.5vw, 122px); line-height: .9; letter-spacing: .5px; text-transform: uppercase; color: #0B1E33; margin: 0;">Vista a<br>sua <span style="background: linear-gradient(135deg, #FDB813, #F26522); -webkit-background-clip: text; background-clip: text; color: transparent;">paixão</span></h1>
         <p style="font-size: clamp(15px, 1.5vw, 18px); line-height: 1.55; color: #4A5560; margin: 22px 0 0; max-width: 30ch;">Camisas de futebol importadas direto da Tailândia. Qualidade 1:1, do torcedor ao jogador.</p>
       </div>
+      <div id="scrollhint" style="position: absolute; bottom: 26px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 8px; color: #0B1E33; pointer-events: none;">
+        <span style="font-size: 11px; letter-spacing: .28em; text-transform: uppercase; font-weight: 600;">Role para continuar</span>
+        <span style="font-size: 16px;">↓</span>
+      </div>
+    </div>
 
-      <!-- SOBRE copy (right) -->
-      <div data-step="about" data-side="right" data-center="0.45" data-width="0.22" style="position: absolute; top: 50%; right: 7vw; transform: translateY(-50%); max-width: 30ch; opacity: 0; pointer-events: none;">
+    <!-- Hero 2: Direto da Tailândia -->
+    <div style="height: 100vh; display: flex; align-items: center; justify-content: flex-end; padding: 0 7vw; box-sizing: border-box; position: relative;">
+      <div data-step="about" data-side="right" style="max-width: 30ch; pointer-events: none;">
         <div style="font-weight: 600; font-size: 13px; letter-spacing: .3em; color: #F26522; text-transform: uppercase; margin-bottom: 16px;">Sobre a marca</div>
         <h2 style="font-family: 'Anton', sans-serif; font-weight: 400; font-size: clamp(36px, 5vw, 72px); line-height: .95; text-transform: uppercase; color: #0B1E33; margin: 0;">Direto da<br>Tailândia</h2>
         <p style="font-size: clamp(15px, 1.4vw, 18px); line-height: 1.6; color: #4A5560; margin: 20px 0 0;">Trazemos as camisas mais desejadas do mundo com o mesmo acabamento dos grandes clubes. Tecido, escudo e numeração — tudo fiel ao original.</p>
       </div>
+    </div>
 
-      <!-- CRAFT copy (left) -->
-      <div data-step="craft" data-side="left" data-center="0.83" data-width="0.2" style="position: absolute; top: 50%; left: 7vw; transform: translateY(-50%); max-width: 26ch; opacity: 0; pointer-events: none;">
+    <!-- Hero 3: Cada fio conta -->
+    <div style="height: 100vh; display: flex; align-items: center; padding: 0 7vw; box-sizing: border-box; position: relative;">
+      <div data-step="craft" data-side="left" style="max-width: 26ch; pointer-events: none;">
         <div style="font-weight: 600; font-size: 13px; letter-spacing: .3em; color: #F26522; text-transform: uppercase; margin-bottom: 16px;">Qualidade 1:1</div>
         <h2 style="font-family: 'Anton', sans-serif; font-weight: 400; font-size: clamp(36px, 5vw, 72px); line-height: .95; text-transform: uppercase; color: #0B1E33; margin: 0;">Cada fio<br>conta</h2>
         <p style="font-size: clamp(15px, 1.4vw, 18px); line-height: 1.6; color: #4A5560; margin: 20px 0 0;">Tecido tailandês premium, escudos bordados e numeração perfeita. A versão que os torcedores procuram, sem pagar preço de loja oficial.</p>
       </div>
-
-      <!-- scroll hint -->
-      <div id="scrollhint" style="position: absolute; bottom: 26px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 8px; color: #0B1E33;">
-        <span style="font-size: 11px; letter-spacing: .28em; text-transform: uppercase; font-weight: 600;">Role para girar</span>
-        <span style="font-size: 16px;">↓</span>
-      </div>
-
     </div>
+
   </section>
 
   <!-- COLEÇÕES / CATEGORIAS -->
-  <section id="categorias" data-screen-label="Coleções" style="padding: clamp(56px, 8vh, 110px) 0 clamp(16px, 3vh, 36px); scroll-margin-top: 80px;">
-    <div data-reveal style="max-width: 1440px; margin: 0 auto 40px; padding: 0 clamp(18px, 5vw, 56px); box-sizing: border-box; opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease;">
+  <section id="categorias" data-screen-label="Coleções" style="position: relative; z-index: 1; background: #FFFFFF; padding: clamp(56px, 8vh, 110px) 0 clamp(16px, 3vh, 36px); scroll-margin-top: 80px;">
+    <div data-reveal style="max-width: 1200px; margin: 0 auto 40px; padding: 0 clamp(18px, 5vw, 56px); box-sizing: border-box; opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease;">
       <div style="font-weight: 600; font-size: 13px; letter-spacing: .3em; color: #F26522; text-transform: uppercase; margin-bottom: 14px;">Coleções</div>
       <div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px;">
         <h2 style="font-family: 'Anton', sans-serif; font-weight: 400; font-size: clamp(38px, 6vw, 82px); line-height: .92; text-transform: uppercase; color: #0B1E33; margin: 0;">Explore por<br>categoria</h2>
@@ -99,9 +97,9 @@
       </div>
     </div>
 
-    <div style="max-width: 1440px; margin: 0 auto; padding: 0 clamp(18px, 5vw, 56px); display: flex; flex-wrap: wrap; justify-content: center; gap: 22px;">
+    <div style="max-width: 1180px; margin: 0 auto; padding: 0 clamp(18px, 5vw, 56px); display: flex; flex-wrap: wrap; justify-content: center; gap: 22px;">
       <sc-for list="{{ categories }}" as="cat" hint-placeholder-count="5">
-        <a data-reveal href="{{ cat.href }}" target="_blank" rel="noopener" style="opacity: 0; transform: translateY(24px); transition: opacity .6s ease, transform .6s ease, box-shadow .3s ease; position: relative; display: block; flex: 1 1 280px; max-width: 360px; min-width: 260px; aspect-ratio: 3 / 4; border-radius: 18px; overflow: hidden; text-decoration: none; background: #EDEFF2;" style-hover="box-shadow: 0 22px 46px rgba(11,30,51,.18);">
+        <a data-reveal href="{{ cat.href }}" target="_blank" rel="noopener" style="opacity: 0; transform: translateY(24px); transition: opacity .6s ease, transform .6s ease, box-shadow .3s ease; position: relative; display: block; flex: 1 1 320px; max-width: 360px; aspect-ratio: 3 / 4; border-radius: 18px; overflow: hidden; text-decoration: none; background: #EDEFF2;" style-hover="box-shadow: 0 22px 46px rgba(11,30,51,.18);">
           <img src="{{ cat.img }}" alt="{{ cat.name }}" loading="lazy" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: {{ cat.pos }}; display: block; transition: transform .6s cubic-bezier(.2,.7,.2,1);" style-hover="transform: scale(1.07);">
           <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(8,12,20,.82) 0%, rgba(8,12,20,.28) 42%, rgba(8,12,20,0) 68%);"></div>
           <div style="position: absolute; left: 0; right: 0; bottom: 0; padding: 22px;">
@@ -115,8 +113,8 @@
   </section>
 
   <!-- CATÁLOGO -->
-  <section id="catalogo" data-screen-label="Catálogo" style="padding: clamp(64px, 10vh, 130px) clamp(18px, 5vw, 56px) clamp(60px, 8vh, 110px); scroll-margin-top: 80px;">
-    <div data-reveal style="max-width: 1440px; margin: 0 auto 46px; opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease;">
+  <section id="catalogo" data-screen-label="Catálogo" style="position: relative; z-index: 1; background: #FFFFFF; padding: clamp(64px, 10vh, 130px) clamp(18px, 5vw, 56px) clamp(60px, 8vh, 110px); scroll-margin-top: 80px;">
+    <div data-reveal style="max-width: 1200px; margin: 0 auto 46px; opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease;">
       <div style="font-weight: 600; font-size: 13px; letter-spacing: .3em; color: #F26522; text-transform: uppercase; margin-bottom: 14px;">Catálogo</div>
       <div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px;">
         <h2 style="font-family: 'Anton', sans-serif; font-weight: 400; font-size: clamp(38px, 6vw, 82px); line-height: .92; text-transform: uppercase; color: #0B1E33; margin: 0;">Escolha o<br>seu manto</h2>
@@ -124,7 +122,7 @@
       </div>
     </div>
 
-    <div style="max-width: 1440px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 22px;">
+    <div style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 22px;">
       <sc-for list="{{ products }}" as="p" hint-placeholder-count="8">
         <a data-reveal href="{{ p.href }}" target="_blank" rel="noopener" style="opacity: 0; transform: translateY(24px); transition: opacity .6s ease, transform .6s ease, border-color .25s ease, box-shadow .25s ease; text-decoration: none; display: flex; flex-direction: column; border: 1px solid #ECECEC; border-radius: 16px; overflow: hidden; background: #FFFFFF;" style-hover="border-color: #F26522; box-shadow: 0 18px 40px rgba(11,30,51,.10); transform: translateY(-6px);">
           <div style="aspect-ratio: 4 / 5; overflow: hidden; border-bottom: 1px solid #F0F0F0; background: #F4F5F7;">
@@ -143,8 +141,8 @@
   </section>
 
   <!-- CONTATO / FOOTER -->
-  <footer id="contato" data-screen-label="Rodapé" style="border-top: 1px solid #F0F0F0; padding: clamp(56px, 8vh, 96px) clamp(18px, 5vw, 56px) 40px; scroll-margin-top: 80px;">
-    <div style="max-width: 1440px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 48px; justify-content: space-between;">
+  <footer id="contato" data-screen-label="Rodapé" style="position: relative; z-index: 1; background: #FFFFFF; border-top: 1px solid #F0F0F0; padding: clamp(56px, 8vh, 96px) clamp(18px, 5vw, 56px) 40px; scroll-margin-top: 80px;">
+    <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 48px; justify-content: space-between;">
       <div style="max-width: 34ch;">
         <div style="display: flex; align-items: baseline; gap: 9px; margin-bottom: 16px;">
           <span style="font-family: 'Anton', sans-serif; font-size: clamp(34px, 5vw, 54px); letter-spacing: .5px; color: #0B1E33; text-transform: uppercase;">Versatte</span>
@@ -173,7 +171,7 @@
         </div>
       </div>
     </div>
-    <div style="max-width: 1440px; margin: 56px auto 0; padding-top: 22px; border-top: 1px solid #F0F0F0; display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; color: #98A0AA; font-size: 12.5px;">
+    <div style="max-width: 1200px; margin: 56px auto 0; padding-top: 22px; border-top: 1px solid #F0F0F0; display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; color: #98A0AA; font-size: 12.5px;">
       <span>© 2026 Versatte Sports. Todos os direitos reservados.</span>
       <span>Imagens de camisa meramente ilustrativas.</span>
     </div>
@@ -218,41 +216,25 @@ class Component extends DCLogic {
       categories,
       rootRef: (el) => { this.rootEl = el; },
       scrollyRef: (el) => { this.scrollyEl = el; },
-      videoRef: (el) => { this.videoEl = el; },
+      canvasRef: (el) => { this.canvasEl = el; },
+      loaderRef: (el) => { this.loaderEl = el; },
     };
   }
 
   componentDidMount() {
-    const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
-    const video = this.videoEl;
-    this.dur = 10;
     this.cur = 0;
     this.target = 0;
+    this.rotCur = 0;
+    this.rotTarget = 0;
 
-    if (video) {
-      video.muted = true;
-      video.playsInline = true;
-      video.preload = 'auto';
-      try { video.pause(); } catch (e) {}
-      const onMeta = () => { if (video.duration && isFinite(video.duration)) this.dur = video.duration; };
-      if (video.readyState >= 1) onMeta();
-      video.addEventListener('loadedmetadata', onMeta);
-      // Kick a play/pause cycle so the browser fills the buffer eagerly —
-      // without this some browsers only decode the poster frame until the
-      // first seek, which is exactly when we don't want a stall.
-      const kick = () => {
-        video.play().then(() => video.pause()).catch(() => {});
-      };
-      if (video.readyState >= 2) kick();
-      else video.addEventListener('canplay', kick, { once: true });
-    }
+    this.initThree();
 
     // stable frame wrapper calls the tick() METHOD, so hot-reloads apply live
     const frame = () => { try { this.tick(); } catch (e) {} this._raf = requestAnimationFrame(frame); };
     this._raf = requestAnimationFrame(frame);
 
     // reveal on scroll
-    const rev = root ? [...root.querySelectorAll('[data-reveal]')] : [];
+    const rev = this.rootEl ? [...this.rootEl.querySelectorAll('[data-reveal]')] : [];
     if ('IntersectionObserver' in window) {
       const io = new IntersectionObserver((entries) => {
         entries.forEach(e => {
@@ -271,56 +253,37 @@ class Component extends DCLogic {
     this._resize = () => this.applyResponsive();
     window.addEventListener('resize', this._resize);
     this.applyResponsive();
-
-    // Mobile menu toggle
-    const toggle = this.rootEl && this.rootEl.querySelector('#navtoggle');
-    const drawer = this.rootEl && this.rootEl.querySelector('#navdrawer');
-    if (toggle && drawer) {
-      toggle.addEventListener('click', () => {
-        const open = drawer.style.display === 'flex';
-        drawer.style.display = open ? 'none' : 'flex';
-      });
-      drawer.querySelectorAll('[data-navlink]').forEach(a => {
-        a.addEventListener('click', () => { drawer.style.display = 'none'; });
-      });
-    }
   }
 
   tick() {
     const root = this.rootEl;
     const scrolly = this.scrollyEl;
     if (!scrolly || !scrolly.isConnected || !root) return;
-    const video = this.videoEl;
     const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
     const rect = scrolly.getBoundingClientRect();
     const total = rect.height - window.innerHeight;
     const p = total > 0 ? clamp(-rect.top / total, 0, 1) : 0;
-    const target = p * ((this.dur || 10) - 0.06);
-
-    // Direct-seek strategy (no easing). Easing sends micro-seeks after the
-    // scroll stops which thrash the video decoder. Instead: seek only when
-    // the decoder is idle AND the change is worth a keyframe hit.
-    if (video && video.readyState >= 2 && !video.seeking) {
-      const last = this._lastSeek == null ? -1 : this._lastSeek;
-      if (Math.abs(target - last) > 0.05) {
-        try {
-          if (typeof video.fastSeek === 'function') video.fastSeek(target);
-          else video.currentTime = target;
-          this._lastSeek = target;
-        } catch (e) {}
-      }
+    // 1.25 full turns enquanto o usuário rola pelas 3 seções do hero
+    this.rotTarget = p * Math.PI * 2.5;
+    this.rotCur += (this.rotTarget - this.rotCur) * 0.09;
+    if (this.model) this.model.rotation.y = this.rotCur;
+    if (this.renderer && this.scene && this.camera) {
+      const t = performance.now() * 0.001;
+      if (this.model) this.model.position.y = this.modelBaseY + Math.sin(t * 1.2) * 0.015;
+      this.renderer.render(this.scene, this.camera);
     }
-    root.querySelectorAll('[data-step]').forEach((el) => {
-      const c = parseFloat(el.dataset.center);
-      const w = parseFloat(el.dataset.width);
-      const op = clamp(1 - Math.abs(p - c) / w, 0, 1);
-      const s = op.toFixed(3);
-      if (el._op !== s) { el.style.opacity = s; el._op = s; }
-    });
+    // esconde o canvas fixo quando o usuário passa da última hero
+    // (a partir daí as seções brancas cobrem, mas ocultar economiza GPU)
+    const fixed = root.querySelector('#fixed3d');
+    if (fixed) {
+      const visible = rect.bottom > window.innerHeight * 0.15;
+      const target = visible ? '1' : '0';
+      if (fixed._op !== target) { fixed.style.opacity = target; fixed._op = target; }
+    }
     const hint = root.querySelector('#scrollhint');
-    if (hint) hint.style.opacity = clamp(1 - p / 0.07, 0, 1);
+    if (hint) hint.style.opacity = clamp(1 - p / 0.05, 0, 1);
 
-    // reveal-on-scroll, re-queried each frame so late/streamed nodes are never missed
+    // reveal-on-scroll
     const vh = window.innerHeight;
     root.querySelectorAll('[data-reveal]').forEach((el) => {
       if (el._shown) return;
@@ -339,68 +302,110 @@ class Component extends DCLogic {
     const m = window.innerWidth < 760;
     const links = root.querySelector('#navlinks');
     if (links) links.style.display = m ? 'none' : 'flex';
-    const toggle = root.querySelector('#navtoggle');
-    if (toggle) toggle.style.display = m ? 'inline-flex' : 'none';
-    const drawer = root.querySelector('#navdrawer');
-    if (drawer && !m) drawer.style.display = 'none';
 
-    // Scrolly section: 380vh on desktop is fine (long, cinematic scrub),
-    // but on mobile it becomes ~3 empty screens. Shrink to ~240vh so the
-    // scrub still has room but the page doesn't feel dead.
-    if (this.scrollyEl) this.scrollyEl.style.height = m ? '240vh' : '380vh';
-
-    // Video sizing: on mobile, contain-fit keeps the whole shirt visible
-    // and centered (cover would crop it). Also shrink to 96% so it never
-    // touches the text bubble at the top.
-    if (this.videoEl) {
+    // No mobile, os textos do hero vão pro topo (canvas fixo cobre o fundo).
+    // No desktop, cada hero mantém seu lado (left/right) definido no HTML.
+    root.querySelectorAll('#sobre [data-step]').forEach(el => {
       if (m) {
-        this.videoEl.style.height = '96%';
-        this.videoEl.style.width = '96%';
-        this.videoEl.style.objectFit = 'contain';
-        this.videoEl.style.webkitMaskImage = 'radial-gradient(70% 55% at 50% 40%, #000 55%, rgba(0,0,0,0) 90%)';
-        this.videoEl.style.maskImage = 'radial-gradient(70% 55% at 50% 40%, #000 55%, rgba(0,0,0,0) 90%)';
+        el.style.background = 'rgba(255,255,255,0.82)';
+        el.style.backdropFilter = 'blur(6px)';
+        el.style.padding = '18px';
+        el.style.borderRadius = '16px';
+        el.style.boxShadow = '0 12px 30px rgba(11,30,51,.08)';
+        el.style.maxWidth = '86vw';
       } else {
-        this.videoEl.style.height = '108%';
-        this.videoEl.style.width = '108%';
-        this.videoEl.style.objectFit = 'cover';
-        this.videoEl.style.webkitMaskImage = 'radial-gradient(78% 78% at 50% 48%, #000 62%, rgba(0,0,0,0) 92%)';
-        this.videoEl.style.maskImage = 'radial-gradient(78% 78% at 50% 48%, #000 62%, rgba(0,0,0,0) 92%)';
-      }
-    }
-
-    root.querySelectorAll('[data-step]').forEach(el => {
-      if (m) {
-        // On mobile, stack copy near the top so shirt sits below and both
-        // are visible at once — the desktop side-panels don't translate.
-        el.style.top = '10%';
-        el.style.bottom = 'auto';
-        el.style.left = '50%';
-        el.style.right = 'auto';
-        el.style.transform = 'translateX(-50%)';
-        el.style.textAlign = 'center';
-        el.style.width = '88vw';
-        el.style.maxWidth = '88vw';
-        el.style.background = 'rgba(255,255,255,0.88)';
-        el.style.backdropFilter = 'blur(8px)';
-        el.style.padding = '16px 18px';
-        el.style.borderRadius = '14px';
-        el.style.boxShadow = '0 10px 24px rgba(11,30,51,.10)';
-      } else {
-        el.style.top = '50%';
-        el.style.bottom = 'auto';
-        el.style.transform = 'translateY(-50%)';
-        el.style.textAlign = 'left';
-        el.style.width = 'auto';
         el.style.background = 'transparent';
         el.style.backdropFilter = 'none';
         el.style.padding = '0';
         el.style.borderRadius = '0';
         el.style.boxShadow = 'none';
-        if (el.dataset.side === 'right') {
-          el.style.right = '7vw'; el.style.left = 'auto'; el.style.maxWidth = '30ch';
-        } else {
-          el.style.left = '7vw'; el.style.right = 'auto'; el.style.maxWidth = '26ch';
+      }
+    });
+  }
+
+  async initThree() {
+    const canvas = this.canvasEl;
+    if (!canvas) return;
+    // Load three.js + GLTFLoader as ES modules from CDN
+    let THREE, GLTFLoader;
+    try {
+      THREE = await import('https://esm.sh/three@0.160.0');
+      const mod = await import('https://esm.sh/three@0.160.0/examples/jsm/loaders/GLTFLoader.js');
+      GLTFLoader = mod.GLTFLoader;
+    } catch (e) { console.error('three load failed', e); return; }
+    this.THREE = THREE;
+
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
+    renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.05;
+    this.renderer = renderer;
+
+    const scene = new THREE.Scene();
+    this.scene = scene;
+
+    const cam = new THREE.PerspectiveCamera(32, 1, 0.05, 50);
+    cam.position.set(0, 0.05, 2.1);
+    this.camera = cam;
+
+    // studio lighting (white bg, so keep it soft)
+    scene.add(new THREE.HemisphereLight(0xffffff, 0xdfe4ea, 0.9));
+    const key = new THREE.DirectionalLight(0xffffff, 1.4);
+    key.position.set(2.2, 3.0, 2.5);
+    scene.add(key);
+    const fill = new THREE.DirectionalLight(0xffe0b8, 0.55);
+    fill.position.set(-2.5, 1.0, 1.5);
+    scene.add(fill);
+    const rim = new THREE.DirectionalLight(0xffffff, 0.7);
+    rim.position.set(0, 1.5, -3);
+    scene.add(rim);
+
+    const resize = () => {
+      const r = canvas.getBoundingClientRect();
+      renderer.setSize(r.width, r.height, false);
+      cam.aspect = r.width / Math.max(1, r.height);
+      cam.updateProjectionMatrix();
+    };
+    resize();
+    this._resizeThree = resize;
+    window.addEventListener('resize', resize);
+
+    // load gltf
+    const loader = new GLTFLoader();
+    loader.load('assets/model/scene.gltf', (gltf) => {
+      const obj = gltf.scene;
+      // frame model — foca no torso (cintura pra cima)
+      const box = new THREE.Box3().setFromObject(obj);
+      const size = box.getSize(new THREE.Vector3());
+      const center = box.getCenter(new THREE.Vector3());
+      const maxDim = Math.max(size.x, size.y, size.z) || 1;
+      const scale = 2.4 / maxDim;                              // zoom maior (era 1.35)
+      obj.scale.setScalar(scale);
+      obj.position.sub(center.multiplyScalar(scale));
+      obj.position.y -= size.y * scale * 0.32;                 // desloca pra baixo p/ enquadrar torso
+      this.modelBaseY = obj.position.y;
+      // corrige materiais: o gltf vem com alphaMode BLEND + doubleSided,
+      // o que causa translucidez indevida (vê o verso do outro lado).
+      obj.traverse((n) => {
+        if (n.isMesh && n.material) {
+          const mats = Array.isArray(n.material) ? n.material : [n.material];
+          mats.forEach((m) => {
+            m.transparent = false;
+            m.alphaTest = 0;
+            m.depthWrite = true;
+            m.side = THREE.FrontSide;
+            m.needsUpdate = true;
+          });
         }
+      });
+      scene.add(obj);
+      this.model = obj;
+      if (this.loaderEl) this.loaderEl.style.display = 'none';
+    }, undefined, (err) => {
+      console.error('gltf load failed', err);
+      if (this.loaderEl) {
+        this.loaderEl.innerHTML = '<div style="font: 500 13px Archivo,sans-serif; color:#4A5560; text-align:center; padding: 20px; max-width: 32ch;">Não foi possível carregar o modelo 3D. Verifique se <code>assets/model/scene.bin</code> está no projeto.</div>';
       }
     });
   }
@@ -408,6 +413,8 @@ class Component extends DCLogic {
   componentWillUnmount() {
     if (this._raf) cancelAnimationFrame(this._raf);
     if (this._resize) window.removeEventListener('resize', this._resize);
+    if (this._resizeThree) window.removeEventListener('resize', this._resizeThree);
+    if (this.renderer) { try { this.renderer.dispose(); } catch (e) {} }
   }
 }
 </script>
