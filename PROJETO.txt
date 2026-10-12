@@ -1,0 +1,184 @@
+================================================================================
+  VERSATTE SPORTS · SITE VITRINE
+  Desenvolvido por Beyond Bits
+================================================================================
+
+1. O QUE É
+--------------------------------------------------------------------------------
+Site vitrine da Versatte Sports (@versatte_sports). Não tem carrinho nem
+pagamento: o objetivo é mostrar as camisas anunciadas no Instagram e levar a
+pessoa a comprar pelo Direct ou pelo WhatsApp, com a mensagem já montada.
+
+Premissas:
+  - funcionar muito bem no celular e se adaptar a tablet e desktop;
+  - promoções e campanhas aparecem só no topo (slider), nunca em seção própria;
+  - nenhuma menção a origem das camisas; o foco é o produto e a marca.
+
+O site é estático (HTML + CSS + JavaScript puro, sem framework e sem etapa de
+build). Basta publicar a pasta em qualquer hospedagem estática.
+
+
+2. ESTRUTURA DE PASTAS
+--------------------------------------------------------------------------------
+index.html              página única, com todas as seções
+css/style.css           todo o visual (cores, fontes e medidas ficam no :root)
+js/main.js              comportamento: slider, galeria, prévia do post,
+                        pedido, Direct/WhatsApp, cartas do jogo, faixa animada
+js/posts.js             DADOS das camisas da galeria (gerado pela ferramenta)
+tools/instagram.mjs     ferramenta que importa posts do Instagram
+assets/img/             imagens otimizadas que o site usa (WebP)
+assets/posts/<código>/  fotos de cada post, baixadas do Instagram
+assets/*.png            artes originais em alta (fonte das imagens otimizadas;
+                        o site NÃO carrega esses arquivos)
+assets/exemplos/        referências de design usadas no início do projeto
+uploads/                arquivos do site antigo (não usados)
+logo.png                logo original em alta (fonte de assets/img/logo-vs.*)
+
+
+3. SEÇÕES DA PÁGINA (na ordem)
+--------------------------------------------------------------------------------
+1) Topo (hero) com slider de 3 slides:
+   - Boas-vindas: a cada visita alterna entre 3 combinações de imagem + texto.
+   - Campanha "Esquenta Novembro": some sozinha depois de 25/10/2026.
+   - Teaser do Versatte Cards.
+   Embaixo do topo há uma borda curva com uma faixa de "tecido" laranja que
+   acompanha a curva, com texto correndo (desenhada em SVG pelo main.js).
+2) Camisas em destaque: cards montados a partir de js/posts.js. Tocar na foto
+   abre a prévia no formato do Instagram (carrossel, legenda, curtidas).
+3) Guia do manto: diferença entre Versão Torcedor e Versão Jogador, com fotos
+   de detalhe.
+4) Tabela de medidas: faixas de tamanho por modelo
+   (Torcedor P ao 4XL, Jogador P ao 3XL, Feminina P ao GG).
+5) Como comprar: 3 passos + botões de Direct e WhatsApp.
+6) Versatte Cards (em breve): faixa fina com as cartas do jogo escapando para
+   fora; as cartas têm efeito 3D/holográfico e viram ao toque.
+7) Rodapé: contatos e crédito Beyond Bits.
+Fixo na tela: botão flutuante do WhatsApp.
+
+
+4. COMO ATUALIZAR
+--------------------------------------------------------------------------------
+4.1 Adicionar ou atualizar uma camisa da galeria
+    Precisa de Node 22+ e Edge ou Chrome instalados. Na pasta do site:
+
+      node tools/instagram.mjs https://www.instagram.com/p/CODIGO/
+
+    A ferramenta abre o post de forma invisível, percorre o carrossel, baixa
+    todas as fotos na resolução original (1440 px na primeira, 1080 px nas
+    demais) e grava legenda, curtidas, comentários e data em js/posts.js.
+    Depois, edite em js/posts.js os textos da vitrine daquele post:
+      tag     etiqueta do card (ex.: "Modelo Torcedor")
+      caps    parte em caixa alta do título (ex.: "Chelsea")
+      script  parte em letra cursiva (ex.: "Black & Gold")
+      name    nome usado nas mensagens (ex.: "Chelsea Black & Gold")
+      msg     opcional: mensagem própria para o Direct/WhatsApp
+    Para atualizar curtidas e fotos de todos os posts:  node tools/instagram.mjs
+    Para tirar uma camisa do site: apague o bloco dela em js/posts.js.
+    A ordem dos blocos em js/posts.js é a ordem dos cards no site.
+
+4.2 Campanhas no topo
+    Copie o slide "Esquenta Novembro" no index.html e troque textos e imagens.
+    O atributo data-until="AAAA-MM-DD" esconde o slide automaticamente depois
+    dessa data (horário de Brasília). Imagens: uma versão larga (desktop) e
+    uma vertical (sufixo -m, celular), em WebP.
+
+4.3 Imagens de boas-vindas
+    Ficam em assets/img/boas-vindas-N.webp (desktop) e boas-vindas-N-m.webp
+    (celular). Os textos de cada uma estão no pequeno script logo abaixo do
+    primeiro slide no index.html. Para uma 4ª imagem, gere os dois arquivos e
+    adicione uma linha nesse script.
+
+4.4 Tabela de medidas
+    Os textos estão na seção "TABELA DE MEDIDAS" do index.html. Se as faixas
+    mudarem, atualize também SIZE_MAX em js/main.js: ele desativa, na janela
+    "Quero essa camisa", os tamanhos que cada modelo não tem.
+
+4.5 Contatos
+    WhatsApp: 55 31 9316-8184 · Instagram: @versatte_sports
+    No js/main.js: WA_NUMBER e IG_USER. No index.html também há links diretos
+    (rodapé, botão flutuante, "Como comprar"): ao trocar o número, busque por
+    "553193168184" e substitua em todos os lugares.
+
+4.6 Visual
+    Cores, fontes, raios e espaçamentos ficam em :root no css/style.css.
+    Fontes (Google Fonts): Big Shoulders Display (títulos), Mr Dafoe (palavras
+    cursivas) e Figtree (texto). Laranja da marca: #EA5B0C.
+    Textura de fundo: padrão de faixas onduladas com círculos (SVG embutido em
+    body::before), em degradê laranja → azul, 7% de opacidade e desfoque. Para
+    deixar mais ou menos visível, altere o "opacity" dessa regra.
+
+
+5. COMO FUNCIONA A COMPRA (Direct e WhatsApp)
+--------------------------------------------------------------------------------
+"Quero essa" abre uma janela onde a pessoa escolhe modelo e tamanho, e o site
+monta a mensagem, por exemplo:
+  "Olá! Vi no site da Versatte e tenho interesse na camisa Chelsea Black &
+   Gold (modelo Torcedor, tamanho G). https://www.instagram.com/p/..."
+
+  - WhatsApp: a mensagem já chega escrita (o link wa.me aceita texto pronto).
+  - Direct do Instagram: o Instagram NÃO permite que sites preencham o campo
+    do Direct. Por isso o site copia a mensagem no clique e mostra o passo
+    "Mensagem copiada! Abra o Direct e cole". O link ig.me também leva o texto
+    no parâmetro ?text=, que não é oficial; se um dia o Instagram aceitar, a
+    mensagem passa a aparecer sozinha.
+  Importante: a cópia precisa acontecer no mesmo instante do clique (é
+  síncrona de propósito). Se for adiada, o navegador abre o Direct antes,
+  a página perde o foco e a cópia é bloqueada.
+
+
+6. LIMITES CONHECIDOS
+--------------------------------------------------------------------------------
+- Comentários dos posts: o Instagram só libera comentários pela API oficial
+  (conta comercial + servidor guardando um token de acesso). A prévia mostra
+  o número de comentários e leva ao post. Se quiserem exibir comentários no
+  futuro, dá para usar um servidor pequeno, como o Cloudflare Worker já usado
+  no Versatte Cards.
+- A ferramenta tools/instagram.mjs lê a página pública do post como um
+  navegador. Se o Instagram mudar o layout dessa página, ela pode precisar de
+  ajustes. Vídeos de carrossel não são baixados, só fotos.
+- As fotos dos posts trazem a arte original da campanha (inclusive preços da
+  época); quando a campanha acabar, vale trocar ou remover esses posts.
+
+
+7. IMAGENS E DESEMPENHO
+--------------------------------------------------------------------------------
+As artes originais (PNG de 2 a 20 MB) foram convertidas para WebP com Python
+(Pillow), ficando entre 35 e 240 KB cada, com recortes próprios para celular.
+Tamanhos de referência para novas imagens:
+  - topo (desktop): ~2000 px de largura; topo (celular): ~900 x 1200 px
+  - fotos de detalhe do guia: 1200 x 750 px
+As imagens fora da primeira tela carregam só quando a pessoa chega até elas.
+Arquivos que estão na pasta mas não são usados pelo site:
+  assets/*.png (originais), assets/img/retrato-time.webp,
+  assets/hero-promoção-02.png e a pasta uploads/.
+Se a hospedagem tiver limite de espaço, eles podem ficar fora da publicação.
+
+
+8. ACESSIBILIDADE E COMPATIBILIDADE
+--------------------------------------------------------------------------------
+- Layout mobile first, com ajustes em 700 px, 1000 px e 1200 px (menu
+  completo só a partir de 1200 px; abaixo disso, menu em tela cheia).
+- Respeita a opção do sistema "reduzir movimento" (desliga animações e a
+  troca automática do slider).
+- Navegação por teclado no slider (setas) e nas janelas (Esc fecha).
+- Testado em navegador Chromium (Edge) nas larguras 390, 768, 1024, 1280 e
+  1440 px.
+
+
+9. CUIDADOS IMPORTANTES NO CELULAR
+--------------------------------------------------------------------------------
+- NADA pode passar da largura da tela. No iPhone, um único elemento mais largo
+  que a tela faz o navegador encolher o site inteiro (topo e botões ficam
+  minúsculos e parece que é preciso arrastar as seções para o lado). Por isso:
+    . a textura de fundo (body::before) ocupa exatamente a tela (inset: 0);
+    . a faixa de tecido do topo é cortada nas laterais pela própria caixa (.edge);
+    . a seção do Versatte Cards corta as laterais (overflow: hidden) e o espaço
+      por onde as cartas escapam é padding da própria seção.
+  Ao criar algo novo que saia das bordas, mantenha o corte dentro da seção.
+- Em celulares baixos (ex.: iPhone SE) o topo usa uma versão compacta para que
+  textos e botões caibam na primeira tela.
+- O botão flutuante do WhatsApp só aparece depois do topo, para não cobrir os
+  botões do hero.
+- Os arquivos CSS/JS são chamados com ?v=AAAAMMDD-N no index.html. Ao publicar
+  mudanças, aumente esse número para o celular não usar uma versão antiga em
+  cache.

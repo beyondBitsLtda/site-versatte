@@ -94,6 +94,8 @@
     hero.addEventListener('focusout', e => { if (!hero.contains(e.relatedTarget)) pause('focus', false); });
     document.addEventListener('visibilitychange', () => pause('tab', document.hidden));
     new IntersectionObserver(([e]) => pause('offscreen', !e.isIntersecting), { threshold: .2 }).observe(hero);
+    // o WhatsApp flutuante aparece só depois do topo, para não cobrir os botões do hero
+    new IntersectionObserver(([e]) => document.body.classList.toggle('past-hero', !e.isIntersecting), { threshold: .35 }).observe(hero);
 
     $('[data-hero-prev]', hero).addEventListener('click', () => go(current - 1));
     $('[data-hero-next]', hero).addEventListener('click', () => go(current + 1));
@@ -114,10 +116,12 @@
     let textPath = null, unitLen = 0, offset = 0, lastW = 0, visible = true;
 
     const build = () => {
-      const W = edge.clientWidth, H = edge.clientHeight;
+      const W = edge.clientWidth, box = edge.clientHeight;
       if (!W || W === lastW) return;
       lastW = W;
       const big = W >= 1000;
+      const up = big ? 50 : 40;               // folga acima da curva para a faixa (igual ao --edge-up do CSS)
+      const H = box - up;                      // altura da curva
       const T = big ? 56 : 40;                 // largura da faixa
       const fs = big ? 31 : 22;                // tamanho do texto
       // mesma curva da borda: começa em H/2 nas laterais e encosta no topo no centro
@@ -127,7 +131,7 @@
       const shift = dy => `transform="translate(0 ${dy})"`;
       const svg = $('.edge__svg', edge);
       svg.removeAttribute('preserveAspectRatio');
-      svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+      svg.setAttribute('viewBox', `0 ${-up} ${W} ${box}`);
       svg.innerHTML = `
         <defs>
           <filter id="rb-shadow" x="-10%" y="-200%" width="120%" height="500%"><feGaussianBlur stdDeviation="7"/></filter>
