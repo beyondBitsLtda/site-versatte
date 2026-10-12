@@ -35,6 +35,7 @@
     <nav class="nav__links" id="menu" aria-label="Seções">
       <a href="#camisas">Camisas</a>
       <a href="#guia">Guia do manto</a>
+      <a href="#tamanhos">Tamanhos</a>
       <a href="#como-comprar">Como comprar</a>
       <a href="#card-game">Card Game</a>
       <a href="#contato">Contato</a>
@@ -223,7 +224,7 @@
         <p>A Versão Torcedor traz a tradição do escudo bordado e a durabilidade perfeita pro dia a dia.</p>
         <ul class="guide__chips" role="list"><li>Escudo bordado</li><li>Durabilidade pro dia a dia</li></ul>
       </div>
-      <div class="guide__strip" tabindex="0" aria-label="Fotos de detalhe da Versão Torcedor, arraste para o lado">
+      <div class="guide__strip" role="group" aria-label="Fotos de detalhe da Versão Torcedor">
         <figure><img src="assets/img/guia-torcedor-1.webp" alt="Escudo bordado da Versão Torcedor" loading="lazy" width="1200" height="747"><figcaption>Escudo bordado</figcaption></figure>
         <figure><img src="assets/img/guia-torcedor-2.webp" alt="Tecido da Versão Torcedor visto de perto" loading="lazy" width="1200" height="747"><figcaption>Tecido</figcaption></figure>
         <figure><img src="assets/img/guia-torcedor-3.webp" alt="Etiqueta Torcedor na gola" loading="lazy" width="1200" height="747"><figcaption>Etiqueta Torcedor</figcaption></figure>
@@ -237,7 +238,7 @@
         <p>A Versão Jogador entrega a mesma tecnologia usada em campo: escudo emborrachado em alta definição, tecido ultra respirável e caimento leve no corpo.</p>
         <ul class="guide__chips" role="list"><li>Escudo emborrachado HD</li><li>Tecido ultra respirável</li><li>Caimento leve</li></ul>
       </div>
-      <div class="guide__strip" tabindex="0" aria-label="Fotos de detalhe da Versão Jogador, arraste para o lado">
+      <div class="guide__strip" role="group" aria-label="Fotos de detalhe da Versão Jogador">
         <figure><img src="assets/img/guia-jogador-1.webp" alt="Escudo emborrachado em alta definição da Versão Jogador" loading="lazy" width="1200" height="749"><figcaption>Escudo emborrachado</figcaption></figure>
         <figure><img src="assets/img/guia-jogador-2.webp" alt="Tecido ultra respirável da Versão Jogador visto de perto" loading="lazy" width="1200" height="749"><figcaption>Tecido ultra respirável</figcaption></figure>
         <figure><img src="assets/img/guia-jogador-3.webp" alt="Manga com acabamento leve da Versão Jogador" loading="lazy" width="1200" height="749"><figcaption>Caimento leve</figcaption></figure>
@@ -249,6 +250,38 @@
       <div class="actions">
         <a class="btn btn--solid" href="https://ig.me/m/versatte_sports" target="_blank" rel="noopener" data-dm="Quero ajuda para escolher entre a Versão Torcedor e a Versão Jogador.">Me ajuda a escolher</a>
         <button class="btn btn--line" type="button" data-open-post data-code="DeNXGnnlU72">Ver o post completo</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TABELA DE MEDIDAS ============
+     Faixas de tamanho por modelo. Se mudarem, atualize aqui e o SIZE_MAX em js/main.js. -->
+<section class="section sizes" id="tamanhos">
+  <div class="wrap">
+    <div class="sizes__card reveal">
+      <picture class="sizes__media">
+        <source media="(max-width: 999px)" srcset="assets/img/medidas-m.webp">
+        <img src="assets/img/medidas.webp" alt="Modelo vestindo camisa de futebol vermelha e azul-marinho" loading="lazy" decoding="async" width="1300" height="1106">
+      </picture>
+      <div class="sizes__content">
+        <p class="eyebrow">Guia de tamanhos</p>
+        <h2 class="display display--md">
+          <span class="display__caps">Tabela</span>
+          <span class="display__script">de medidas</span>
+        </h2>
+        <dl class="sizes__grid">
+          <div class="sizes__item"><dt>Torcedor</dt><dd><b>P ao 4XL</b><span>Altura 162–200 cm</span></dd></div>
+          <div class="sizes__item"><dt>Jogador</dt><dd><b>P ao 3XL</b><span>Altura 162–195 cm</span></dd></div>
+          <div class="sizes__item"><dt>Feminina</dt><dd><b>P ao GG</b><span>Altura 150–175 cm</span></dd></div>
+        </dl>
+        <p class="sizes__note">Na dúvida entre dois tamanhos? Mande sua altura e seu peso que a gente indica o tamanho ideal pra você.</p>
+        <div class="actions">
+          <a class="btn btn--solid" href="https://ig.me/m/versatte_sports" target="_blank" rel="noopener" data-dm="Quero ajuda para encontrar meu tamanho. Minha altura é ___ cm e meu peso é ___ kg.">Encontre seu tamanho</a>
+          <a class="btn btn--glass" href="https://wa.me/553193168184" target="_blank" rel="noopener" data-wa-msg="Quero ajuda para encontrar meu tamanho. Minha altura é ___ cm e meu peso é ___ kg.">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-wa"/></svg> Pelo WhatsApp
+          </a>
+        </div>
       </div>
     </div>
   </div>
@@ -328,6 +361,7 @@
       <h3>Navegue</h3>
       <a href="#camisas">Camisas</a>
       <a href="#guia">Guia do manto</a>
+      <a href="#tamanhos">Tamanhos</a>
       <a href="#como-comprar">Como comprar</a>
       <a href="#card-game">Versatte Cards</a>
     </div>
@@ -414,14 +448,17 @@
       <label><input type="radio" name="modelo" value="Torcedor"><span>Torcedor</span></label>
       <label><input type="radio" name="modelo" value="Jogador"><span>Jogador</span></label>
       <label><input type="radio" name="modelo" value="Retrô"><span>Retrô</span></label>
+      <label><input type="radio" name="modelo" value="Feminina"><span>Feminina</span></label>
     </fieldset>
     <fieldset class="chips" data-chips="tamanho">
-      <legend>Tamanho</legend>
+      <legend>Tamanho <a href="#tamanhos" class="chips__link" data-to-sizes>Ver tabela de medidas</a></legend>
       <label><input type="radio" name="tamanho" value="P"><span>P</span></label>
       <label><input type="radio" name="tamanho" value="M"><span>M</span></label>
       <label><input type="radio" name="tamanho" value="G"><span>G</span></label>
       <label><input type="radio" name="tamanho" value="GG"><span>GG</span></label>
-      <label><input type="radio" name="tamanho" value="XGG"><span>XGG</span></label>
+      <label><input type="radio" name="tamanho" value="2XL"><span>2XL</span></label>
+      <label><input type="radio" name="tamanho" value="3XL"><span>3XL</span></label>
+      <label><input type="radio" name="tamanho" value="4XL"><span>4XL</span></label>
     </fieldset>
 
     <label class="order__msg">

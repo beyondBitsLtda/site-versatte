@@ -32,7 +32,7 @@
   toggle.addEventListener('click', () => setMenu(!nav.classList.contains('is-open')));
   $$('#menu a').forEach(a => a.addEventListener('click', () => setMenu(false)));
   addEventListener('keydown', e => { if (e.key === 'Escape') setMenu(false); });
-  matchMedia('(min-width: 1000px)').addEventListener('change', () => setMenu(false));
+  matchMedia('(min-width: 1200px)').addEventListener('change', () => setMenu(false));
 
   /* ---------- hero / slider ---------- */
   const hero = $('[data-hero]');
@@ -268,6 +268,9 @@
   dmtip.addEventListener('click', e => { if (e.target === dmtip) dmtip.close(); });
   dmtip.addEventListener('close', () => { closedModal(); if (lastFocus && lastFocus.isConnected) lastFocus.focus({ preventScroll: true }); });
 
+  // links de WhatsApp com mensagem pronta definida no HTML
+  $$('a[data-wa-msg]').forEach(a => { a.href = waLink(`Olá! ${a.dataset.waMsg}`); });
+
   // links de direct do site (topo, hero, guia, rodapé)
   $$('a[data-dm]').forEach(a => {
     const text = a.dataset.dm ? `Olá! ${a.dataset.dm}` : messageFor(null);
@@ -395,7 +398,20 @@
     if (viewer.open) viewer.close();
     openModal(order);
   };
-  form.addEventListener('change', syncOrder);
+  // cada modelo tem uma faixa de tamanhos (ver seção "Tabela de medidas")
+  const SIZE_MAX = { Torcedor: '4XL', Jogador: '3XL', Feminina: 'GG' };
+  const sizeInputs = [...form.querySelectorAll('input[name=tamanho]')];
+  const limitSizes = () => {
+    const max = SIZE_MAX[form.modelo.value];
+    const last = max ? sizeInputs.findIndex(i => i.value === max) : sizeInputs.length - 1;
+    sizeInputs.forEach((input, i) => {
+      input.disabled = i > last;
+      if (input.disabled && input.checked) input.checked = false;
+    });
+  };
+  form.addEventListener('change', e => { if (e.target.name === 'modelo') limitSizes(); syncOrder(); });
+  form.addEventListener('reset', () => setTimeout(limitSizes));
+  $('[data-to-sizes]', order).addEventListener('click', () => order.close());
   msgBox.addEventListener('input', () => { edited = true; syncOrder(); });
   $('[data-order-dm]', order).addEventListener('click', e => { e.preventDefault(); openDmTip(msgBox.value); });
   order.addEventListener('click', e => { if (e.target === order) order.close(); });
