@@ -175,6 +175,13 @@ Se a hospedagem tiver limite de espaço, eles podem ficar fora da publicação.
     . a seção do Versatte Cards corta as laterais (overflow: hidden) e o espaço
       por onde as cartas escapam é padding da própria seção.
   Ao criar algo novo que saia das bordas, mantenha o corte dentro da seção.
+- Celular com "Site para computador" (Chrome) ou "Versão para PC" (Samsung
+  Internet) ligado: o navegador ignora a tag viewport e desenha a página com
+  ~980px, deixando tudo minúsculo. Um script no <head> do index.html detecta
+  esse caso (tela de toque estreita desenhada larga), amplia a página para o
+  tamanho real e faz as regras @media responderem à largura real da tela.
+  Por isso, no CSS, use calc(N * var(--vw)) e var(--vh) em vez de vw/vh: o
+  script ajusta essas variáveis para compensar o zoom.
 - Em celulares baixos (ex.: iPhone SE) o topo usa uma versão compacta para que
   textos e botões caibam na primeira tela.
 - O botão flutuante do WhatsApp só aparece depois do topo, para não cobrir os

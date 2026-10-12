@@ -36,10 +36,16 @@
   --r-sm: 16px;
   --shadow: 0 1px 2px rgba(23,19,15,.05), 0 20px 50px -28px rgba(23,19,15,.35);
 
+  /* unidades de tela: use calc(N * var(--vw)) / var(--vh) em vez de vw/vh.
+     O script do <head> ajusta essas variáveis quando corrige o modo "site para computador". */
+  --vw: 1vw;
+  --vh: 1vh;
+
   --gutter: 18px;
   --max: 1240px;
   --nav-h: 76px;
 }
+@supports (height: 1svh) { :root { --vh: 1svh; } }
 @media (min-width: 700px) { :root { --gutter: 32px; --nav-h: 84px; } }
 @media (min-width: 1000px) { :root { --gutter: 48px; } }
 
@@ -82,16 +88,16 @@ button { font: inherit; color: inherit; }
 }
 .eyebrow::before { content: ''; width: 26px; height: 2px; border-radius: 2px; background: currentColor; flex: none; }
 
-.display { margin: 0; display: flex; flex-direction: column; line-height: .84; font-size: clamp(58px, 16vw, 150px); }
-.display--md { font-size: clamp(54px, 13vw, 116px); }
-.display--sm { font-size: clamp(46px, 10vw, 80px); }
+.display { margin: 0; display: flex; flex-direction: column; line-height: .84; font-size: clamp(58px, calc(16 * var(--vw)), 150px); }
+.display--md { font-size: clamp(54px, calc(13 * var(--vw)), 116px); }
+.display--sm { font-size: clamp(46px, calc(10 * var(--vw)), 80px); }
 .display__caps { font-family: var(--f-caps); font-weight: 900; text-transform: uppercase; letter-spacing: .004em; color: var(--ink); }
 .display__script {
   font-family: var(--f-script); font-weight: 400; font-size: .8em; line-height: .95;
   color: var(--orange-script); margin: -.1em 0 0 .06em; padding: 0 .2em .08em 0;
   transform: rotate(-4deg); transform-origin: 0 50%;
 }
-.lead { margin: 20px 0 0; max-width: 36ch; font-size: clamp(16px, 1.5vw, 19px); line-height: 1.55; color: var(--ink-2); }
+.lead { margin: 20px 0 0; max-width: 36ch; font-size: clamp(16px, calc(1.5 * var(--vw)), 19px); line-height: 1.55; color: var(--ink-2); }
 
 /* contextos escuros (foto do hero, faixa do jogo) */
 .hero, .game { color: var(--cream); }
@@ -177,8 +183,8 @@ button { font: inherit; color: inherit; }
     opacity: 0; visibility: hidden; transition: opacity .3s, visibility 0s .3s;
   }
   .nav.is-open .nav__links { opacity: 1; visibility: visible; transition: opacity .3s; }
-  .nav__links a { font: 900 clamp(50px, 15vw, 80px)/1 var(--f-caps); text-transform: uppercase; }
-  .nav__links a:nth-child(even) { font: 400 clamp(52px, 15vw, 84px)/1.1 var(--f-script); text-transform: none; color: var(--orange-script); }
+  .nav__links a { font: 900 clamp(50px, calc(15 * var(--vw)), 80px)/1 var(--f-caps); text-transform: uppercase; }
+  .nav__links a:nth-child(even) { font: 400 clamp(52px, calc(15 * var(--vw)), 84px)/1.1 var(--f-script); text-transform: none; color: var(--orange-script); }
   body.menu-open { overflow: hidden; }
 }
 @media (min-width: 1200px) {
@@ -200,7 +206,7 @@ button { font: inherit; color: inherit; }
 .hero__track > script { display: none; }
 .slide {
   grid-area: 1 / 1; position: relative; overflow: hidden;
-  min-height: 100vh; min-height: 100svh;
+  min-height: calc(100 * var(--vh));
   display: flex; align-items: flex-end;
   opacity: 0; visibility: hidden; transition: opacity 1s ease, visibility 0s linear 1s;
 }
@@ -231,7 +237,7 @@ button { font: inherit; color: inherit; }
 .slide--promo .slide__media img { object-position: 50% 20%; }
 
 @media (min-width: 1000px) {
-  .slide { min-height: clamp(660px, 100svh, 960px); align-items: center; }
+  .slide { min-height: clamp(660px, calc(100 * var(--vh)), 960px); align-items: center; }
   .slide__shade {
     background:
       linear-gradient(to bottom, rgba(12,11,10,.5) 0%, rgba(12,11,10,0) 18%),
@@ -245,16 +251,16 @@ button { font: inherit; color: inherit; }
 
 /* telas largas em pé (tablet): sem vazio enorme em cima; o slide do jogo fica empilhado com a carta grande */
 @media (min-width: 700px) and (orientation: portrait) {
-  .slide { min-height: min(100svh, 125vw); }
+  .slide { min-height: min(calc(100 * var(--vh)), calc(125 * var(--vw))); }
   .hero .cards-teaser { flex-direction: column-reverse; align-items: flex-start; justify-content: flex-end; gap: 34px; }
-  .hero .cards-teaser__card { --cw: min(42vw, 340px); align-self: center; margin: 0; }
+  .hero .cards-teaser__card { --cw: min(calc(42 * var(--vw)), 340px); align-self: center; margin: 0; }
 }
 
 /* celulares baixos (ex.: iPhone SE): tudo do slide cabe na primeira tela */
 @media (max-width: 699px) and (max-height: 760px) {
   .slide__content { padding-top: calc(var(--nav-h) + 10px); padding-bottom: 84px; }
   .slide__logo { width: 44px; margin-bottom: 10px; }
-  .hero .display { font-size: clamp(46px, 13.5vw, 60px); }
+  .hero .display { font-size: clamp(46px, calc(13.5 * var(--vw)), 60px); }
   .hero .eyebrow { margin-bottom: 10px; }
   .hero .lead { font-size: 14.5px; margin-top: 12px; }
   .hero .actions { margin-top: 16px; gap: 10px; }
@@ -266,7 +272,7 @@ button { font: inherit; color: inherit; }
   .price__now { font-size: 26px; }
   .prices__note { display: none; }
   .cards-teaser { gap: 16px; }
-  .cards-teaser__card { --cw: min(34vw, 150px); }
+  .cards-teaser__card { --cw: min(calc(34 * var(--vw)), 150px); }
 }
 
 /* ---------- slide de campanha ---------- */
@@ -283,7 +289,7 @@ button { font: inherit; color: inherit; }
 .prices__note { margin: 10px 0 0; font-size: 13.5px; line-height: 1.45; font-weight: 500; color: rgba(247,239,227,.9); }
 .prices__note a { color: var(--orange-hi); text-decoration: none; font-weight: 600; }
 
-.slide--promo .slide__content { padding-top: calc(var(--nav-h) + 9vh); }
+.slide--promo .slide__content { padding-top: calc(var(--nav-h) + calc(9 * var(--vh))); }
 .slide--promo .lead { font-size: 15.5px; margin-top: 14px; }
 .slide--promo .actions { margin-top: 18px; }
 @media (max-width: 699px) {
@@ -299,7 +305,7 @@ button { font: inherit; color: inherit; }
   .prices__note { font-size: 12px; }
 }
 @media (min-width: 700px) {
-  .slide--promo .slide__content { padding-top: calc(var(--nav-h) + 28vh); }
+  .slide--promo .slide__content { padding-top: calc(var(--nav-h) + calc(28 * var(--vh))); }
   .promo { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: end; }
   .prices { margin-top: 0; }
 }
@@ -324,12 +330,12 @@ button { font: inherit; color: inherit; }
     linear-gradient(160deg, #0B1626 0%, var(--night) 70%);
 }
 .cards-teaser { display: flex; flex-direction: column-reverse; gap: 26px; }
-.cards-teaser__card { --cw: min(44vw, 210px); align-self: center; opacity: 0; transform: translateY(30px) rotate(-6deg); transition: opacity .8s ease .2s, transform 1s cubic-bezier(.2,.7,.2,1) .2s; }
+.cards-teaser__card { --cw: min(calc(44 * var(--vw)), 210px); align-self: center; opacity: 0; transform: translateY(30px) rotate(-6deg); transition: opacity .8s ease .2s, transform 1s cubic-bezier(.2,.7,.2,1) .2s; }
 .slide.is-active .cards-teaser__card { opacity: 1; transform: rotate(-6deg); }
-@media (max-height: 700px) and (max-width: 699px) { .cards-teaser__card { --cw: min(38vw, 160px); } }
+@media (max-height: 700px) and (max-width: 699px) { .cards-teaser__card { --cw: min(calc(38 * var(--vw)), 160px); } }
 @media (min-width: 700px) {
   .cards-teaser { flex-direction: row; align-items: center; justify-content: space-between; }
-  .cards-teaser__card { --cw: clamp(230px, 26vw, 330px); margin-right: 4vw; }
+  .cards-teaser__card { --cw: clamp(230px, calc(26 * var(--vw)), 330px); margin-right: calc(4 * var(--vw)); }
 }
 
 /* ---------- controles do slider ---------- */
@@ -357,14 +363,14 @@ button { font: inherit; color: inherit; }
 .ribbon__text .s { font-family: var(--f-script); font-weight: 400; text-transform: none; letter-spacing: 0; }
 .ribbon__text .d { fill: rgba(42,18,6,.55); }
 @media (min-width: 1000px) { .edge { --edge-h: 72px; --edge-up: 50px; } }
-.hero + section { padding-top: clamp(110px, 13vw, 170px); }
+.hero + section { padding-top: clamp(110px, calc(13 * var(--vw)), 170px); }
 
 /* ============================================================
    SEÇÕES
    ============================================================ */
-.section { position: relative; padding: clamp(80px, 11vw, 140px) 0; }
-.section__head { margin-bottom: clamp(32px, 5vw, 56px); }
-.section__lead { max-width: 44ch; margin: 22px 0 0; color: var(--muted); font-size: clamp(15.5px, 1.4vw, 18px); }
+.section { position: relative; padding: clamp(80px, calc(11 * var(--vw)), 140px) 0; }
+.section__head { margin-bottom: clamp(32px, calc(5 * var(--vw)), 56px); }
+.section__lead { max-width: 44ch; margin: 22px 0 0; color: var(--muted); font-size: clamp(15.5px, calc(1.4 * var(--vw)), 18px); }
 .section__lead b { color: var(--ink); font-weight: 600; }
 .section__lead a { color: var(--orange-text); font-weight: 600; }
 @media (min-width: 1000px) {
@@ -396,8 +402,8 @@ button { font: inherit; color: inherit; }
 .post__body { flex: 1; display: flex; flex-direction: column; padding: 18px 12px 10px; }
 .post__tag { align-self: flex-start; padding: 6px 11px; border-radius: 999px; background: #FCE9DD; font: 600 12px/1 var(--f-body); color: var(--orange-text); }
 .post__title { margin: 14px 0 20px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 .3em; line-height: .9; }
-.post__title span { font: 900 clamp(34px, 3.6vw, 44px)/.9 var(--f-caps); text-transform: uppercase; letter-spacing: .005em; }
-.post__title em { font: 400 clamp(36px, 3.9vw, 48px)/.9 var(--f-script); font-style: normal; color: var(--orange-script); transform: rotate(-3deg); }
+.post__title span { font: 900 clamp(34px, calc(3.6 * var(--vw)), 44px)/.9 var(--f-caps); text-transform: uppercase; letter-spacing: .005em; }
+.post__title em { font: 400 clamp(36px, calc(3.9 * var(--vw)), 48px)/.9 var(--f-script); font-style: normal; color: var(--orange-script); transform: rotate(-3deg); }
 .post__buy { margin-top: auto; display: flex; gap: 10px; }
 .post__buy .btn--solid { flex: 1; }
 @media (min-width: 1000px) { .post { padding: 12px; } .post__body { padding: 22px 14px 12px; } }
@@ -450,8 +456,8 @@ button { font: inherit; color: inherit; }
 }
 
 /* ---------- como comprar ---------- */
-.buy { padding: 0 0 clamp(70px, 10vw, 120px); }
-.buy__card { position: relative; overflow: hidden; display: grid; gap: 26px; padding: clamp(30px, 5vw, 56px); border-radius: 40px; background: linear-gradient(140deg, #FCE6D6 0%, var(--bg-2) 55%, #E6EDF4 100%); }
+.buy { padding: 0 0 clamp(70px, calc(10 * var(--vw)), 120px); }
+.buy__card { position: relative; overflow: hidden; display: grid; gap: 26px; padding: clamp(30px, calc(5 * var(--vw)), 56px); border-radius: 40px; background: linear-gradient(140deg, #FCE6D6 0%, var(--bg-2) 55%, #E6EDF4 100%); }
 .buy__card::after { content: ''; position: absolute; right: -80px; top: -80px; width: 260px; height: 260px; border-radius: 50%; border: 2px solid rgba(234,91,12,.18); pointer-events: none; }
 .buy__steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
 .buy__steps li { display: flex; align-items: center; gap: 14px; font-size: 16.5px; font-weight: 500; color: var(--ink-2); }
@@ -468,13 +474,13 @@ button { font: inherit; color: inherit; }
 
 /* ---------- guia do manto ---------- */
 .guide { padding-top: 0; }
-.guide__row { display: grid; gap: 22px; padding: clamp(22px, 3vw, 34px); border-radius: 36px; background: var(--surface); box-shadow: var(--shadow); }
+.guide__row { display: grid; gap: 22px; padding: clamp(22px, calc(3 * var(--vw)), 34px); border-radius: 36px; background: var(--surface); box-shadow: var(--shadow); }
 .guide__row + .guide__row { margin-top: 22px; }
 .guide__tag { display: inline-block; padding: 7px 13px; border-radius: 999px; background: #FCE9DD; color: var(--orange-text); font: 600 12.5px/1 var(--f-body); }
 .guide__row--alt .guide__tag { background: #E3ECF6; color: var(--blue); }
 .guide__title { margin: 14px 0 12px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 .28em; line-height: .9; }
-.guide__title span { font: 900 clamp(38px, 5vw, 58px)/.9 var(--f-caps); text-transform: uppercase; }
-.guide__title em { font: 400 clamp(40px, 5.3vw, 62px)/.9 var(--f-script); font-style: normal; color: var(--orange-script); transform: rotate(-3deg); }
+.guide__title span { font: 900 clamp(38px, calc(5 * var(--vw)), 58px)/.9 var(--f-caps); text-transform: uppercase; }
+.guide__title em { font: 400 clamp(40px, calc(5.3 * var(--vw)), 62px)/.9 var(--f-script); font-style: normal; color: var(--orange-script); transform: rotate(-3deg); }
 .guide__row--alt .guide__title em { color: var(--blue); }
 .guide__info p { margin: 0; max-width: 46ch; color: var(--ink-2); font-size: 16.5px; }
 .guide__chips { list-style: none; margin: 18px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
@@ -498,17 +504,17 @@ button { font: inherit; color: inherit; }
 }
 
 /* ---------- Versatte Cards · faixa retangular fina; as cartas escapam para cima e para baixo ---------- */
-.game { position: relative; z-index: 2; overflow: hidden; padding: clamp(150px, 42vw, 190px) 0 clamp(60px, 8vw, 120px); margin: 20px 0 0; }
+.game { position: relative; z-index: 2; overflow: hidden; padding: clamp(150px, calc(42 * var(--vw)), 190px) 0 clamp(60px, calc(8 * var(--vw)), 120px); margin: 20px 0 0; }
 .game__band { position: relative; background: radial-gradient(50% 120% at 75% 50%, rgba(31,92,153,.6), transparent 70%), radial-gradient(30% 90% at 80% 50%, rgba(234,91,12,.25), transparent 70%), linear-gradient(100deg, var(--night) 0%, #0B1626 60%, #0A1322 100%); }
 .game__net { position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(45deg, rgba(120,170,255,.07) 0 1px, transparent 1px 28px), repeating-linear-gradient(-45deg, rgba(120,170,255,.07) 0 1px, transparent 1px 28px); -webkit-mask: radial-gradient(45% 140% at 72% 50%, #000, transparent 80%); mask: radial-gradient(45% 140% at 72% 50%, #000, transparent 80%); }
 .game__inner { position: relative; display: grid; }
 .game__text { padding: 26px 0 40px; }
-.game .display { font-size: clamp(56px, 13vw, 104px); }
+.game .display { font-size: clamp(56px, calc(13 * var(--vw)), 104px); }
 .game .lead { max-width: 40ch; font-size: 16px; margin-top: 14px; }
 .game .btn { margin-top: 22px; }
 .stamp { display: inline-block; margin-bottom: 16px; padding: 8px 16px 7px; border-radius: 999px; border: 1.5px solid var(--orange-hi); color: var(--orange-hi); font: 600 12px/1 var(--f-body); letter-spacing: .24em; text-transform: uppercase; transform: rotate(-3deg); }
 /* no celular as cartas ficam em cima e invadem a seção anterior */
-.game__stage { position: relative; order: -1; height: 110px; --cw: min(46vw, 210px); }
+.game__stage { position: relative; order: -1; height: 110px; --cw: min(calc(46 * var(--vw)), 210px); }
 .fan { position: absolute; left: 50%; bottom: 0; translate: -50% 0; transition: transform .8s cubic-bezier(.2,.7,.2,1); }
 .fan--left { transform: translateX(-52%) rotate(-14deg) scale(.84); transform-origin: 50% 100%; z-index: 1; }
 .fan--right { transform: translateX(52%) rotate(13deg) scale(.84); transform-origin: 50% 100%; z-index: 1; }
@@ -530,10 +536,10 @@ button { font: inherit; color: inherit; }
 /* ============================================================
    RODAPÉ
    ============================================================ */
-.footer { position: relative; padding: clamp(64px, 8vw, 100px) 0 calc(26px + env(safe-area-inset-bottom)); }
+.footer { position: relative; padding: clamp(64px, calc(8 * var(--vw)), 100px) 0 calc(26px + env(safe-area-inset-bottom)); }
 .footer__grid { display: grid; gap: 44px; }
 .footer__brand img { width: 66px; height: auto; margin-bottom: 16px; }
-.footer__title { font-size: clamp(56px, 11vw, 84px); }
+.footer__title { font-size: clamp(56px, calc(11 * var(--vw)), 84px); }
 .footer__brand p:last-child { margin: 18px 0 0; max-width: 34ch; color: var(--muted); }
 .footer__col { display: flex; flex-direction: column; gap: 10px; }
 .footer__col h3 { margin: 0 0 8px; font: 600 12.5px/1 var(--f-body); letter-spacing: .2em; text-transform: uppercase; color: var(--orange-text); }
@@ -614,7 +620,7 @@ dialog { color: var(--ink); }
   .ig__close { top: 20px; right: 22px; background: rgba(255,255,255,.12); color: #fff; }
   .ig__close:hover { background: rgba(255,255,255,.22); }
   .ig__box {
-    --h: min(calc(100vh - 48px), 880px, calc((100vw - 160px - 420px) / .8)); /* nunca passa da largura da tela */
+    --h: min(calc(calc(100 * var(--vh)) - 48px), 880px, calc((calc(100 * var(--vw)) - 160px - 420px) / .8)); /* nunca passa da largura da tela */
     height: var(--h); width: auto; overflow: hidden; border-radius: var(--r-md);
     display: grid; grid-template-columns: calc(var(--h) * .8) 420px; grid-template-rows: auto 1fr;
     grid-template-areas: "media head" "media body";
@@ -634,7 +640,7 @@ dialog { color: var(--ink); }
 /* tablet em pé: a prévia vira uma coluna centralizada, como no app */
 @media (min-width: 700px) and (orientation: portrait) {
   .ig[open] { display: grid; place-items: center; padding: 32px; }
-  .ig__box { width: min(560px, 100%); height: auto; max-height: calc(100vh - 64px); border-radius: var(--r-md); box-shadow: 0 60px 120px -40px rgba(0,0,0,.7); }
+  .ig__box { width: min(560px, 100%); height: auto; max-height: calc(calc(100 * var(--vh)) - 64px); border-radius: var(--r-md); box-shadow: 0 60px 120px -40px rgba(0,0,0,.7); }
   .ig__close { top: 18px; right: 18px; background: rgba(255,255,255,.14); color: #fff; }
 }
 body.modal-open { overflow: hidden; }
@@ -642,7 +648,7 @@ body.modal-open { overflow: hidden; }
 /* ============================================================
    QUERO ESSA CAMISA
    ============================================================ */
-.order { padding: 0; border: 0; margin: auto auto 0; width: 100%; max-width: 100%; max-height: 92vh; border-radius: 30px 30px 0 0; background: var(--surface); overflow: auto; }
+.order { padding: 0; border: 0; margin: auto auto 0; width: 100%; max-width: 100%; max-height: calc(92 * var(--vh)); border-radius: 30px 30px 0 0; background: var(--surface); overflow: auto; }
 .order__box { position: relative; padding: 22px 20px calc(20px + env(safe-area-inset-bottom)); }
 .order__close { position: absolute; top: 14px; right: 14px; width: 40px; height: 40px; display: grid; place-items: center; border: 0; border-radius: 50%; background: var(--bg); cursor: pointer; }
 .order__product { display: flex; align-items: center; gap: 14px; padding-right: 48px; margin-bottom: 18px; }
