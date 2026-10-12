@@ -1,422 +1,474 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR" class="no-js">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<script src="./support.js"></script>
-</head>
-<body>
-<x-dc>
-<helmet>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Versatte Sports · Vista o manto do seu time</title>
+  <meta name="description" content="Vitrine da Versatte Sports: camisas de clubes e seleções nos modelos Torcedor, Jogador e Retrô. Viu, curtiu? Chame no direct ou no WhatsApp.">
+  <meta name="theme-color" content="#F7F3EC">
+  <meta property="og:title" content="Versatte Sports · Vista o manto do seu time">
+  <meta property="og:description" content="Camisas de clubes e seleções nos modelos Torcedor, Jogador e Retrô.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="assets/img/boas-vindas-1.webp">
+  <link rel="icon" type="image/png" href="assets/img/favicon.png">
+  <link rel="apple-touch-icon" href="assets/img/favicon.png">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <style>
-    html { scroll-behavior: smooth; }
-    body { margin: 0; }
-    @keyframes vs-pulse { 0% { transform: scale(1); opacity: .55; } 100% { transform: scale(1.9); opacity: 0; } }
-    @keyframes vs-dot { 0%,100% { opacity: 1; } 50% { opacity: .35; } }
-    @keyframes vs-spin { to { transform: rotate(360deg); } }
-    ::selection { background: #FDB813; color: #0B1E33; }
-  </style>
-</helmet>
-<div ref="{{ rootRef }}" style="font-family: 'Archivo', system-ui, sans-serif; color: #0A0E14; background: #FFFFFF; -webkit-font-smoothing: antialiased;">
+  <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Figtree:wght@400;500;600;700&family=Mr+Dafoe&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/posts.js" defer></script>
+  <script src="js/main.js" defer></script>
+</head>
+<body>
 
-  <!-- NAV -->
-  <nav style="position: fixed; top: 0; left: 0; right: 0; z-index: 50; height: 68px; display: flex; align-items: center; justify-content: space-between; padding: 0 clamp(18px, 5vw, 56px); background: rgba(255,255,255,0.82); backdrop-filter: saturate(180%) blur(12px); border-bottom: 1px solid #F0F0F0;">
-    <a href="#top" style="text-decoration: none; display: flex; align-items: baseline; gap: 8px;">
-      <span style="font-family: 'Anton', sans-serif; font-size: 22px; letter-spacing: .5px; color: #0B1E33; text-transform: uppercase;">Versatte</span>
-      <span style="font-family: 'Archivo', sans-serif; font-weight: 600; font-size: 11px; letter-spacing: .32em; color: #F26522; text-transform: uppercase;">Sports</span>
+<a class="skip" href="#camisas">Pular para as camisas</a>
+
+<!-- ============ NAV (pílula flutuante) ============ -->
+<header class="nav" data-nav>
+  <div class="nav__bar">
+    <a class="brand" href="#inicio" aria-label="Versatte Sports, início">
+      <img src="assets/img/logo-vs.webp" alt="" width="40" height="48">
+      <span class="brand__name">Versatte <em>Sports</em></span>
     </a>
-    <div id="navlinks" style="display: flex; align-items: center; gap: 34px;">
-      <a href="#sobre" style="text-decoration: none; color: #0B1E33; font-size: 14px; font-weight: 500; letter-spacing: .02em;">Sobre</a>
-      <a href="#categorias" style="text-decoration: none; color: #0B1E33; font-size: 14px; font-weight: 500; letter-spacing: .02em;">Coleções</a>
-      <a href="#catalogo" style="text-decoration: none; color: #0B1E33; font-size: 14px; font-weight: 500; letter-spacing: .02em;">Catálogo</a>
-      <a href="#contato" style="text-decoration: none; color: #0B1E33; font-size: 14px; font-weight: 500; letter-spacing: .02em;">Contato</a>
+
+    <nav class="nav__links" id="menu" aria-label="Seções">
+      <a href="#camisas">Camisas</a>
+      <a href="#guia">Guia do manto</a>
+      <a href="#como-comprar">Como comprar</a>
+      <a href="#card-game">Card Game</a>
+      <a href="#contato">Contato</a>
+    </nav>
+
+    <a class="nav__dm" href="https://ig.me/m/versatte_sports" target="_blank" rel="noopener" data-dm aria-label="Chamar a Versatte no direct do Instagram">
+      <svg aria-hidden="true" viewBox="0 0 24 24"><use href="#i-send"/></svg>
+      <span>Chamar no direct</span>
+    </a>
+
+    <button class="nav__toggle" type="button" aria-controls="menu" aria-expanded="false" aria-label="Abrir menu" data-menu-toggle>
+      <span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main>
+
+<!-- ============ HERO / SLIDER ============
+     Cada <article data-slide> é um slide. Campanhas e promoções aparecem SOMENTE aqui.
+     Para uma nova campanha, copie o slide "Esquenta Novembro" e troque textos e imagens.
+     data-until esconde o slide automaticamente depois da data (AAAA-MM-DD). -->
+<section class="hero" id="inicio" aria-roledescription="carrossel" aria-label="Destaques da Versatte" data-hero>
+  <div class="hero__track">
+
+    <!-- Slide 1 · Boas-vindas (imagem e texto variam a cada visita) -->
+    <article class="slide slide--welcome is-active" data-slide data-label="Boas-vindas" aria-roledescription="slide">
+      <picture class="slide__media">
+        <source media="(max-width: 760px)" data-welcome-source>
+        <img data-welcome-img alt="" fetchpriority="high" decoding="async">
+        <noscript><img src="assets/img/boas-vindas-1.webp" alt=""></noscript>
+      </picture>
+      <div class="slide__shade"></div>
+      <div class="slide__content wrap">
+        <img class="slide__logo" src="assets/img/logo-vs.webp" alt="Versatte Sports" width="480" height="573">
+        <p class="eyebrow" data-welcome="eyebrow">Bem-vindo à Versatte</p>
+        <h1 class="display">
+          <span class="display__caps" data-welcome="caps">Vista o manto</span>
+          <span class="display__script" data-welcome="script">do seu time</span>
+        </h1>
+        <p class="lead" data-welcome="lead">Camisas de clubes e seleções nos modelos Torcedor, Jogador e Retrô.</p>
+        <div class="actions">
+          <a class="btn btn--solid" href="#camisas">Ver camisas</a>
+          <a class="btn btn--glass" href="https://ig.me/m/versatte_sports" target="_blank" rel="noopener" data-dm>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-send"/></svg> Chamar no direct
+          </a>
+        </div>
+      </div>
+    </article>
+    <script>
+      // Boas-vindas: a cada visita mostra a próxima combinação de imagem + texto.
+      // Para incluir uma 4ª imagem, gere assets/img/boas-vindas-4.webp e -4-m.webp e adicione uma linha aqui.
+      (function () {
+        var V = [
+          { eyebrow: 'Bem-vindo à Versatte', caps: 'Vista o manto', script: 'do seu time', lead: 'Camisas de clubes e seleções nos modelos Torcedor, Jogador e Retrô.' },
+          { eyebrow: 'Bem-vindo à Versatte', caps: 'Sua paixão', script: 'em cada detalhe', lead: 'Dos gigantes da Europa ao clube do coração. O que brilha no nosso feed está reunido aqui.' },
+          { eyebrow: 'Bem-vindo à Versatte', caps: 'Escolha', script: 'o seu manto', lead: 'Lançamentos da temporada e clássicos retrô para todos os estilos. Viu, curtiu? Chama no direct.' }
+        ];
+        var i;
+        try {
+          var last = parseInt(localStorage.getItem('vs-welcome'), 10);
+          i = isNaN(last) ? Math.floor(Math.random() * V.length) : (last + 1) % V.length;
+          localStorage.setItem('vs-welcome', i);
+        } catch (e) { i = Math.floor(Math.random() * V.length); }
+        var n = i + 1, slide = document.currentScript.previousElementSibling;
+        slide.querySelector('[data-welcome-source]').srcset = 'assets/img/boas-vindas-' + n + '-m.webp';
+        slide.querySelector('[data-welcome-img]').src = 'assets/img/boas-vindas-' + n + '.webp';
+        slide.classList.add('slide--v' + n);
+        slide.querySelectorAll('[data-welcome]').forEach(function (el) { el.textContent = V[i][el.dataset.welcome]; });
+      })();
+    </script>
+
+    <!-- Slide 2 · Campanha Esquenta Novembro -->
+    <article class="slide slide--promo" data-slide data-id="esquenta" data-label="Esquenta Novembro" data-until="2026-10-25" aria-roledescription="slide">
+      <picture class="slide__media">
+        <source media="(max-width: 760px)" srcset="assets/img/promo-esquenta-m.webp">
+        <img src="assets/img/promo-esquenta.webp" alt="" loading="lazy" decoding="async">
+      </picture>
+      <div class="slide__shade"></div>
+      <div class="slide__content wrap promo">
+        <div class="promo__head">
+          <p class="eyebrow">Pré-venda</p>
+          <h2 class="display">
+            <span class="display__caps">Esquenta</span>
+            <span class="display__script">Novembro</span>
+          </h2>
+          <p class="lead">Peça até 25/10 e receba seu manto em novembro. Entrega em aproximadamente 30 dias.</p>
+          <div class="actions">
+            <a class="btn btn--solid" href="https://ig.me/m/versatte_sports" target="_blank" rel="noopener" data-dm="Quero antecipar meu manto no Esquenta Novembro.">Antecipe seu manto</a>
+          </div>
+        </div>
+
+        <div class="prices" aria-label="Tabela de valores da campanha">
+          <div class="prices__top">
+            <span>À vista · Pix ou dinheiro</span>
+            <span class="tag">Até 25/10</span>
+          </div>
+          <dl class="prices__list">
+            <div class="price"><dt>Torcedor</dt><dd><s>R$ 134,90</s> <span class="price__now"><small>R$</small>129,90</span></dd></div>
+            <div class="price"><dt>Jogador</dt><dd><s>R$ 159,90</s> <span class="price__now"><small>R$</small>154,90</span></dd></div>
+            <div class="price"><dt>Retrô</dt><dd><s>R$ 164,90</s> <span class="price__now"><small>R$</small>159,90</span></dd></div>
+          </dl>
+          <p class="prices__note">Preços postando no Story. Compartilhe, marque a <a href="https://www.instagram.com/versatte_sports/" target="_blank" rel="noopener">@versatte_sports</a> e ganhe + R$5 OFF na hora!</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- Slide 3 · Versatte Cards (teaser) -->
+    <article class="slide slide--cards" data-slide data-label="Versatte Cards" aria-roledescription="slide">
+      <div class="slide__media slide__media--cards" aria-hidden="true"></div>
+      <div class="slide__content wrap cards-teaser">
+        <div class="cards-teaser__text">
+          <p class="eyebrow">Em breve</p>
+          <h2 class="display">
+            <span class="display__caps">Versatte</span>
+            <span class="display__script">Cards</span>
+          </h2>
+          <p class="lead">O jogo de cartas colecionáveis da Versatte. Abra pacotes, complete álbuns e troque por brindes.</p>
+          <div class="actions">
+            <a class="btn btn--solid" href="#card-game">Conhecer o jogo</a>
+          </div>
+        </div>
+        <div class="cards-teaser__card" data-vcard="urubu" data-tilt></div>
+      </div>
+    </article>
+
+  </div>
+
+  <!-- controles: indicadores em pílula, contador e setas de vidro -->
+  <div class="hero__ui wrap">
+    <div class="hero__dots" role="tablist" aria-label="Escolher slide" data-hero-dots></div>
+    <div class="hero__nav">
+      <button class="glass-btn" type="button" aria-label="Slide anterior" data-hero-prev><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 6 8.5 12l6 6"/></svg></button>
+      <span class="hero__count" aria-hidden="true"><b data-hero-current>01</b><i></i><span data-hero-total>03</span></span>
+      <button class="glass-btn" type="button" aria-label="Próximo slide" data-hero-next><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.5 6l6 6-6 6"/></svg></button>
     </div>
-    <a href="https://wa.me/553193168184?text=Olá! Quero comprar uma camisa importada com a Versatte Sports." target="_blank" rel="noopener" style="text-decoration: none; display: inline-flex; align-items: center; gap: 9px; padding: 10px 18px; border-radius: 999px; background: linear-gradient(135deg, #FDB813, #F26522); color: #fff; font-weight: 600; font-size: 13.5px; letter-spacing: .01em; box-shadow: 0 8px 20px rgba(242,101,34,.28);">
-      <span style="width: 8px; height: 8px; border-radius: 50%; background: #fff; animation: vs-dot 1.6s ease-in-out infinite;"></span>
-      WhatsApp
-    </a>
-  </nav>
+  </div>
+  <!-- borda curva do hero + faixa de tecido que corre junto da curva (desenhada em js/main.js) -->
+  <div class="edge" data-edge aria-hidden="true">
+    <svg class="edge__svg" viewBox="0 0 1440 80" preserveAspectRatio="none"><path class="edge__fill" d="M0 80V40C240 6 480 0 720 0s480 6 720 40v40Z"/></svg>
+  </div>
+</section>
 
-  <span id="top"></span>
+<!-- ============ CAMISAS ============
+     Os cards são montados a partir de js/posts.js.
+     Para adicionar uma camisa: node tools/instagram.mjs <link do post> -->
+<section class="section shop" id="camisas">
+  <div class="wrap">
+    <header class="section__head reveal">
+      <p class="eyebrow">Camisas em destaque</p>
+      <h2 class="display display--md">
+        <span class="display__caps">Escolha o</span>
+        <span class="display__script">seu manto</span>
+      </h2>
+      <p class="section__lead">Toque na camisa para ver todas as fotos do post. Curtiu? Clique em <b>Quero essa</b> e a mensagem já vai pronta.</p>
+    </header>
 
-  <!-- SCROLLYTELLING HERO + SOBRE -->
-  <!-- CANVAS 3D FIXO — persiste enquanto o usuário rola pelos heros -->
-  <div id="fixed3d" style="position: fixed; inset: 0; z-index: 0; pointer-events: none; transition: opacity .35s ease;">
-    <canvas ref="{{ canvasRef }}" style="position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: pan-y;"></canvas>
-    <div ref="{{ loaderRef }}" style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none;">
-      <div style="width: 46px; height: 46px; border-radius: 50%; border: 3px solid rgba(11,30,51,.12); border-top-color: #F26522; animation: vs-spin 1s linear infinite;"></div>
+    <ul class="shop__grid" role="list" data-shop></ul>
+    <noscript><p class="section__lead">Veja todas as camisas no <a href="https://www.instagram.com/versatte_sports/">@versatte_sports</a>.</p></noscript>
+
+    <div class="shop__more reveal">
+      <p>Tem muito mais no nosso feed. Não achou o seu time? <b>Pergunta no direct.</b></p>
+      <a class="btn btn--line" href="https://www.instagram.com/versatte_sports/" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-ig"/></svg> Ver todas no Instagram
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ GUIA DO MANTO ============ -->
+<section class="section guide" id="guia">
+  <div class="wrap">
+    <header class="section__head reveal">
+      <p class="eyebrow">Guia do manto</p>
+      <h2 class="display display--md">
+        <span class="display__caps">Torcedor</span>
+        <span class="display__script">x Jogador</span>
+      </h2>
+      <p class="section__lead">Veja de perto a diferença em cada detalhe, do acabamento do escudo à tecnologia do tecido.</p>
+    </header>
+
+    <article class="guide__row reveal">
+      <div class="guide__info">
+        <span class="guide__tag">Versão Torcedor</span>
+        <h3 class="guide__title"><span>A tradição</span> <em>pro dia a dia</em></h3>
+        <p>A Versão Torcedor traz a tradição do escudo bordado e a durabilidade perfeita pro dia a dia.</p>
+        <ul class="guide__chips" role="list"><li>Escudo bordado</li><li>Durabilidade pro dia a dia</li></ul>
+      </div>
+      <div class="guide__strip" tabindex="0" aria-label="Fotos de detalhe da Versão Torcedor, arraste para o lado">
+        <figure><img src="assets/img/guia-torcedor-1.webp" alt="Escudo bordado da Versão Torcedor" loading="lazy" width="1200" height="747"><figcaption>Escudo bordado</figcaption></figure>
+        <figure><img src="assets/img/guia-torcedor-2.webp" alt="Tecido da Versão Torcedor visto de perto" loading="lazy" width="1200" height="747"><figcaption>Tecido</figcaption></figure>
+        <figure><img src="assets/img/guia-torcedor-3.webp" alt="Etiqueta Torcedor na gola" loading="lazy" width="1200" height="747"><figcaption>Etiqueta Torcedor</figcaption></figure>
+      </div>
+    </article>
+
+    <article class="guide__row guide__row--alt reveal">
+      <div class="guide__info">
+        <span class="guide__tag">Versão Jogador</span>
+        <h3 class="guide__title"><span>A tecnologia</span> <em>de campo</em></h3>
+        <p>A Versão Jogador entrega a mesma tecnologia usada em campo: escudo emborrachado em alta definição, tecido ultra respirável e caimento leve no corpo.</p>
+        <ul class="guide__chips" role="list"><li>Escudo emborrachado HD</li><li>Tecido ultra respirável</li><li>Caimento leve</li></ul>
+      </div>
+      <div class="guide__strip" tabindex="0" aria-label="Fotos de detalhe da Versão Jogador, arraste para o lado">
+        <figure><img src="assets/img/guia-jogador-1.webp" alt="Escudo emborrachado em alta definição da Versão Jogador" loading="lazy" width="1200" height="749"><figcaption>Escudo emborrachado</figcaption></figure>
+        <figure><img src="assets/img/guia-jogador-2.webp" alt="Tecido ultra respirável da Versão Jogador visto de perto" loading="lazy" width="1200" height="749"><figcaption>Tecido ultra respirável</figcaption></figure>
+        <figure><img src="assets/img/guia-jogador-3.webp" alt="Manga com acabamento leve da Versão Jogador" loading="lazy" width="1200" height="749"><figcaption>Caimento leve</figcaption></figure>
+      </div>
+    </article>
+
+    <div class="guide__cta reveal">
+      <p>Ficou na dúvida entre os dois? A gente ajuda a escolher.</p>
+      <div class="actions">
+        <a class="btn btn--solid" href="https://ig.me/m/versatte_sports" target="_blank" rel="noopener" data-dm="Quero ajuda para escolher entre a Versão Torcedor e a Versão Jogador.">Me ajuda a escolher</a>
+        <button class="btn btn--line" type="button" data-open-post data-code="DeNXGnnlU72">Ver o post completo</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ COMO COMPRAR ============ -->
+<section class="buy" id="como-comprar">
+  <div class="wrap">
+    <div class="buy__card reveal">
+      <div class="buy__head">
+        <p class="eyebrow">Como comprar</p>
+        <h2 class="display display--sm">
+          <span class="display__caps">Viu, curtiu,</span>
+          <span class="display__script">chamou.</span>
+        </h2>
+      </div>
+      <ol class="buy__steps" role="list">
+        <li><b>1</b><span>Escolha a camisa aqui ou no feed</span></li>
+        <li><b>2</b><span>Chame no direct ou WhatsApp com modelo e tamanho</span></li>
+        <li><b>3</b><span>Receba em casa, em qualquer lugar do Brasil</span></li>
+      </ol>
+      <div class="buy__cta">
+        <a class="btn btn--solid" href="https://ig.me/m/versatte_sports" target="_blank" rel="noopener" data-dm>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-send"/></svg> Chamar no direct
+        </a>
+        <a class="btn btn--wa" href="https://wa.me/553193168184?text=Ol%C3%A1!%20Vi%20o%20site%20da%20Versatte%20Sports%20e%20quero%20comprar%20uma%20camisa." target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-wa"/></svg> WhatsApp
+        </a>
+      </div>
+      <ul class="buy__perks" role="list">
+        <li>Envio para todo o Brasil</li>
+        <li>Parcelamos no cartão</li>
+        <li>Atendimento direto, sem intermediário</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ VERSATTE CARDS · faixa fina, cartas escapando ============ -->
+<section class="game" id="card-game">
+  <div class="game__band">
+    <div class="game__net" aria-hidden="true"></div>
+    <div class="wrap game__inner">
+      <div class="game__text reveal">
+        <span class="stamp">Em breve</span>
+        <h2 class="display">
+          <span class="display__caps">Versatte</span>
+          <span class="display__script">Cards</span>
+        </h2>
+        <p class="lead">O jogo de cartas colecionáveis da Versatte. Abra pacotes, complete álbuns e troque por brindes de verdade.</p>
+        <a class="btn btn--glass" href="https://www.instagram.com/versatte_sports/" target="_blank" rel="noopener">Acompanhe o lançamento</a>
+      </div>
+      <div class="game__stage" data-fan>
+        <div class="fan fan--left" data-vcard="back"></div>
+        <div class="fan fan--right" data-vcard="galo" data-tilt></div>
+        <div class="fan fan--center" data-vcard="urubu" data-tilt data-flip></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ============ RODAPÉ ============ -->
+<footer class="footer" id="contato">
+  <div class="wrap footer__grid">
+    <div class="footer__brand">
+      <img src="assets/img/logo-vs.webp" alt="Versatte Sports" width="480" height="573" loading="lazy">
+      <p class="display footer__title">
+        <span class="display__caps">Versatte</span>
+        <span class="display__script">Sports</span>
+      </p>
+      <p>Camisas de clubes e seleções nos modelos Torcedor, Jogador e Retrô.</p>
+    </div>
+
+    <div class="footer__col">
+      <h3>Navegue</h3>
+      <a href="#camisas">Camisas</a>
+      <a href="#guia">Guia do manto</a>
+      <a href="#como-comprar">Como comprar</a>
+      <a href="#card-game">Versatte Cards</a>
+    </div>
+
+    <div class="footer__col">
+      <h3>Fale com a gente</h3>
+      <a href="https://ig.me/m/versatte_sports" target="_blank" rel="noopener" data-dm><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-ig"/></svg>Direct · @versatte_sports</a>
+      <a href="https://wa.me/553193168184" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-wa"/></svg>+55 31 9316-8184</a>
+      <a href="mailto:contato@versattesports.com"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-mail"/></svg>contato@versattesports.com</a>
+      <span><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-pin"/></svg>Belo Horizonte · MG</span>
     </div>
   </div>
 
-  <!-- HERO STACK — 3 seções em fluxo normal, canvas fica fixo atrás -->
-  <section id="sobre" data-screen-label="Hero / Sobre" ref="{{ scrollyRef }}" style="position: relative; z-index: 1; scroll-margin-top: 80px;">
-
-    <!-- Hero 1: Vista a sua paixão -->
-    <div style="height: 100vh; display: flex; align-items: center; padding: 80px 7vw 0; box-sizing: border-box; position: relative;">
-      <div data-step="hero" data-side="left" style="max-width: 24ch; pointer-events: none;">
-        <div style="font-weight: 600; font-size: 13px; letter-spacing: .3em; color: #F26522; text-transform: uppercase; margin-bottom: 18px;">Importadas da Tailândia</div>
-        <h1 style="font-family: 'Anton', sans-serif; font-weight: 400; font-size: clamp(52px, 8.5vw, 122px); line-height: .9; letter-spacing: .5px; text-transform: uppercase; color: #0B1E33; margin: 0;">Vista a<br>sua <span style="background: linear-gradient(135deg, #FDB813, #F26522); -webkit-background-clip: text; background-clip: text; color: transparent;">paixão</span></h1>
-        <p style="font-size: clamp(15px, 1.5vw, 18px); line-height: 1.55; color: #4A5560; margin: 22px 0 0; max-width: 30ch;">Camisas de futebol importadas direto da Tailândia. Qualidade 1:1, do torcedor ao jogador.</p>
-      </div>
-      <div id="scrollhint" style="position: absolute; bottom: 26px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 8px; color: #0B1E33; pointer-events: none;">
-        <span style="font-size: 11px; letter-spacing: .28em; text-transform: uppercase; font-weight: 600;">Role para continuar</span>
-        <span style="font-size: 16px;">↓</span>
-      </div>
-    </div>
-
-    <!-- Hero 2: Direto da Tailândia -->
-    <div style="height: 100vh; display: flex; align-items: center; justify-content: flex-end; padding: 0 7vw; box-sizing: border-box; position: relative;">
-      <div data-step="about" data-side="right" style="max-width: 30ch; pointer-events: none;">
-        <div style="font-weight: 600; font-size: 13px; letter-spacing: .3em; color: #F26522; text-transform: uppercase; margin-bottom: 16px;">Sobre a marca</div>
-        <h2 style="font-family: 'Anton', sans-serif; font-weight: 400; font-size: clamp(36px, 5vw, 72px); line-height: .95; text-transform: uppercase; color: #0B1E33; margin: 0;">Direto da<br>Tailândia</h2>
-        <p style="font-size: clamp(15px, 1.4vw, 18px); line-height: 1.6; color: #4A5560; margin: 20px 0 0;">Trazemos as camisas mais desejadas do mundo com o mesmo acabamento dos grandes clubes. Tecido, escudo e numeração — tudo fiel ao original.</p>
-      </div>
-    </div>
-
-    <!-- Hero 3: Cada fio conta -->
-    <div style="height: 100vh; display: flex; align-items: center; padding: 0 7vw; box-sizing: border-box; position: relative;">
-      <div data-step="craft" data-side="left" style="max-width: 26ch; pointer-events: none;">
-        <div style="font-weight: 600; font-size: 13px; letter-spacing: .3em; color: #F26522; text-transform: uppercase; margin-bottom: 16px;">Qualidade 1:1</div>
-        <h2 style="font-family: 'Anton', sans-serif; font-weight: 400; font-size: clamp(36px, 5vw, 72px); line-height: .95; text-transform: uppercase; color: #0B1E33; margin: 0;">Cada fio<br>conta</h2>
-        <p style="font-size: clamp(15px, 1.4vw, 18px); line-height: 1.6; color: #4A5560; margin: 20px 0 0;">Tecido tailandês premium, escudos bordados e numeração perfeita. A versão que os torcedores procuram, sem pagar preço de loja oficial.</p>
-      </div>
-    </div>
-
-  </section>
-
-  <!-- COLEÇÕES / CATEGORIAS -->
-  <section id="categorias" data-screen-label="Coleções" style="position: relative; z-index: 1; background: #FFFFFF; padding: clamp(56px, 8vh, 110px) 0 clamp(16px, 3vh, 36px); scroll-margin-top: 80px;">
-    <div data-reveal style="max-width: 1200px; margin: 0 auto 40px; padding: 0 clamp(18px, 5vw, 56px); box-sizing: border-box; opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease;">
-      <div style="font-weight: 600; font-size: 13px; letter-spacing: .3em; color: #F26522; text-transform: uppercase; margin-bottom: 14px;">Coleções</div>
-      <div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px;">
-        <h2 style="font-family: 'Anton', sans-serif; font-weight: 400; font-size: clamp(38px, 6vw, 82px); line-height: .92; text-transform: uppercase; color: #0B1E33; margin: 0;">Explore por<br>categoria</h2>
-        <p style="font-size: 15px; line-height: 1.5; color: #4A5560; margin: 0; max-width: 32ch;">Da temporada atual aos clássicos retrô — encontre o manto certo pra você.</p>
-      </div>
-    </div>
-
-    <div style="max-width: 1180px; margin: 0 auto; padding: 0 clamp(18px, 5vw, 56px); display: flex; flex-wrap: wrap; justify-content: center; gap: 22px;">
-      <sc-for list="{{ categories }}" as="cat" hint-placeholder-count="5">
-        <a data-reveal href="{{ cat.href }}" target="_blank" rel="noopener" style="opacity: 0; transform: translateY(24px); transition: opacity .6s ease, transform .6s ease, box-shadow .3s ease; position: relative; display: block; flex: 1 1 320px; max-width: 360px; aspect-ratio: 3 / 4; border-radius: 18px; overflow: hidden; text-decoration: none; background: #EDEFF2;" style-hover="box-shadow: 0 22px 46px rgba(11,30,51,.18);">
-          <img src="{{ cat.img }}" alt="{{ cat.name }}" loading="lazy" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: {{ cat.pos }}; display: block; transition: transform .6s cubic-bezier(.2,.7,.2,1);" style-hover="transform: scale(1.07);">
-          <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(8,12,20,.82) 0%, rgba(8,12,20,.28) 42%, rgba(8,12,20,0) 68%);"></div>
-          <div style="position: absolute; left: 0; right: 0; bottom: 0; padding: 22px;">
-            <div style="font-weight: 600; font-size: 11px; letter-spacing: .28em; color: #FDB813; margin-bottom: 8px;">{{ cat.num }}</div>
-            <div style="font-family: 'Anton', sans-serif; font-size: clamp(21px, 2vw, 27px); color: #fff; text-transform: uppercase; line-height: 1.02; letter-spacing: .5px;">{{ cat.name }}</div>
-            <div style="margin-top: 9px; font-size: 12px; font-weight: 600; color: #fff; text-transform: uppercase; letter-spacing: .16em;">Ver camisas <span style="color: #F26522;">→</span></div>
-          </div>
-        </a>
-      </sc-for>
-    </div>
-  </section>
-
-  <!-- CATÁLOGO -->
-  <section id="catalogo" data-screen-label="Catálogo" style="position: relative; z-index: 1; background: #FFFFFF; padding: clamp(64px, 10vh, 130px) clamp(18px, 5vw, 56px) clamp(60px, 8vh, 110px); scroll-margin-top: 80px;">
-    <div data-reveal style="max-width: 1200px; margin: 0 auto 46px; opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease;">
-      <div style="font-weight: 600; font-size: 13px; letter-spacing: .3em; color: #F26522; text-transform: uppercase; margin-bottom: 14px;">Catálogo</div>
-      <div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px;">
-        <h2 style="font-family: 'Anton', sans-serif; font-weight: 400; font-size: clamp(38px, 6vw, 82px); line-height: .92; text-transform: uppercase; color: #0B1E33; margin: 0;">Escolha o<br>seu manto</h2>
-        <p style="font-size: 15px; line-height: 1.5; color: #4A5560; margin: 0; max-width: 34ch;">Toque na camisa e fale com a gente no WhatsApp — sua importada chega pronta pra vestir.</p>
-      </div>
-    </div>
-
-    <div style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 22px;">
-      <sc-for list="{{ products }}" as="p" hint-placeholder-count="8">
-        <a data-reveal href="{{ p.href }}" target="_blank" rel="noopener" style="opacity: 0; transform: translateY(24px); transition: opacity .6s ease, transform .6s ease, border-color .25s ease, box-shadow .25s ease; text-decoration: none; display: flex; flex-direction: column; border: 1px solid #ECECEC; border-radius: 16px; overflow: hidden; background: #FFFFFF;" style-hover="border-color: #F26522; box-shadow: 0 18px 40px rgba(11,30,51,.10); transform: translateY(-6px);">
-          <div style="aspect-ratio: 4 / 5; overflow: hidden; border-bottom: 1px solid #F0F0F0; background: #F4F5F7;">
-            <img src="{{ p.img }}" alt="{{ p.name }}" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .5s cubic-bezier(.2,.7,.2,1);" style-hover="transform: scale(1.05);">
-          </div>
-          <div style="padding: 16px 18px 18px; display: flex; align-items: flex-end; justify-content: space-between; gap: 12px;">
-            <div>
-              <div style="font-family: 'Anton', sans-serif; font-size: 18px; letter-spacing: .3px; color: #0B1E33; text-transform: uppercase; line-height: 1.05;">{{ p.name }}</div>
-              <div style="font-size: 15px; font-weight: 700; color: #123A5C; margin-top: 7px;">{{ p.price }}</div>
-            </div>
-            <span style="font-size: 12.5px; font-weight: 600; color: #F26522; white-space: nowrap;">Falar →</span>
-          </div>
-        </a>
-      </sc-for>
-    </div>
-  </section>
-
-  <!-- CONTATO / FOOTER -->
-  <footer id="contato" data-screen-label="Rodapé" style="position: relative; z-index: 1; background: #FFFFFF; border-top: 1px solid #F0F0F0; padding: clamp(56px, 8vh, 96px) clamp(18px, 5vw, 56px) 40px; scroll-margin-top: 80px;">
-    <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 48px; justify-content: space-between;">
-      <div style="max-width: 34ch;">
-        <div style="display: flex; align-items: baseline; gap: 9px; margin-bottom: 16px;">
-          <span style="font-family: 'Anton', sans-serif; font-size: clamp(34px, 5vw, 54px); letter-spacing: .5px; color: #0B1E33; text-transform: uppercase;">Versatte</span>
-          <span style="font-weight: 600; font-size: 13px; letter-spacing: .32em; color: #F26522; text-transform: uppercase;">Sports</span>
-        </div>
-        <p style="font-size: 15px; line-height: 1.6; color: #4A5560; margin: 0 0 22px;">Camisas de futebol importadas da Tailândia. Qualidade 1:1, atendimento direto — sem intermediário.</p>
-        <a href="https://wa.me/553193168184?text=Olá! Quero comprar uma camisa importada com a Versatte Sports." target="_blank" rel="noopener" style="text-decoration: none; display: inline-flex; align-items: center; gap: 9px; padding: 12px 20px; border-radius: 999px; background: linear-gradient(135deg, #FDB813, #F26522); color: #fff; font-weight: 600; font-size: 14px; box-shadow: 0 10px 26px rgba(242,101,34,.3);">Chamar no WhatsApp</a>
-      </div>
-
-      <div style="display: flex; gap: clamp(40px, 8vw, 96px); flex-wrap: wrap;">
-        <div>
-          <div style="font-size: 11px; letter-spacing: .28em; text-transform: uppercase; color: #98A0AA; font-weight: 600; margin-bottom: 16px;">Contato</div>
-          <div style="display: flex; flex-direction: column; gap: 11px;">
-            <a href="https://wa.me/553193168184" target="_blank" rel="noopener" style="text-decoration: none; color: #0B1E33; font-size: 14.5px; font-weight: 500;">+55 31 9316-8184</a>
-            <a href="mailto:contato@versattesports.com" style="text-decoration: none; color: #0B1E33; font-size: 14.5px; font-weight: 500;">contato@versattesports.com</a>
-            <span style="color: #4A5560; font-size: 14.5px;">Belo Horizonte · MG</span>
-          </div>
-        </div>
-        <div>
-          <div style="font-size: 11px; letter-spacing: .28em; text-transform: uppercase; color: #98A0AA; font-weight: 600; margin-bottom: 16px;">Redes</div>
-          <div style="display: flex; flex-direction: column; gap: 11px;">
-            <a href="#" style="text-decoration: none; color: #0B1E33; font-size: 14.5px; font-weight: 500;">Instagram</a>
-            <a href="#" style="text-decoration: none; color: #0B1E33; font-size: 14.5px; font-weight: 500;">TikTok</a>
-            <a href="#" style="text-decoration: none; color: #0B1E33; font-size: 14.5px; font-weight: 500;">Facebook</a>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div style="max-width: 1200px; margin: 56px auto 0; padding-top: 22px; border-top: 1px solid #F0F0F0; display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; color: #98A0AA; font-size: 12.5px;">
-      <span>© 2026 Versatte Sports. Todos os direitos reservados.</span>
-      <span>Imagens de camisa meramente ilustrativas.</span>
-    </div>
-  </footer>
-
-  <!-- FLOATING WHATSAPP -->
-  <div style="position: fixed; right: clamp(16px, 3vw, 28px); bottom: clamp(16px, 3vw, 28px); z-index: 60;">
-    <span style="position: absolute; inset: 0; border-radius: 999px; background: #F26522; opacity: .5; animation: vs-pulse 2.1s ease-out infinite; z-index: 0;"></span>
-    <a href="https://wa.me/553193168184?text=Olá! Quero comprar uma camisa importada com a Versatte Sports." target="_blank" rel="noopener" style="position: relative; z-index: 1; text-decoration: none; display: inline-flex; align-items: center; gap: 10px; padding: 14px 20px; border-radius: 999px; background: linear-gradient(135deg, #FDB813, #F26522); color: #fff; font-weight: 600; font-size: 15px; box-shadow: 0 14px 34px rgba(242,101,34,.45);">
-      <span style="width: 9px; height: 9px; border-radius: 50%; background: #fff; animation: vs-dot 1.6s ease-in-out infinite;"></span>
-      WhatsApp
-    </a>
+  <div class="wrap footer__bottom">
+    <span>© <span data-year>2026</span> Versatte Sports. Todos os direitos reservados.</span>
+    <span class="credit">
+      Site desenvolvido por
+      <img src="assets/img/beyond-bits-dark.webp" alt="Beyond Bits" width="360" height="153" loading="lazy">
+    </span>
   </div>
+</footer>
 
-</div>
-</x-dc>
-<script type="text/x-dc" data-dc-script>
-class Component extends DCLogic {
-  renderVals() {
-    const wa = '553193168184';
-    const mk = (name) => 'https://wa.me/' + wa + '?text=' + encodeURIComponent('Olá, tenho interesse na camisa ' + name + '.');
-    const products = [
-      { name: 'Camisa do Cruzeiro', price: 'R$ 159,90', img: 'https://loremflickr.com/600/750/cruzeiro,jersey?lock=31' },
-      { name: 'Camisa do Atlético-MG', price: 'R$ 159,90', img: 'https://loremflickr.com/600/750/atletico,mineiro,jersey?lock=32' },
-      { name: 'Camisa do Brasil', price: 'R$ 169,90', img: 'https://loremflickr.com/600/750/brazil,soccer,jersey?lock=33' },
-      { name: 'Camisa do Flamengo', price: 'R$ 159,90', img: 'https://loremflickr.com/600/750/flamengo,jersey?lock=34' },
-      { name: 'Camisa do Barcelona', price: 'R$ 174,90', img: 'https://loremflickr.com/600/750/barcelona,soccer,jersey?lock=35' },
-      { name: 'Camisa do Real Madrid', price: 'R$ 174,90', img: 'https://loremflickr.com/600/750/real,madrid,jersey?lock=36' },
-    ].map((p) => ({ ...p, href: mk(p.name) }));
+<!-- WhatsApp flutuante -->
+<a class="fab" href="https://wa.me/553193168184?text=Ol%C3%A1!%20Vi%20o%20site%20da%20Versatte%20Sports%20e%20quero%20comprar%20uma%20camisa." target="_blank" rel="noopener" aria-label="Falar no WhatsApp">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-wa"/></svg>
+</a>
 
-    const catMsg = (name) => 'https://wa.me/' + wa + '?text=' + encodeURIComponent('Olá! Quero ver as ' + name + '.');
-    const categories = [
-      { name: 'Camisas da Temporada', num: '01', img: 'assets/cat-temporada.jpg', pos: '50% 30%' },
-      { name: 'Camisas Retrô', num: '02', img: 'assets/cat-retro.jpg', pos: '50% 35%' },
-      { name: 'Outros Esportes', num: '03', img: 'assets/cat-outros.jpg', pos: '50% 40%' },
-      { name: 'Camisas Femininas', num: '04', img: 'assets/cat-feminina.jpg', pos: '50% 25%' },
-      { name: 'Camisas para Crianças', num: '05', img: 'https://loremflickr.com/1600/900/kids,soccer,jersey?lock=12', pos: '50% 40%' },
-    ].map(c => ({ ...c, href: catMsg(c.name) }));
+<!-- ============ PRÉVIA DO POST (no formato do Instagram) ============ -->
+<dialog class="ig" data-viewer aria-labelledby="ig-title">
+  <button class="ig__close" type="button" data-viewer-close aria-label="Fechar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+  <div class="ig__box">
+    <header class="ig__head">
+      <img class="ig__avatar" src="assets/img/logo-vs.webp" alt="" width="40" height="48">
+      <div class="ig__who">
+        <a href="https://www.instagram.com/versatte_sports/" target="_blank" rel="noopener"><b>versatte_sports</b></a>
+        <span data-ig-name></span>
+      </div>
+      <a class="ig__open" href="#" target="_blank" rel="noopener" data-ig-link aria-label="Abrir post no Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-ig"/></svg></a>
+    </header>
 
-    return {
-      products,
-      categories,
-      rootRef: (el) => { this.rootEl = el; },
-      scrollyRef: (el) => { this.scrollyEl = el; },
-      canvasRef: (el) => { this.canvasEl = el; },
-      loaderRef: (el) => { this.loaderEl = el; },
-    };
-  }
+    <div class="ig__media" data-ig-media>
+      <div class="ig__track" data-ig-track></div>
+      <button class="ig__arrow ig__arrow--prev" type="button" aria-label="Foto anterior" data-ig-prev><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 6 8.5 12l6 6"/></svg></button>
+      <button class="ig__arrow ig__arrow--next" type="button" aria-label="Próxima foto" data-ig-next><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.5 6l6 6-6 6"/></svg></button>
+      <div class="ig__dots" data-ig-dots></div>
+    </div>
 
-  componentDidMount() {
-    this.cur = 0;
-    this.target = 0;
-    this.rotCur = 0;
-    this.rotTarget = 0;
+    <div class="ig__body">
+      <div class="ig__scroll">
+        <p class="ig__caption"><img class="ig__avatar ig__avatar--sm" src="assets/img/logo-vs.webp" alt="" width="40" height="48"><b>versatte_sports</b> <span data-ig-caption></span></p>
+        <time class="ig__date" data-ig-date></time>
+        <div class="ig__comments" data-ig-comments></div>
+      </div>
+      <div class="ig__foot">
+        <div class="ig__icons">
+          <a href="#" target="_blank" rel="noopener" data-ig-link aria-label="Curtir no Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-heart"/></svg></a>
+          <a href="#" target="_blank" rel="noopener" data-ig-link aria-label="Comentar no Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-chat"/></svg></a>
+          <button type="button" data-ig-share aria-label="Compartilhar"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-share"/></svg></button>
+          <span class="ig__likes" data-ig-likes></span>
+        </div>
+        <div class="ig__buy">
+          <button class="btn btn--solid btn--sm" type="button" data-order-open>Quero essa camisa</button>
+          <a class="round-btn round-btn--wa" href="#" target="_blank" rel="noopener" data-ig-wa aria-label="Pedir pelo WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-wa"/></svg></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</dialog>
 
-    this.initThree();
+<!-- ============ QUERO ESSA CAMISA (monta a mensagem) ============ -->
+<dialog class="order" data-order aria-labelledby="order-title">
+  <form method="dialog" class="order__box" data-order-form>
+    <button class="order__close" type="submit" value="cancel" aria-label="Fechar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    <div class="order__product">
+      <img data-order-thumb alt="" width="72" height="90">
+      <div>
+        <p class="order__kicker">Quero essa camisa</p>
+        <h2 id="order-title" class="order__name" data-order-name></h2>
+      </div>
+    </div>
 
-    // stable frame wrapper calls the tick() METHOD, so hot-reloads apply live
-    const frame = () => { try { this.tick(); } catch (e) {} this._raf = requestAnimationFrame(frame); };
-    this._raf = requestAnimationFrame(frame);
+    <fieldset class="chips" data-chips="modelo">
+      <legend>Modelo</legend>
+      <label><input type="radio" name="modelo" value="Torcedor"><span>Torcedor</span></label>
+      <label><input type="radio" name="modelo" value="Jogador"><span>Jogador</span></label>
+      <label><input type="radio" name="modelo" value="Retrô"><span>Retrô</span></label>
+    </fieldset>
+    <fieldset class="chips" data-chips="tamanho">
+      <legend>Tamanho</legend>
+      <label><input type="radio" name="tamanho" value="P"><span>P</span></label>
+      <label><input type="radio" name="tamanho" value="M"><span>M</span></label>
+      <label><input type="radio" name="tamanho" value="G"><span>G</span></label>
+      <label><input type="radio" name="tamanho" value="GG"><span>GG</span></label>
+      <label><input type="radio" name="tamanho" value="XGG"><span>XGG</span></label>
+    </fieldset>
 
-    // reveal on scroll
-    const rev = this.rootEl ? [...this.rootEl.querySelectorAll('[data-reveal]')] : [];
-    if ('IntersectionObserver' in window) {
-      const io = new IntersectionObserver((entries) => {
-        entries.forEach(e => {
-          if (e.isIntersecting) {
-            e.target.style.opacity = '1';
-            e.target.style.transform = 'none';
-            io.unobserve(e.target);
-          }
-        });
-      }, { threshold: 0.12 });
-      rev.forEach(el => io.observe(el));
-    } else {
-      rev.forEach(el => { el.style.opacity = '1'; el.style.transform = 'none'; });
-    }
+    <label class="order__msg">
+      <span>Sua mensagem</span>
+      <textarea rows="3" data-order-msg></textarea>
+    </label>
 
-    this._resize = () => this.applyResponsive();
-    window.addEventListener('resize', this._resize);
-    this.applyResponsive();
-  }
+    <div class="order__send">
+      <a class="btn btn--wa" href="#" target="_blank" rel="noopener" data-order-wa><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-wa"/></svg> Enviar no WhatsApp</a>
+      <a class="btn btn--ink" href="https://ig.me/m/versatte_sports" target="_blank" rel="noopener" data-order-dm><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-send"/></svg> Enviar no Direct</a>
+    </div>
+    <p class="order__note">No WhatsApp a mensagem já vai escrita. No Direct a gente copia a mensagem para você só colar.</p>
+  </form>
+</dialog>
 
-  tick() {
-    const root = this.rootEl;
-    const scrolly = this.scrollyEl;
-    if (!scrolly || !scrolly.isConnected || !root) return;
-    const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
-    const rect = scrolly.getBoundingClientRect();
-    const total = rect.height - window.innerHeight;
-    const p = total > 0 ? clamp(-rect.top / total, 0, 1) : 0;
-    // 1.25 full turns enquanto o usuário rola pelas 3 seções do hero
-    this.rotTarget = p * Math.PI * 2.5;
-    this.rotCur += (this.rotTarget - this.rotCur) * 0.09;
-    if (this.model) this.model.rotation.y = this.rotCur;
-    if (this.renderer && this.scene && this.camera) {
-      const t = performance.now() * 0.001;
-      if (this.model) this.model.position.y = this.modelBaseY + Math.sin(t * 1.2) * 0.015;
-      this.renderer.render(this.scene, this.camera);
-    }
-    // esconde o canvas fixo quando o usuário passa da última hero
-    // (a partir daí as seções brancas cobrem, mas ocultar economiza GPU)
-    const fixed = root.querySelector('#fixed3d');
-    if (fixed) {
-      const visible = rect.bottom > window.innerHeight * 0.15;
-      const target = visible ? '1' : '0';
-      if (fixed._op !== target) { fixed.style.opacity = target; fixed._op = target; }
-    }
-    const hint = root.querySelector('#scrollhint');
-    if (hint) hint.style.opacity = clamp(1 - p / 0.05, 0, 1);
+<!-- ============ DIRECT: mensagem copiada, é só colar ============
+     O Instagram não permite que sites preencham o campo do Direct,
+     então a mensagem é copiada no clique e este passo explica como colar. -->
+<dialog class="order dmtip" data-dmtip aria-labelledby="dmtip-title">
+  <div class="order__box">
+    <button class="order__close" type="button" data-dmtip-close aria-label="Fechar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    <div class="dmtip__check" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></div>
+    <h2 id="dmtip-title" class="dmtip__title" data-dmtip-title>Mensagem copiada!</h2>
+    <p class="dmtip__text" data-dmtip-text></p>
+    <p class="dmtip__msg" data-dmtip-msg></p>
+    <div class="order__send">
+      <a class="btn btn--ink" href="https://ig.me/m/versatte_sports" target="_blank" rel="noopener" data-dmtip-open><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-send"/></svg> Abrir o Direct</a>
+      <a class="btn btn--wa" href="#" target="_blank" rel="noopener" data-dmtip-wa><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-wa"/></svg> WhatsApp já escrito</a>
+    </div>
+  </div>
+</dialog>
 
-    // reveal-on-scroll
-    const vh = window.innerHeight;
-    root.querySelectorAll('[data-reveal]').forEach((el) => {
-      if (el._shown) return;
-      const r = el.getBoundingClientRect();
-      if (r.top < vh * 0.9 && r.bottom > 0) {
-        el.style.opacity = '1';
-        el.style.transform = 'none';
-        el._shown = true;
-      }
-    });
-  }
+<!-- Aviso de mensagem copiada -->
+<div class="toast" role="status" aria-live="polite" data-toast></div>
 
-  applyResponsive() {
-    const root = this.rootEl;
-    if (!root) return;
-    const m = window.innerWidth < 760;
-    const links = root.querySelector('#navlinks');
-    if (links) links.style.display = m ? 'none' : 'flex';
+<!-- Ícones -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-ig" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="17.4" cy="6.6" r="1.2" fill="currentColor"/></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24"><path d="M21 3 10.2 13.8M21 3l-6.6 18-4.2-7.2L3 9.6 21 3Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/></symbol>
+  <symbol id="i-wa" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2.2a9.7 9.7 0 0 0-8.4 14.6L2.2 21.8l5.1-1.3A9.7 9.7 0 1 0 12 2.2Zm0 17.7c-1.5 0-3-.4-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 19.9Zm4.4-6c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.5.1l-.8 1c-.1.2-.3.2-.5.1a6.6 6.6 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.5-.4h-.5a.9.9 0 0 0-.7.3 2.8 2.8 0 0 0-.9 2.1c0 1.2.9 2.4 1 2.6.1.2 1.7 2.7 4.2 3.8 1.6.7 2.2.7 3 .6.5-.1 1.4-.6 1.6-1.1.2-.6.2-1 .1-1.1l-.4-.2Z"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20.3s-7.8-4.6-7.8-10.4A4.4 4.4 0 0 1 12 7.3a4.4 4.4 0 0 1 7.8 2.6c0 5.8-7.8 10.4-7.8 10.4Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M20.6 12a8.6 8.6 0 0 1-12.4 7.7L3.6 21l1.3-4.4A8.6 8.6 0 1 1 20.6 12Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+  <symbol id="i-share" viewBox="0 0 24 24"><path d="M12 3v12M7 8l5-5 5 5M5 14v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-stack" viewBox="0 0 24 24"><rect x="7" y="3" width="14" height="14" rx="3" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M17 21H6a3 3 0 0 1-3-3V7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m4 7 8 6 8-6" fill="none" stroke="currentColor" stroke-width="1.8"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-6.5-6-6.5-11a6.5 6.5 0 0 1 13 0c0 5-6.5 11-6.5 11Z" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="10" r="2.3" fill="currentColor"/></symbol>
+</svg>
 
-    // No mobile, os textos do hero vão pro topo (canvas fixo cobre o fundo).
-    // No desktop, cada hero mantém seu lado (left/right) definido no HTML.
-    root.querySelectorAll('#sobre [data-step]').forEach(el => {
-      if (m) {
-        el.style.background = 'rgba(255,255,255,0.82)';
-        el.style.backdropFilter = 'blur(6px)';
-        el.style.padding = '18px';
-        el.style.borderRadius = '16px';
-        el.style.boxShadow = '0 12px 30px rgba(11,30,51,.08)';
-        el.style.maxWidth = '86vw';
-      } else {
-        el.style.background = 'transparent';
-        el.style.backdropFilter = 'none';
-        el.style.padding = '0';
-        el.style.borderRadius = '0';
-        el.style.boxShadow = 'none';
-      }
-    });
-  }
-
-  async initThree() {
-    const canvas = this.canvasEl;
-    if (!canvas) return;
-    // Load three.js + GLTFLoader as ES modules from CDN
-    let THREE, GLTFLoader;
-    try {
-      THREE = await import('https://esm.sh/three@0.160.0');
-      const mod = await import('https://esm.sh/three@0.160.0/examples/jsm/loaders/GLTFLoader.js');
-      GLTFLoader = mod.GLTFLoader;
-    } catch (e) { console.error('three load failed', e); return; }
-    this.THREE = THREE;
-
-    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
-    renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
-    renderer.outputColorSpace = THREE.SRGBColorSpace;
-    renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.05;
-    this.renderer = renderer;
-
-    const scene = new THREE.Scene();
-    this.scene = scene;
-
-    const cam = new THREE.PerspectiveCamera(32, 1, 0.05, 50);
-    cam.position.set(0, 0.05, 2.1);
-    this.camera = cam;
-
-    // studio lighting (white bg, so keep it soft)
-    scene.add(new THREE.HemisphereLight(0xffffff, 0xdfe4ea, 0.9));
-    const key = new THREE.DirectionalLight(0xffffff, 1.4);
-    key.position.set(2.2, 3.0, 2.5);
-    scene.add(key);
-    const fill = new THREE.DirectionalLight(0xffe0b8, 0.55);
-    fill.position.set(-2.5, 1.0, 1.5);
-    scene.add(fill);
-    const rim = new THREE.DirectionalLight(0xffffff, 0.7);
-    rim.position.set(0, 1.5, -3);
-    scene.add(rim);
-
-    const resize = () => {
-      const r = canvas.getBoundingClientRect();
-      renderer.setSize(r.width, r.height, false);
-      cam.aspect = r.width / Math.max(1, r.height);
-      cam.updateProjectionMatrix();
-    };
-    resize();
-    this._resizeThree = resize;
-    window.addEventListener('resize', resize);
-
-    // load gltf
-    const loader = new GLTFLoader();
-    loader.load('assets/model/scene.gltf', (gltf) => {
-      const obj = gltf.scene;
-      // frame model — foca no torso (cintura pra cima)
-      const box = new THREE.Box3().setFromObject(obj);
-      const size = box.getSize(new THREE.Vector3());
-      const center = box.getCenter(new THREE.Vector3());
-      const maxDim = Math.max(size.x, size.y, size.z) || 1;
-      const scale = 2.4 / maxDim;                              // zoom maior (era 1.35)
-      obj.scale.setScalar(scale);
-      obj.position.sub(center.multiplyScalar(scale));
-      obj.position.y -= size.y * scale * 0.32;                 // desloca pra baixo p/ enquadrar torso
-      this.modelBaseY = obj.position.y;
-      // corrige materiais: o gltf vem com alphaMode BLEND + doubleSided,
-      // o que causa translucidez indevida (vê o verso do outro lado).
-      obj.traverse((n) => {
-        if (n.isMesh && n.material) {
-          const mats = Array.isArray(n.material) ? n.material : [n.material];
-          mats.forEach((m) => {
-            m.transparent = false;
-            m.alphaTest = 0;
-            m.depthWrite = true;
-            m.side = THREE.FrontSide;
-            m.needsUpdate = true;
-          });
-        }
-      });
-      scene.add(obj);
-      this.model = obj;
-      if (this.loaderEl) this.loaderEl.style.display = 'none';
-    }, undefined, (err) => {
-      console.error('gltf load failed', err);
-      if (this.loaderEl) {
-        this.loaderEl.innerHTML = '<div style="font: 500 13px Archivo,sans-serif; color:#4A5560; text-align:center; padding: 20px; max-width: 32ch;">Não foi possível carregar o modelo 3D. Verifique se <code>assets/model/scene.bin</code> está no projeto.</div>';
-      }
-    });
-  }
-
-  componentWillUnmount() {
-    if (this._raf) cancelAnimationFrame(this._raf);
-    if (this._resize) window.removeEventListener('resize', this._resize);
-    if (this._resizeThree) window.removeEventListener('resize', this._resizeThree);
-    if (this.renderer) { try { this.renderer.dispose(); } catch (e) {} }
-  }
-}
-</script>
 </body>
 </html>
