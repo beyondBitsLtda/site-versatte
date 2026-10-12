@@ -243,6 +243,13 @@ button { font: inherit; color: inherit; }
   .slide__media img, .slide--v1 .slide__media img, .slide--promo .slide__media img { object-position: 50% 50%; }
 }
 
+/* telas largas em pé (tablet): sem vazio enorme em cima; o slide do jogo fica empilhado com a carta grande */
+@media (min-width: 700px) and (orientation: portrait) {
+  .slide { min-height: min(100svh, 125vw); }
+  .hero .cards-teaser { flex-direction: column-reverse; align-items: flex-start; justify-content: flex-end; gap: 34px; }
+  .hero .cards-teaser__card { --cw: min(42vw, 340px); align-self: center; margin: 0; }
+}
+
 /* celulares baixos (ex.: iPhone SE): tudo do slide cabe na primeira tela */
 @media (max-width: 699px) and (max-height: 760px) {
   .slide__content { padding-top: calc(var(--nav-h) + 10px); padding-bottom: 84px; }
@@ -601,13 +608,13 @@ dialog { color: var(--ink); }
 .ig__buy { display: flex; gap: 10px; }
 .ig__buy .btn { flex: 1; }
 
-@media (min-width: 960px) {
+@media (min-width: 960px) and (orientation: landscape) {
   .ig { display: none; }
   .ig[open] { display: grid; place-items: center; padding: 24px 80px; }
   .ig__close { top: 20px; right: 22px; background: rgba(255,255,255,.12); color: #fff; }
   .ig__close:hover { background: rgba(255,255,255,.22); }
   .ig__box {
-    --h: min(calc(100vh - 48px), 880px);
+    --h: min(calc(100vh - 48px), 880px, calc((100vw - 160px - 420px) / .8)); /* nunca passa da largura da tela */
     height: var(--h); width: auto; overflow: hidden; border-radius: var(--r-md);
     display: grid; grid-template-columns: calc(var(--h) * .8) 420px; grid-template-rows: auto 1fr;
     grid-template-areas: "media head" "media body";
@@ -623,6 +630,12 @@ dialog { color: var(--ink); }
   .ig__caption b { grid-column: 2; }
   .ig__date, .ig__comments { margin-left: 50px; }
   .ig__foot { position: static; padding: 8px 16px 16px; background: var(--surface); }
+}
+/* tablet em pé: a prévia vira uma coluna centralizada, como no app */
+@media (min-width: 700px) and (orientation: portrait) {
+  .ig[open] { display: grid; place-items: center; padding: 32px; }
+  .ig__box { width: min(560px, 100%); height: auto; max-height: calc(100vh - 64px); border-radius: var(--r-md); box-shadow: 0 60px 120px -40px rgba(0,0,0,.7); }
+  .ig__close { top: 18px; right: 18px; background: rgba(255,255,255,.14); color: #fff; }
 }
 body.modal-open { overflow: hidden; }
 
