@@ -1,0 +1,2831 @@
+{
+  "id": "d5d5d8e1890870a5eda433b7",
+  "name": "Versatte Sports · Site e Loja Online",
+  "desc": "Projeto do site da Versatte Sports (Beyond Bits). Fase 1 concluída: vitrine do Instagram publicada. Próximos passos: domínio próprio e loja online com Pix, cartão, carrinho, cupons e login de cliente, com segurança e LGPD.",
+  "closed": false,
+  "prefs": {
+    "background": "orange",
+    "backgroundColor": "#EA5B0C"
+  },
+  "labels": [
+    {
+      "id": "49e8ad5bae47cb67acf26ecc",
+      "name": "Frontend",
+      "color": "blue",
+      "idBoard": "d5d5d8e1890870a5eda433b7"
+    },
+    {
+      "id": "fec43971b1d636e01cf279c1",
+      "name": "Backend",
+      "color": "purple",
+      "idBoard": "d5d5d8e1890870a5eda433b7"
+    },
+    {
+      "id": "0fc0e9aa2987478f31838344",
+      "name": "Segurança",
+      "color": "red",
+      "idBoard": "d5d5d8e1890870a5eda433b7"
+    },
+    {
+      "id": "5ed1c1293658d3f661a0676c",
+      "name": "Pagamentos",
+      "color": "green",
+      "idBoard": "d5d5d8e1890870a5eda433b7"
+    },
+    {
+      "id": "4ffd57ca0ab56b3fb2afb5c6",
+      "name": "Infra / Domínio",
+      "color": "sky",
+      "idBoard": "d5d5d8e1890870a5eda433b7"
+    },
+    {
+      "id": "bef70efcef8f89ab33bffa10",
+      "name": "Design / Conteúdo",
+      "color": "pink",
+      "idBoard": "d5d5d8e1890870a5eda433b7"
+    },
+    {
+      "id": "08e4d633a1fc40c68d6dd3a7",
+      "name": "Decisão da Versatte",
+      "color": "yellow",
+      "idBoard": "d5d5d8e1890870a5eda433b7"
+    },
+    {
+      "id": "ce5a30b87da495274349bc3b",
+      "name": "LGPD / Jurídico",
+      "color": "orange",
+      "idBoard": "d5d5d8e1890870a5eda433b7"
+    },
+    {
+      "id": "532d4e3aea481e1e9a485fd5",
+      "name": "Documentação",
+      "color": "black",
+      "idBoard": "d5d5d8e1890870a5eda433b7"
+    }
+  ],
+  "lists": [
+    {
+      "id": "620282a3155f7ceb52f28e8d",
+      "name": "Fase 1 · Vitrine do Instagram ✔ concluída",
+      "closed": false,
+      "pos": 16384,
+      "idBoard": "d5d5d8e1890870a5eda433b7"
+    },
+    {
+      "id": "44dd86fbad0090700db68737",
+      "name": "Fase 2 · Domínio próprio",
+      "closed": false,
+      "pos": 32768,
+      "idBoard": "d5d5d8e1890870a5eda433b7"
+    },
+    {
+      "id": "808e525e9282510d4c1fc63a",
+      "name": "Fase 3 · Decisões e arquitetura da loja",
+      "closed": false,
+      "pos": 49152,
+      "idBoard": "d5d5d8e1890870a5eda433b7"
+    },
+    {
+      "id": "82f45dd05b664bf7aff60814",
+      "name": "Fase 4 · Fundação: backend, banco e segurança base",
+      "closed": false,
+      "pos": 65536,
+      "idBoard": "d5d5d8e1890870a5eda433b7"
+    },
+    {
+      "id": "6cedae20749728ed5fa312d7",
+      "name": "Fase 5 · Catálogo e carrinho",
+      "closed": false,
+      "pos": 81920,
+      "idBoard": "d5d5d8e1890870a5eda433b7"
+    },
+    {
+      "id": "f6923322581315fb8a596b86",
+      "name": "Fase 6 · Contas de cliente",
+      "closed": false,
+      "pos": 98304,
+      "idBoard": "d5d5d8e1890870a5eda433b7"
+    },
+    {
+      "id": "12c998e5003ecbdcbbb30bce",
+      "name": "Fase 7 · Checkout e pagamentos (Pix e cartão)",
+      "closed": false,
+      "pos": 114688,
+      "idBoard": "d5d5d8e1890870a5eda433b7"
+    },
+    {
+      "id": "d22810e481b9409e8d1f3815",
+      "name": "Fase 8 · Cupons e promoções",
+      "closed": false,
+      "pos": 131072,
+      "idBoard": "d5d5d8e1890870a5eda433b7"
+    },
+    {
+      "id": "77d6a876912ff9fed8e36690",
+      "name": "Fase 9 · Segurança, LGPD e testes",
+      "closed": false,
+      "pos": 147456,
+      "idBoard": "d5d5d8e1890870a5eda433b7"
+    },
+    {
+      "id": "5a0e17cea818dcec7412344f",
+      "name": "Fase 10 · Lançamento",
+      "closed": false,
+      "pos": 163840,
+      "idBoard": "d5d5d8e1890870a5eda433b7"
+    },
+    {
+      "id": "da803ac5bbacf2902cff1e79",
+      "name": "Backlog · Ideias futuras",
+      "closed": false,
+      "pos": 180224,
+      "idBoard": "d5d5d8e1890870a5eda433b7"
+    }
+  ],
+  "cards": [
+    {
+      "id": "0fae6f7aa5162de9444e089c",
+      "name": "Reformulação da vitrine: conceito e estrutura",
+      "desc": "Objetivo: transformar o site numa vitrine do Instagram da Versatte, sem compra direta. As camisas anunciadas nos posts aparecem no site e a venda acontece pelo Direct ou pelo WhatsApp.\n\nResultado: site estático (HTML + CSS + JS puro), mobile first, publicado no GitHub Pages.",
+      "closed": false,
+      "idList": "620282a3155f7ceb52f28e8d",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "pos": 16384,
+      "idLabels": [
+        "49e8ad5bae47cb67acf26ecc",
+        "bef70efcef8f89ab33bffa10"
+      ],
+      "idMembers": [],
+      "start": "2026-10-12T12:00:00.000Z",
+      "due": "2026-10-12T21:00:00.000Z",
+      "dueComplete": true,
+      "cover": {
+        "color": "green"
+      },
+      "attachments": []
+    },
+    {
+      "id": "7b5717afc6c372c8d94b11cc",
+      "name": "Identidade visual do site",
+      "desc": "Linguagem visual própria, fugindo do visual genérico.\n\nFontes: Big Shoulders Display (títulos, letreiro de estádio), Mr Dafoe (pincelada, conversa com o VS da logo) e Figtree (texto). Laranja da marca #EA5B0C.",
+      "closed": false,
+      "idList": "620282a3155f7ceb52f28e8d",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "pos": 32768,
+      "idLabels": [
+        "bef70efcef8f89ab33bffa10",
+        "49e8ad5bae47cb67acf26ecc"
+      ],
+      "idMembers": [],
+      "start": "2026-10-12T12:00:00.000Z",
+      "due": "2026-10-12T21:00:00.000Z",
+      "dueComplete": true,
+      "cover": {
+        "color": "green"
+      },
+      "attachments": []
+    },
+    {
+      "id": "86e3fe7730509cfa840b4712",
+      "name": "Hero com slider de boas-vindas e campanhas",
+      "desc": "Slider do topo com indicadores em pílula, contador e setas de vidro, swipe no celular e pausa automática.",
+      "closed": false,
+      "idList": "620282a3155f7ceb52f28e8d",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "pos": 49152,
+      "idLabels": [
+        "49e8ad5bae47cb67acf26ecc"
+      ],
+      "idMembers": [],
+      "start": "2026-10-12T12:00:00.000Z",
+      "due": "2026-10-12T21:00:00.000Z",
+      "dueComplete": true,
+      "cover": {
+        "color": "green"
+      },
+      "attachments": []
+    },
+    {
+      "id": "17ecbfac04ae12cac87390c8",
+      "name": "Galeria de camisas a partir dos posts do Instagram",
+      "desc": "Cards grandes e uniformes montados a partir de js/posts.js.\n\nFerramenta tools/instagram.mjs: importa um post pelo link, baixa todas as fotos do carrossel na resolução original (1440/1080 px) e grava legenda, curtidas, comentários e data.",
+      "closed": false,
+      "idList": "620282a3155f7ceb52f28e8d",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "pos": 65536,
+      "idLabels": [
+        "49e8ad5bae47cb67acf26ecc",
+        "fec43971b1d636e01cf279c1"
+      ],
+      "idMembers": [],
+      "start": "2026-10-12T12:00:00.000Z",
+      "due": "2026-10-12T21:00:00.000Z",
+      "dueComplete": true,
+      "cover": {
+        "color": "green"
+      },
+      "attachments": []
+    },
+    {
+      "id": "154cea04921db62c79db9c2d",
+      "name": "Fluxo de pedido pelo Direct e pelo WhatsApp",
+      "desc": "Janela \"Quero essa camisa\": escolha de modelo (Torcedor, Jogador, Retrô, Feminina) e tamanho (P a 4XL), com mensagem montada automaticamente.\n\nO Instagram não permite pré-preencher o Direct: a mensagem é copiada no clique (de forma síncrona) e o site mostra o passo \"Mensagem copiada, é só colar\". No WhatsApp a mensagem já vai escrita.",
+      "closed": false,
+      "idList": "620282a3155f7ceb52f28e8d",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "pos": 81920,
+      "idLabels": [
+        "49e8ad5bae47cb67acf26ecc"
+      ],
+      "idMembers": [],
+      "start": "2026-10-12T12:00:00.000Z",
+      "due": "2026-10-12T21:00:00.000Z",
+      "dueComplete": true,
+      "cover": {
+        "color": "green"
+      },
+      "attachments": []
+    },
+    {
+      "id": "2c193ef2263b33e6854c95ff",
+      "name": "Seção Guia do manto (Torcedor x Jogador)",
+      "desc": "Comparação das versões com fotos de detalhe recortadas da arte original (6 painéis).",
+      "closed": false,
+      "idList": "620282a3155f7ceb52f28e8d",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "pos": 98304,
+      "idLabels": [
+        "49e8ad5bae47cb67acf26ecc",
+        "bef70efcef8f89ab33bffa10"
+      ],
+      "idMembers": [],
+      "start": "2026-10-12T12:00:00.000Z",
+      "due": "2026-10-12T21:00:00.000Z",
+      "dueComplete": true,
+      "cover": {
+        "color": "green"
+      },
+      "attachments": []
+    },
+    {
+      "id": "ea1c981f574fd013e1424f0d",
+      "name": "Seção Tabela de medidas",
+      "desc": "Torcedor P ao 4XL (162–200 cm), Jogador P ao 3XL (162–195 cm), Feminina P ao GG (150–175 cm).",
+      "closed": false,
+      "idList": "620282a3155f7ceb52f28e8d",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "pos": 114688,
+      "idLabels": [
+        "49e8ad5bae47cb67acf26ecc",
+        "bef70efcef8f89ab33bffa10"
+      ],
+      "idMembers": [],
+      "start": "2026-10-12T12:00:00.000Z",
+      "due": "2026-10-12T21:00:00.000Z",
+      "dueComplete": true,
+      "cover": {
+        "color": "green"
+      },
+      "attachments": []
+    },
+    {
+      "id": "4c469b1e056806c4b1760573",
+      "name": "Seção Versatte Cards (em breve)",
+      "desc": "Faixa fina com as cartas do jogo escapando para as seções vizinhas. Cartas com efeito 3D, holográfico e virada ao toque, portadas do repositório Versatte_card_game.",
+      "closed": false,
+      "idList": "620282a3155f7ceb52f28e8d",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "pos": 131072,
+      "idLabels": [
+        "49e8ad5bae47cb67acf26ecc",
+        "bef70efcef8f89ab33bffa10"
+      ],
+      "idMembers": [],
+      "start": "2026-10-12T12:00:00.000Z",
+      "due": "2026-10-12T21:00:00.000Z",
+      "dueComplete": true,
+      "cover": {
+        "color": "green"
+      },
+      "attachments": []
+    },
+    {
+      "id": "88ef69e2ca2e235b5b68b583",
+      "name": "Responsivo e correções do mobile",
+      "desc": "Correções após testes em aparelho real.",
+      "closed": false,
+      "idList": "620282a3155f7ceb52f28e8d",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "pos": 147456,
+      "idLabels": [
+        "49e8ad5bae47cb67acf26ecc"
+      ],
+      "idMembers": [],
+      "start": "2026-10-12T12:00:00.000Z",
+      "due": "2026-10-13T09:00:00.000Z",
+      "dueComplete": true,
+      "cover": {
+        "color": "green"
+      },
+      "attachments": []
+    },
+    {
+      "id": "65b25c88e3b2dd18fff50ec9",
+      "name": "Otimização de imagens e desempenho",
+      "desc": "Artes originais (2–20 MB) convertidas para WebP (35–240 KB), carregamento sob demanda fora da primeira tela.",
+      "closed": false,
+      "idList": "620282a3155f7ceb52f28e8d",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "pos": 163840,
+      "idLabels": [
+        "49e8ad5bae47cb67acf26ecc"
+      ],
+      "idMembers": [],
+      "start": "2026-10-12T12:00:00.000Z",
+      "due": "2026-10-12T21:00:00.000Z",
+      "dueComplete": true,
+      "cover": {
+        "color": "green"
+      },
+      "attachments": []
+    },
+    {
+      "id": "e7368a1ce7b429cc1da69889",
+      "name": "Documentação do projeto (PROJETO.txt)",
+      "desc": "Explica estrutura, como atualizar camisas, campanhas, imagens, tabela de medidas, contatos, visual e os cuidados do mobile.",
+      "closed": false,
+      "idList": "620282a3155f7ceb52f28e8d",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "pos": 180224,
+      "idLabels": [
+        "532d4e3aea481e1e9a485fd5"
+      ],
+      "idMembers": [],
+      "start": "2026-10-12T12:00:00.000Z",
+      "due": "2026-10-13T09:00:00.000Z",
+      "dueComplete": true,
+      "cover": {
+        "color": "green"
+      },
+      "attachments": []
+    },
+    {
+      "id": "09fcb7bb119ce994d86200cc",
+      "name": "Publicação no GitHub Pages",
+      "desc": "Site publicado em https://beyondbitsltda.github.io/site-versatte/",
+      "closed": false,
+      "idList": "620282a3155f7ceb52f28e8d",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "pos": 196608,
+      "idLabels": [
+        "4ffd57ca0ab56b3fb2afb5c6"
+      ],
+      "idMembers": [],
+      "start": "2026-10-12T12:00:00.000Z",
+      "due": "2026-10-13T09:00:00.000Z",
+      "dueComplete": true,
+      "cover": {
+        "color": "green"
+      },
+      "attachments": []
+    },
+    {
+      "id": "6237a4da58dcec50fff36f91",
+      "name": "Definir e registrar o domínio da Versatte",
+      "desc": "Hoje o site está em beyondbitsltda.github.io. O e-mail do site usa versattesports.com, então primeiro é preciso confirmar se esse domínio já é da Versatte.\n\nRecomendação: ter o .com.br (registro.br) e, se possível, o .com, apontando um para o outro.\n\nPronto quando: domínio registrado em nome (CPF/CNPJ) da Versatte, com acesso guardado em local seguro.",
+      "closed": false,
+      "idList": "44dd86fbad0090700db68737",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "pos": 16384,
+      "idLabels": [
+        "4ffd57ca0ab56b3fb2afb5c6",
+        "08e4d633a1fc40c68d6dd3a7"
+      ],
+      "idMembers": [],
+      "start": null,
+      "due": null,
+      "dueComplete": false,
+      "cover": {
+        "color": null
+      },
+      "attachments": []
+    },
+    {
+      "id": "b47ce5447a3b08b0e5f5f55b",
+      "name": "Apontar o domínio para o site (DNS + HTTPS)",
+      "desc": "Configuração para o GitHub Pages (fase atual). Quando a loja for para o novo servidor (Fase 10), o DNS muda.\n\nSegurança: verificar o domínio na organização do GitHub antes de apontar, para evitar sequestro de subdomínio.",
+      "closed": false,
+      "idList": "44dd86fbad0090700db68737",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "pos": 32768,
+      "idLabels": [
+        "4ffd57ca0ab56b3fb2afb5c6",
+        "0fc0e9aa2987478f31838344"
+      ],
+      "idMembers": [],
+      "start": null,
+      "due": null,
+      "dueComplete": false,
+      "cover": {
+        "color": null
+      },
+      "attachments": []
+    },
+    {
+      "id": "24bb5ff680fa4b8e86a4687a",
+      "name": "E-mail profissional no domínio",
+      "desc": "contato@ e pedidos@ no domínio, e base para os e-mails automáticos da loja (confirmação de pedido etc.).",
+      "closed": false,
+      "idList": "44dd86fbad0090700db68737",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "pos": 49152,
+      "idLabels": [
+        "4ffd57ca0ab56b3fb2afb5c6",
+        "08e4d633a1fc40c68d6dd3a7"
+      ],
+      "idMembers": [],
+      "start": null,
+      "due": null,
+      "dueComplete": false,
+      "cover": {
+        "color": null
+      },
+      "attachments": []
+    },
+    {
+      "id": "e6455024bc6aac7173948bf7",
+      "name": "SEO e compartilhamento com o domínio novo",
+      "desc": "Ajustes que dependem do endereço definitivo.",
+      "closed": false,
+      "idList": "44dd86fbad0090700db68737",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "pos": 65536,
+      "idLabels": [
+        "49e8ad5bae47cb67acf26ecc"
+      ],
+      "idMembers": [],
+      "start": null,
+      "due": null,
+      "dueComplete": false,
+      "cover": {
+        "color": null
+      },
+      "attachments": []
+    },
+    {
+      "id": "d3ed0886a8ea691feca8a7ca",
+      "name": "Limpeza da publicação da vitrine",
+      "desc": "Arquivos que estão no repositório mas não são usados pelo site (≈ 60 MB de originais).",
+      "closed": false,
+      "idList": "44dd86fbad0090700db68737",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "pos": 81920,
+      "idLabels": [
+        "4ffd57ca0ab56b3fb2afb5c6"
+      ],
+      "idMembers": [],
+      "start": null,
+      "due": null,
+      "dueComplete": false,
+      "cover": {
+        "color": null
+      },
+      "attachments": []
+    },
+    {
+      "id": "4516e131f6f94a2fc0c1f35b",
+      "name": "Decisão: loja própria x plataforma pronta",
+      "desc": "Opções:\n• Plataforma pronta (Nuvemshop, Shopify, Yampi): mais rápida e com segurança/pagamento prontos, mas perde boa parte do visual e do fluxo atual e tem mensalidade + taxa.\n• Loja própria (continuação deste site): mantém a identidade e o fluxo do Instagram, mais trabalho e responsabilidade de segurança.\n\nRecomendação da Beyond Bits: loja própria, usando um gateway que cuide dos dados do cartão (ver card do gateway), para nunca guardar cartão no nosso servidor.",
+      "closed": false,
+      "idList": "808e525e9282510d4c1fc63a",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "pos": 16384,
+      "idLabels": [
+        "08e4d633a1fc40c68d6dd3a7"
+      ],
+      "idMembers": [],
+      "start": null,
+      "due": null,
+      "dueComplete": false,
+      "cover": {
+        "color": null
+      },
+      "attachments": []
+    },
+    {
+      "id": "8e593916eb76767723872886",
+      "name": "Escolher o gateway de pagamento (Pix + cartão)",
+      "desc": "Critérios obrigatórios:\n• Pix com QR Code dinâmico, expiração e confirmação por webhook assinado.\n• Cartão com tokenização no navegador ou checkout do gateway: o número do cartão nunca passa pelo nosso servidor (PCI DSS no nível mais simples, SAQ A).\n• Parcelamento, antifraude e 3-D Secure.\n• Ambiente de testes (sandbox).\n\nCandidatos: Mercado Pago, Pagar.me, Asaas, Stripe (Pix no Brasil), Efí.",
+      "closed": false,
+      "idList": "808e525e9282510d4c1fc63a",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "pos": 32768,
+      "idLabels": [
+        "5ed1c1293658d3f661a0676c",
+        "0fc0e9aa2987478f31838344",
+        "08e4d633a1fc40c68d6dd3a7"
+      ],
+      "idMembers": [],
+      "start": null,
+      "due": null,
+      "dueComplete": false,
+      "cover": {
+        "color": null
+      },
+      "attachments": []
+    },
+    {
+      "id": "f95173f0faa5d96809c015ee",
+      "name": "Modelo de venda, frete e políticas",
+      "desc": "As camisas são de pré-venda/encomenda (entrega em ~30 dias) ou pronta entrega? Isso muda estoque, prazos e textos.\n\nAtenção ao Código de Defesa do Consumidor: compra online tem direito de arrependimento de 7 dias (art. 49).",
+      "closed": false,
+      "idList": "808e525e9282510d4c1fc63a",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "pos": 49152,
+      "idLabels": [
+        "08e4d633a1fc40c68d6dd3a7",
+        "ce5a30b87da495274349bc3b"
+      ],
+      "idMembers": [],
+      "start": null,
+      "due": null,
+      "dueComplete": false,
+      "cover": {
+        "color": null
+      },
+      "attachments": []
+    },
+    {
+      "id": "496d91e8f6506c8463aa0a31",
+      "name": "Definir frete e entrega",
+      "desc": "Cálculo de frete por CEP no carrinho e no checkout.",
+      "closed": false,
+      "idList": "808e525e9282510d4c1fc63a",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "pos": 65536,
+      "idLabels": [
+        "fec43971b1d636e01cf279c1",
+        "08e4d633a1fc40c68d6dd3a7"
+      ],
+      "idMembers": [],
+      "start": null,
+      "due": null,
+      "dueComplete": false,
+      "cover": {
+        "color": null
+      },
+      "attachments": []
+    },
+    {
+      "id": "8091979ef06daf7f4565bc14",
+      "name": "Arquitetura técnica da loja",
+      "desc": "Proposta (alinhada ao que a Beyond Bits já usa):\n• Frontend: mantém o visual atual (pode migrar para um framework, ex.: Next.js ou Astro).\n• Backend: API serverless (Cloudflare Workers ou Vercel).\n• Banco: Postgres gerenciado (Supabase ou Neon), com backups.\n• Autenticação: provedor gerenciado (Supabase Auth ou similar).\n• E-mails: Resend ou Amazon SES.\n• Hospedagem sai do GitHub Pages (que não roda backend).\n\nPronto quando: diagrama e decisões registrados no PROJETO.txt.",
+      "closed": false,
+      "idList": "808e525e9282510d4c1fc63a",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "pos": 81920,
+      "idLabels": [
+        "fec43971b1d636e01cf279c1",
+        "4ffd57ca0ab56b3fb2afb5c6",
+        "532d4e3aea481e1e9a485fd5"
+      ],
+      "idMembers": [],
+      "start": null,
+      "due": null,
+      "dueComplete": false,
+      "cover": {
+        "color": null
+      },
+      "attachments": []
+    },
+    {
+      "id": "2cf9e5743abfb8bf548834d5",
+      "name": "Ambientes, segredos e entrega contínua",
+      "desc": "Desenvolvimento, homologação e produção separados. Nenhuma chave (gateway, banco, e-mail) no repositório.",
+      "closed": false,
+      "idList": "82f45dd05b664bf7aff60814",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "pos": 16384,
+      "idLabels": [
+        "4ffd57ca0ab56b3fb2afb5c6",
+        "0fc0e9aa2987478f31838344"
+      ],
+      "idMembers": [],
+      "start": null,
+      "due": null,
+      "dueComplete": false,
+      "cover": {
+        "color": null
+      },
+      "attachments": []
+    },
+    {
+      "id": "635d6601ce148b22afdfd1e4",
+      "name": "Modelagem do banco de dados",
+      "desc": "Tabelas: produtos, variantes (modelo × tamanho), preços, estoque/encomenda, imagens, clientes, endereços, carrinhos, pedidos, itens do pedido, pagamentos, cupons, usos de cupom, eventos de webhook, auditoria.",
+      "closed": false,
+      "idList": "82f45dd05b664bf7aff60814",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "pos": 32768,
+      "idLabels": [
+        "fec43971b1d636e01cf279c1"
+      ],
+      "idMembers": [],
+      "start": null,
+      "due": null,
+      "dueComplete": false,
+      "cover": {
+        "color": null
+      },
+      "attachments": []
+    },
+    {
+      "id": "621b6da09c7f5e382af5be6a",
+      "name": "Painel administrativo da Versatte",
+      "desc": "Onde a Versatte cadastra camisas, preços e acompanha os pedidos, sem depender da Beyond Bits.",
+      "closed": false,
+      "idList": "82f45dd05b664bf7aff60814",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "pos": 49152,
+      "idLabels": [
+        "49e8ad5bae47cb67acf26ecc",
+        "fec43971b1d636e01cf279c1"
+      ],
+      "idMembers": [],
+      "start": null,
+      "due": null,
+      "dueComplete": false,
+      "cover": {
+        "color": null
+      },
+      "attachments": []
+    },
+    {
+      "id": "bb017f91e4dd0e44a77e01af",
+      "name": "Segurança base da aplicação",
+      "desc": "Proteções que valem para tudo antes de ter dinheiro passando pelo site.",
+      "closed": false,
+      "idList": "82f45dd05b664bf7aff60814",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "pos": 65536,
+      "idLabels": [
+        "0fc0e9aa2987478f31838344"
+      ],
+      "idMembers": [],
+      "start": null,
+      "due": null,
+      "dueComplete": false,
+      "cover": {
+        "color": null
+      },
+      "attachments": []
+    },
+    {
+      "id": "333513fd08234789b1a9a40c",
+      "name": "Catálogo e página de produto",
+      "desc": "Evolução da galeria atual para produtos de verdade, mantendo o visual.",
+      "closed": false,
+      "idList": "6cedae20749728ed5fa312d7",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "pos": 16384,
+      "idLabels": [
+        "49e8ad5bae47cb67acf26ecc",
+        "fec43971b1d636e01cf279c1"
+      ],
+      "idMembers": [],
+      "start": null,
+      "due": null,
+      "dueComplete": false,
+      "cover": {
+        "color": null
+      },
+      "attachments": []
+    },
+    {
+      "id": "94f535823bd21e8287fd2bab",
+      "name": "Busca e filtros",
+      "desc": "Filtros por time, seleção, categoria (temporada, retrô, feminina) e modelo.",
+      "closed": false,
+      "idList": "6cedae20749728ed5fa312d7",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "pos": 32768,
+      "idLabels": [
+        "49e8ad5bae47cb67acf26ecc"
+      ],
+      "idMembers": [],
+      "start": null,
+      "due": null,
+      "dueComplete": false,
+      "cover": {
+        "color": null
+      },
+      "attachments": []
+    },
+    {
+      "id": "54cd4fb1e5083d0ac5a2bd91",
+      "name": "Carrinho de compras",
+      "desc": "O preço exibido no navegador é só informativo: o servidor recalcula tudo (preço, desconto, frete) em cada etapa.",
+      "closed": false,
+      "idList": "6cedae20749728ed5fa312d7",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "pos": 49152,
+      "idLabels": [
+        "49e8ad5bae47cb67acf26ecc",
+        "fec43971b1d636e01cf279c1",
+        "0fc0e9aa2987478f31838344"
+      ],
+      "idMembers": [],
+      "start": null,
+      "due": null,
+      "dueComplete": false,
+      "cover": {
+        "color": null
+      },
+      "attachments": []
+    },
+    {
+      "id": "7d0550807e1165f981adbc82",
+      "name": "Cadastro e login seguros",
+      "desc": "Senha nunca é guardada em texto: hash forte feito pelo provedor de autenticação.",
+      "closed": false,
+      "idList": "f6923322581315fb8a596b86",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "pos": 16384,
+      "idLabels": [
+        "fec43971b1d636e01cf279c1",
+        "0fc0e9aa2987478f31838344"
+      ],
+      "idMembers": [],
+      "start": null,
+      "due": null,
+      "dueComplete": false,
+      "cover": {
+        "color": null
+      },
+      "attachments": []
+    },
+    {
+      "id": "82dc52c9a69e2594fb2a72da",
+      "name": "Área do cliente",
+      "desc": "Minha conta: pedidos, rastreio, endereços e dados.",
+      "closed": false,
+      "idList": "f6923322581315fb8a596b86",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "pos": 32768,
+      "idLabels": [
+        "49e8ad5bae47cb67acf26ecc",
+        "fec43971b1d636e01cf279c1",
+        "ce5a30b87da495274349bc3b"
+      ],
+      "idMembers": [],
+      "start": null,
+      "due": null,
+      "dueComplete": false,
+      "cover": {
+        "color": null
+      },
+      "attachments": []
+    },
+    {
+      "id": "8e14801f906865d28af4806e",
+      "name": "Decisão: compra sem cadastro (checkout como visitante)",
+      "desc": "Comprar sem criar conta aumenta conversão; o pedido fica vinculado ao e-mail.",
+      "closed": false,
+      "idList": "f6923322581315fb8a596b86",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "pos": 49152,
+      "idLabels": [
+        "08e4d633a1fc40c68d6dd3a7"
+      ],
+      "idMembers": [],
+      "start": null,
+      "due": null,
+      "dueComplete": false,
+      "cover": {
+        "color": null
+      },
+      "attachments": []
+    },
+    {
+      "id": "145098c90e90629ebe10664f",
+      "name": "Checkout",
+      "desc": "Endereço → frete → pagamento → confirmação. CPF só é pedido porque os gateways exigem para Pix e cartão.",
+      "closed": false,
+      "idList": "12c998e5003ecbdcbbb30bce",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "pos": 16384,
+      "idLabels": [
+        "49e8ad5bae47cb67acf26ecc",
+        "fec43971b1d636e01cf279c1"
+      ],
+      "idMembers": [],
+      "start": null,
+      "due": null,
+      "dueComplete": false,
+      "cover": {
+        "color": null
+      },
+      "attachments": []
+    },
+    {
+      "id": "d0b0e6c7e2bdaf28657a43cc",
+      "name": "Pagamento por Pix",
+      "desc": "QR Code dinâmico gerado pelo gateway, com prazo. O pedido só vira \"pago\" pela confirmação do webhook, nunca pelo retorno do navegador.",
+      "closed": false,
+      "idList": "12c998e5003ecbdcbbb30bce",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "pos": 32768,
+      "idLabels": [
+        "5ed1c1293658d3f661a0676c",
+        "fec43971b1d636e01cf279c1"
+      ],
+      "idMembers": [],
+      "start": null,
+      "due": null,
+      "dueComplete": false,
+      "cover": {
+        "color": null
+      },
+      "attachments": []
+    },
+    {
+      "id": "a9f0ffe2c9aabd6e05453c31",
+      "name": "Pagamento por cartão",
+      "desc": "Os dados do cartão são digitados em campos/checkout do gateway (tokenização): o número do cartão nunca chega ao nosso servidor nem ao nosso banco.",
+      "closed": false,
+      "idList": "12c998e5003ecbdcbbb30bce",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "pos": 49152,
+      "idLabels": [
+        "5ed1c1293658d3f661a0676c",
+        "0fc0e9aa2987478f31838344"
+      ],
+      "idMembers": [],
+      "start": null,
+      "due": null,
+      "dueComplete": false,
+      "cover": {
+        "color": null
+      },
+      "attachments": []
+    },
+    {
+      "id": "e38b951bd7b56de1a981f218",
+      "name": "Webhooks e status do pedido",
+      "desc": "Máquina de estados: aguardando pagamento → pago → em preparação → enviado → entregue; ou cancelado / estornado.",
+      "closed": false,
+      "idList": "12c998e5003ecbdcbbb30bce",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "pos": 65536,
+      "idLabels": [
+        "fec43971b1d636e01cf279c1",
+        "5ed1c1293658d3f661a0676c",
+        "0fc0e9aa2987478f31838344"
+      ],
+      "idMembers": [],
+      "start": null,
+      "due": null,
+      "dueComplete": false,
+      "cover": {
+        "color": null
+      },
+      "attachments": []
+    },
+    {
+      "id": "e17e132ef71f7bc3251c107d",
+      "name": "E-mails automáticos do pedido",
+      "desc": "Do domínio da Versatte (depende da Fase 2).",
+      "closed": false,
+      "idList": "12c998e5003ecbdcbbb30bce",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "pos": 81920,
+      "idLabels": [
+        "fec43971b1d636e01cf279c1"
+      ],
+      "idMembers": [],
+      "start": null,
+      "due": null,
+      "dueComplete": false,
+      "cover": {
+        "color": null
+      },
+      "attachments": []
+    },
+    {
+      "id": "f31f0ffb839ccb783200761c",
+      "name": "Cancelamento e estorno pelo painel",
+      "desc": "A Versatte cancela e estorna pelo painel, sem entrar no site do gateway.",
+      "closed": false,
+      "idList": "12c998e5003ecbdcbbb30bce",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "pos": 98304,
+      "idLabels": [
+        "fec43971b1d636e01cf279c1",
+        "5ed1c1293658d3f661a0676c"
+      ],
+      "idMembers": [],
+      "start": null,
+      "due": null,
+      "dueComplete": false,
+      "cover": {
+        "color": null
+      },
+      "attachments": []
+    },
+    {
+      "id": "509e08893a085c345794bd92",
+      "name": "Cupons de desconto",
+      "desc": "Toda regra é validada no servidor; o navegador só mostra o resultado.",
+      "closed": false,
+      "idList": "d22810e481b9409e8d1f3815",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "pos": 16384,
+      "idLabels": [
+        "fec43971b1d636e01cf279c1",
+        "0fc0e9aa2987478f31838344"
+      ],
+      "idMembers": [],
+      "start": null,
+      "due": null,
+      "dueComplete": false,
+      "cover": {
+        "color": null
+      },
+      "attachments": []
+    },
+    {
+      "id": "4f079b7b21063701d0285e54",
+      "name": "Campanhas ligadas ao hero",
+      "desc": "Campanhas como o Esquenta Novembro passam a ter cupom e data no painel, e o slide do hero sai do ar junto com a campanha.",
+      "closed": false,
+      "idList": "d22810e481b9409e8d1f3815",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "pos": 32768,
+      "idLabels": [
+        "49e8ad5bae47cb67acf26ecc",
+        "fec43971b1d636e01cf279c1"
+      ],
+      "idMembers": [],
+      "start": null,
+      "due": null,
+      "dueComplete": false,
+      "cover": {
+        "color": null
+      },
+      "attachments": []
+    },
+    {
+      "id": "d6839445759d5df7bc09b6e6",
+      "name": "Documentos legais",
+      "desc": "Obrigatórios para vender online.",
+      "closed": false,
+      "idList": "77d6a876912ff9fed8e36690",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "pos": 16384,
+      "idLabels": [
+        "ce5a30b87da495274349bc3b",
+        "08e4d633a1fc40c68d6dd3a7"
+      ],
+      "idMembers": [],
+      "start": null,
+      "due": null,
+      "dueComplete": false,
+      "cover": {
+        "color": null
+      },
+      "attachments": []
+    },
+    {
+      "id": "91773e086579ad5dd7ae9286",
+      "name": "Adequação à LGPD",
+      "desc": "Coletar só o necessário, proteger e saber apagar.",
+      "closed": false,
+      "idList": "77d6a876912ff9fed8e36690",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "pos": 32768,
+      "idLabels": [
+        "ce5a30b87da495274349bc3b",
+        "0fc0e9aa2987478f31838344"
+      ],
+      "idMembers": [],
+      "start": null,
+      "due": null,
+      "dueComplete": false,
+      "cover": {
+        "color": null
+      },
+      "attachments": []
+    },
+    {
+      "id": "1373d1271d0300fad8889240",
+      "name": "Testes automatizados e de ponta a ponta",
+      "desc": "Nada vai para produção sem o checkout testado no sandbox do gateway.",
+      "closed": false,
+      "idList": "77d6a876912ff9fed8e36690",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "pos": 49152,
+      "idLabels": [
+        "fec43971b1d636e01cf279c1",
+        "49e8ad5bae47cb67acf26ecc"
+      ],
+      "idMembers": [],
+      "start": null,
+      "due": null,
+      "dueComplete": false,
+      "cover": {
+        "color": null
+      },
+      "attachments": []
+    },
+    {
+      "id": "9a5aa73b4ac24c481338823b",
+      "name": "Teste de segurança antes do lançamento",
+      "desc": "Revisão com base no OWASP Top 10.",
+      "closed": false,
+      "idList": "77d6a876912ff9fed8e36690",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "pos": 65536,
+      "idLabels": [
+        "0fc0e9aa2987478f31838344"
+      ],
+      "idMembers": [],
+      "start": null,
+      "due": null,
+      "dueComplete": false,
+      "cover": {
+        "color": null
+      },
+      "attachments": []
+    },
+    {
+      "id": "33e8e170de92dedbeaebf5ed",
+      "name": "Monitoramento e alertas",
+      "desc": "Saber de um problema antes do cliente.",
+      "closed": false,
+      "idList": "77d6a876912ff9fed8e36690",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "pos": 81920,
+      "idLabels": [
+        "4ffd57ca0ab56b3fb2afb5c6"
+      ],
+      "idMembers": [],
+      "start": null,
+      "due": null,
+      "dueComplete": false,
+      "cover": {
+        "color": null
+      },
+      "attachments": []
+    },
+    {
+      "id": "fbfe8d07ed8d7cae75b77b11",
+      "name": "Migração para a hospedagem da loja",
+      "desc": "Sair do GitHub Pages e apontar o domínio para a nova hospedagem, sem derrubar a vitrine.",
+      "closed": false,
+      "idList": "5a0e17cea818dcec7412344f",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "pos": 16384,
+      "idLabels": [
+        "4ffd57ca0ab56b3fb2afb5c6"
+      ],
+      "idMembers": [],
+      "start": null,
+      "due": null,
+      "dueComplete": false,
+      "cover": {
+        "color": null
+      },
+      "attachments": []
+    },
+    {
+      "id": "6d0d4ffb9884e19812699f61",
+      "name": "Homologação com a Versatte",
+      "desc": "Pedidos reais de valor baixo antes de abrir ao público.",
+      "closed": false,
+      "idList": "5a0e17cea818dcec7412344f",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "pos": 32768,
+      "idLabels": [
+        "5ed1c1293658d3f661a0676c",
+        "08e4d633a1fc40c68d6dd3a7"
+      ],
+      "idMembers": [],
+      "start": null,
+      "due": null,
+      "dueComplete": false,
+      "cover": {
+        "color": null
+      },
+      "attachments": []
+    },
+    {
+      "id": "1c41c2c2e61ceea574a3f59e",
+      "name": "Lançamento e acompanhamento",
+      "desc": "Abrir a loja e acompanhar as primeiras vendas de perto.",
+      "closed": false,
+      "idList": "5a0e17cea818dcec7412344f",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "pos": 49152,
+      "idLabels": [
+        "4ffd57ca0ab56b3fb2afb5c6",
+        "bef70efcef8f89ab33bffa10"
+      ],
+      "idMembers": [],
+      "start": null,
+      "due": null,
+      "dueComplete": false,
+      "cover": {
+        "color": null
+      },
+      "attachments": []
+    },
+    {
+      "id": "b6ee5ccd3c67fd75c3039561",
+      "name": "Integrar o Versatte Cards com a loja",
+      "desc": "Brindes do jogo (cupons) aplicados direto no carrinho; login único entre jogo e loja.",
+      "closed": false,
+      "idList": "da803ac5bbacf2902cff1e79",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "pos": 16384,
+      "idLabels": [
+        "fec43971b1d636e01cf279c1"
+      ],
+      "idMembers": [],
+      "start": null,
+      "due": null,
+      "dueComplete": false,
+      "cover": {
+        "color": null
+      },
+      "attachments": []
+    },
+    {
+      "id": "44030c8147a3e787adfffbfe",
+      "name": "Comentários do Instagram na prévia dos posts",
+      "desc": "Exige a API oficial do Instagram (conta comercial + servidor guardando o token).",
+      "closed": false,
+      "idList": "da803ac5bbacf2902cff1e79",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "pos": 32768,
+      "idLabels": [
+        "fec43971b1d636e01cf279c1"
+      ],
+      "idMembers": [],
+      "start": null,
+      "due": null,
+      "dueComplete": false,
+      "cover": {
+        "color": null
+      },
+      "attachments": []
+    }
+  ],
+  "checklists": [
+    {
+      "id": "d2a3aa193fe49cf44aee5f3d",
+      "idCard": "0fae6f7aa5162de9444e089c",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "name": "Tarefas",
+      "pos": 16384,
+      "checkItems": [
+        {
+          "id": "58f15756b38cc85702acc9fa",
+          "name": "Remover o modelo 3D da camisa (Three.js) e o runtime antigo (support.js)",
+          "state": "complete",
+          "pos": 16384
+        },
+        {
+          "id": "c9cbcf33beb4699773a9381a",
+          "name": "Nova estrutura: hero → camisas → guia do manto → tabela de medidas → como comprar → Versatte Cards → rodapé",
+          "state": "complete",
+          "pos": 32768
+        },
+        {
+          "id": "9976db66c374434fa5716935",
+          "name": "Revisão textual: foco no produto e na marca, sem menção à origem das camisas",
+          "state": "complete",
+          "pos": 49152
+        },
+        {
+          "id": "0909a40f1668ccc1ed9fe4b8",
+          "name": "Promoções e campanhas apenas no hero, sem seção própria",
+          "state": "complete",
+          "pos": 65536
+        },
+        {
+          "id": "060c35e6dbc7452b67c5a543",
+          "name": "Crédito \"Site desenvolvido por Beyond Bits\" no rodapé",
+          "state": "complete",
+          "pos": 81920
+        }
+      ]
+    },
+    {
+      "id": "d1284036d23603522eaf7e24",
+      "idCard": "7b5717afc6c372c8d94b11cc",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "name": "Tarefas",
+      "pos": 16384,
+      "checkItems": [
+        {
+          "id": "74a414058b6a617f368128fd",
+          "name": "Escolha de fontes com comparação visual de 6 combinações",
+          "state": "complete",
+          "pos": 16384
+        },
+        {
+          "id": "8827720402f78526b43a169d",
+          "name": "Formas arredondadas: botões em pílula, cards suaves, menu flutuante",
+          "state": "complete",
+          "pos": 32768
+        },
+        {
+          "id": "cd5fa961990931b3e028631e",
+          "name": "Fundo claro com textura de faixas onduladas e círculos (degradê laranja → azul, 7% de opacidade, desfoque)",
+          "state": "complete",
+          "pos": 49152
+        },
+        {
+          "id": "570323dedba800ef5ad78b58",
+          "name": "Faixa de tecido laranja acompanhando a curva do hero, com costura e texto correndo",
+          "state": "complete",
+          "pos": 65536
+        }
+      ]
+    },
+    {
+      "id": "226318d4a0a4a99914dc49a0",
+      "idCard": "86e3fe7730509cfa840b4712",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "name": "Tarefas",
+      "pos": 16384,
+      "checkItems": [
+        {
+          "id": "3e64705c679c6688253a98d7",
+          "name": "Boas-vindas alternando 3 imagens + textos a cada visita, com a logo da Versatte",
+          "state": "complete",
+          "pos": 16384
+        },
+        {
+          "id": "f19b7a872525fb6d30c64c30",
+          "name": "Slide da campanha Esquenta Novembro com tabela de preços",
+          "state": "complete",
+          "pos": 32768
+        },
+        {
+          "id": "a0f9dc429250aea9035eb8c3",
+          "name": "Expiração automática da campanha (data-until = 25/10)",
+          "state": "complete",
+          "pos": 49152
+        },
+        {
+          "id": "a9293df10b0cdf7a06f31c85",
+          "name": "Slide teaser do Versatte Cards",
+          "state": "complete",
+          "pos": 65536
+        },
+        {
+          "id": "e2900a24c4cba28755db8e53",
+          "name": "Imagens otimizadas em WebP com recorte próprio para celular",
+          "state": "complete",
+          "pos": 81920
+        }
+      ]
+    },
+    {
+      "id": "7995c47937b2925cf16c9137",
+      "idCard": "17ecbfac04ae12cac87390c8",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "name": "Tarefas",
+      "pos": 16384,
+      "checkItems": [
+        {
+          "id": "79c02ecc564bc75a2771b54b",
+          "name": "Ferramenta de importação via navegador headless (Edge/Chrome), sem dependências",
+          "state": "complete",
+          "pos": 16384
+        },
+        {
+          "id": "56f1bb9af50ad2b5a0c910a2",
+          "name": "4 posts importados (Atlético-MG, Chelsea, Napoli, Torcedor x Jogador)",
+          "state": "complete",
+          "pos": 32768
+        },
+        {
+          "id": "91b9aa083d95a8d3653154ee",
+          "name": "Cards com contador de fotos e troca de imagem no hover",
+          "state": "complete",
+          "pos": 49152
+        },
+        {
+          "id": "acc3cff94d1aedc42057068e",
+          "name": "Prévia no formato do Instagram: carrossel com swipe, legenda com @ e #, curtidas e data",
+          "state": "complete",
+          "pos": 65536
+        },
+        {
+          "id": "e1497d57c392de2418b14bf0",
+          "name": "Comentários: mostra a contagem e leva ao post (a lista exige a API oficial)",
+          "state": "complete",
+          "pos": 81920
+        }
+      ]
+    },
+    {
+      "id": "70bdaa7f3b4edc04ccb19a34",
+      "idCard": "154cea04921db62c79db9c2d",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "name": "Tarefas",
+      "pos": 16384,
+      "checkItems": [
+        {
+          "id": "b7abf34b7412c22822d0e4d9",
+          "name": "Mensagem com nome da camisa, modelo, tamanho e link do post",
+          "state": "complete",
+          "pos": 16384
+        },
+        {
+          "id": "63789846861abb9eb3689597",
+          "name": "Tamanhos indisponíveis por modelo ficam desativados",
+          "state": "complete",
+          "pos": 32768
+        },
+        {
+          "id": "c0a587340661380698b7b005",
+          "name": "Cópia síncrona da mensagem (corrige bloqueio da área de transferência)",
+          "state": "complete",
+          "pos": 49152
+        },
+        {
+          "id": "31cb071a304d51e02bb7ceee",
+          "name": "Link ig.me com ?text= (não oficial) + passo explicando como colar",
+          "state": "complete",
+          "pos": 65536
+        },
+        {
+          "id": "6b81291128206e4969a7855a",
+          "name": "Botão flutuante do WhatsApp (aparece depois do hero)",
+          "state": "complete",
+          "pos": 81920
+        }
+      ]
+    },
+    {
+      "id": "b4ad7b2e0181fe2e855e58e2",
+      "idCard": "2c193ef2263b33e6854c95ff",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "name": "Tarefas",
+      "pos": 16384,
+      "checkItems": [
+        {
+          "id": "9ec7fd07202ef7ee91927e56",
+          "name": "Versão Torcedor: escudo bordado e durabilidade",
+          "state": "complete",
+          "pos": 16384
+        },
+        {
+          "id": "47989b977f5497c63b51f923",
+          "name": "Versão Jogador: escudo emborrachado HD, tecido ultra respirável, caimento leve",
+          "state": "complete",
+          "pos": 32768
+        },
+        {
+          "id": "42761a8e5b27d690340763ad",
+          "name": "Grade de fotos sem rolagem lateral no celular",
+          "state": "complete",
+          "pos": 49152
+        },
+        {
+          "id": "d48de675215eba28da3bb856",
+          "name": "Botões \"Me ajuda a escolher\" e \"Ver o post completo\"",
+          "state": "complete",
+          "pos": 65536
+        }
+      ]
+    },
+    {
+      "id": "61145079f2fbb73c473e2a35",
+      "idCard": "ea1c981f574fd013e1424f0d",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "name": "Tarefas",
+      "pos": 16384,
+      "checkItems": [
+        {
+          "id": "25b01f2641dcd2a8722fcfb5",
+          "name": "Textos em HTML com a tipografia do site (foto separada da arte original)",
+          "state": "complete",
+          "pos": 16384
+        },
+        {
+          "id": "c58e6cddee1aee0a2d82f0d3",
+          "name": "Lista de tamanhos no celular e colunas no desktop",
+          "state": "complete",
+          "pos": 32768
+        },
+        {
+          "id": "0c6b7a9db660cf9cb7d0cb43",
+          "name": "\"Encontre seu tamanho\" com mensagem de altura e peso (Direct e WhatsApp)",
+          "state": "complete",
+          "pos": 49152
+        },
+        {
+          "id": "e0c962d72de4c171522ad550",
+          "name": "Atalho para a tabela dentro da janela de pedido",
+          "state": "complete",
+          "pos": 65536
+        }
+      ]
+    },
+    {
+      "id": "de1cb12c138f695ac8f83049",
+      "idCard": "4c469b1e056806c4b1760573",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "name": "Tarefas",
+      "pos": 16384,
+      "checkItems": [
+        {
+          "id": "99c99cdeee6a4af67212cf9e",
+          "name": "Cartas Urubu Infinito (Especial), Galo do Trovão (Muito rara) e verso",
+          "state": "complete",
+          "pos": 16384
+        },
+        {
+          "id": "e80192da8c7a85b296122491",
+          "name": "Inclinação seguindo o dedo/mouse e balanço automático",
+          "state": "complete",
+          "pos": 32768
+        }
+      ]
+    },
+    {
+      "id": "95ff62423c7ebe70daf2aa5c",
+      "idCard": "88ef69e2ca2e235b5b68b583",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "name": "Tarefas",
+      "pos": 16384,
+      "checkItems": [
+        {
+          "id": "74a9e2b09f13020ade38054e",
+          "name": "Nada passa da largura da tela (evita o site encolher no iPhone)",
+          "state": "complete",
+          "pos": 16384
+        },
+        {
+          "id": "0fd7e66a53b89e4cff3e55b1",
+          "name": "Hero compacto em celulares baixos (iPhone SE)",
+          "state": "complete",
+          "pos": 32768
+        },
+        {
+          "id": "dac05a29da1804880627057e",
+          "name": "Layout para tablet em pé (hero e prévia do post)",
+          "state": "complete",
+          "pos": 49152
+        },
+        {
+          "id": "712af3304d708d60a4f6e78e",
+          "name": "Correção automática para celular com \"Site para computador\" ligado (zoom + @media pela largura real)",
+          "state": "complete",
+          "pos": 65536
+        },
+        {
+          "id": "60cbd831c5dbe36a48d895c0",
+          "name": "Versão nos arquivos CSS/JS (?v=) para evitar cache antigo",
+          "state": "complete",
+          "pos": 81920
+        },
+        {
+          "id": "fbd3f82370d61fac54855edc",
+          "name": "Testado em 360, 375, 390, 412, 768, 820, 1024, 1280 e 1440 px",
+          "state": "complete",
+          "pos": 98304
+        }
+      ]
+    },
+    {
+      "id": "96f10afb91bdae3f9a6edde5",
+      "idCard": "65b25c88e3b2dd18fff50ec9",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "name": "Tarefas",
+      "pos": 16384,
+      "checkItems": [
+        {
+          "id": "04f56ad8abb0d10a94bec7f3",
+          "name": "Heros, guia e tabela em WebP com versões para celular",
+          "state": "complete",
+          "pos": 16384
+        },
+        {
+          "id": "c7b593eab543e7299c579884",
+          "name": "Logos em WebP (Versatte e Beyond Bits escura)",
+          "state": "complete",
+          "pos": 32768
+        }
+      ]
+    },
+    {
+      "id": "1ff154663af2336ba6efea36",
+      "idCard": "e7368a1ce7b429cc1da69889",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "name": "Tarefas",
+      "pos": 16384,
+      "checkItems": [
+        {
+          "id": "2552f0b1f750015b17f72133",
+          "name": "PROJETO.txt na raiz do repositório",
+          "state": "complete",
+          "pos": 16384
+        },
+        {
+          "id": "73b1e932ab50cb95848b4a4a",
+          "name": "Comentários de manutenção no index.html, style.css e main.js",
+          "state": "complete",
+          "pos": 32768
+        }
+      ]
+    },
+    {
+      "id": "c0c75cc43c221cf2bdee0d86",
+      "idCard": "09fcb7bb119ce994d86200cc",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "name": "Tarefas",
+      "pos": 16384,
+      "checkItems": [
+        {
+          "id": "f59e40a7e408fef582806ab2",
+          "name": "Repositório beyondBitsLtda/site-versatte",
+          "state": "complete",
+          "pos": 16384
+        },
+        {
+          "id": "49c30d8a79ddea130b54760d",
+          "name": "Publicação automática a cada push na main",
+          "state": "complete",
+          "pos": 32768
+        }
+      ]
+    },
+    {
+      "id": "5aab1b862ddb14978c59d201",
+      "idCard": "6237a4da58dcec50fff36f91",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "name": "Tarefas",
+      "pos": 16384,
+      "checkItems": [
+        {
+          "id": "93785f3d47eefa5a4ec1924d",
+          "name": "Confirmar com a Versatte se versattesports.com já está registrado e em nome de quem",
+          "state": "incomplete",
+          "pos": 16384
+        },
+        {
+          "id": "01541cee8b8e5a553466b7a9",
+          "name": "Decidir o domínio principal (ex.: versattesports.com.br)",
+          "state": "incomplete",
+          "pos": 32768
+        },
+        {
+          "id": "c6561cedac695ed7afc1e429",
+          "name": "Registrar no registro.br em nome da Versatte",
+          "state": "incomplete",
+          "pos": 49152
+        },
+        {
+          "id": "64c79f10a6e5324cfe1c54fc",
+          "name": "Ativar autenticação em dois fatores na conta do registro",
+          "state": "incomplete",
+          "pos": 65536
+        },
+        {
+          "id": "c6bd48822feb8ae0a8b62d56",
+          "name": "Guardar acessos no cofre de senhas da Beyond Bits",
+          "state": "incomplete",
+          "pos": 81920
+        }
+      ]
+    },
+    {
+      "id": "5c43a9f5977e0641a3edc2d7",
+      "idCard": "b47ce5447a3b08b0e5f5f55b",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "name": "Tarefas",
+      "pos": 16384,
+      "checkItems": [
+        {
+          "id": "133fa110aa862a1a1c74c703",
+          "name": "Verificar o domínio na organização beyondBitsLtda do GitHub",
+          "state": "incomplete",
+          "pos": 16384
+        },
+        {
+          "id": "3b123e32b056ab15dfba63da",
+          "name": "Criar o arquivo CNAME no repositório com o domínio",
+          "state": "incomplete",
+          "pos": 32768
+        },
+        {
+          "id": "874b487e874dd67dc616d9f9",
+          "name": "Registros A/AAAA do domínio raiz para os IPs do GitHub Pages",
+          "state": "incomplete",
+          "pos": 49152
+        },
+        {
+          "id": "162646a0b2f3c3c682abe2df",
+          "name": "Registro CNAME do www para beyondbitsltda.github.io",
+          "state": "incomplete",
+          "pos": 65536
+        },
+        {
+          "id": "a24159b195448136e48509d3",
+          "name": "Ativar \"Enforce HTTPS\" no GitHub Pages",
+          "state": "incomplete",
+          "pos": 81920
+        },
+        {
+          "id": "3a26e881f94410fc2d4a44ab",
+          "name": "Testar http → https e www → domínio principal",
+          "state": "incomplete",
+          "pos": 98304
+        }
+      ]
+    },
+    {
+      "id": "9e5aa843bc02af0b654f42e2",
+      "idCard": "24bb5ff680fa4b8e86a4687a",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "name": "Tarefas",
+      "pos": 16384,
+      "checkItems": [
+        {
+          "id": "95eae46059f3bbffea1684d9",
+          "name": "Escolher provedor (Google Workspace, Zoho ou outro)",
+          "state": "incomplete",
+          "pos": 16384
+        },
+        {
+          "id": "35143795ace88d8d2a47212e",
+          "name": "Criar contato@ e pedidos@",
+          "state": "incomplete",
+          "pos": 32768
+        },
+        {
+          "id": "6279a02339324ae64cdaf1d2",
+          "name": "Configurar SPF, DKIM e DMARC (evita cair no spam e falsificação)",
+          "state": "incomplete",
+          "pos": 49152
+        },
+        {
+          "id": "b5bcd358fa30a80a17525f5e",
+          "name": "Atualizar o e-mail no rodapé do site",
+          "state": "incomplete",
+          "pos": 65536
+        }
+      ]
+    },
+    {
+      "id": "e11c23fc6990eb4ff9f8efb8",
+      "idCard": "e6455024bc6aac7173948bf7",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "name": "Tarefas",
+      "pos": 16384,
+      "checkItems": [
+        {
+          "id": "47dec8f2b1a40eef1cf5ddd7",
+          "name": "og:image com URL absoluta (prévia bonita no WhatsApp/Instagram)",
+          "state": "incomplete",
+          "pos": 16384
+        },
+        {
+          "id": "c870e6515053b2352ed3aa4d",
+          "name": "Tag canonical",
+          "state": "incomplete",
+          "pos": 32768
+        },
+        {
+          "id": "ee48635882d75cc6ccbe78cc",
+          "name": "sitemap.xml e robots.txt",
+          "state": "incomplete",
+          "pos": 49152
+        },
+        {
+          "id": "c9a6095e992e053027f93a16",
+          "name": "Cadastrar no Google Search Console",
+          "state": "incomplete",
+          "pos": 65536
+        },
+        {
+          "id": "38cba0d3bcd89d85e20d252e",
+          "name": "Dados estruturados (Organization/Store)",
+          "state": "incomplete",
+          "pos": 81920
+        }
+      ]
+    },
+    {
+      "id": "957290c88e980fbfa799626a",
+      "idCard": "d3ed0886a8ea691feca8a7ca",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "name": "Tarefas",
+      "pos": 16384,
+      "checkItems": [
+        {
+          "id": "1567589eedc2b503242acacf",
+          "name": "Tirar da publicação: assets/*.png originais, uploads/, assets/exemplos/, retrato-time.webp",
+          "state": "incomplete",
+          "pos": 16384
+        },
+        {
+          "id": "b1c9258d09a1443fabf1fa2f",
+          "name": "Guardar os originais em outro lugar (drive da Versatte)",
+          "state": "incomplete",
+          "pos": 32768
+        },
+        {
+          "id": "cca5c2d2bd1ed16bc19ea7f3",
+          "name": "Trocar posts com preços da campanha Esquenta Novembro depois de 25/10",
+          "state": "incomplete",
+          "pos": 49152
+        }
+      ]
+    },
+    {
+      "id": "861f6b77ebc7d629f4bb7e0c",
+      "idCard": "4516e131f6f94a2fc0c1f35b",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "name": "Tarefas",
+      "pos": 16384,
+      "checkItems": [
+        {
+          "id": "71a1449f1263d8c11a971f65",
+          "name": "Apresentar as opções com custos à Versatte",
+          "state": "incomplete",
+          "pos": 16384
+        },
+        {
+          "id": "78a245f9e23d590e4d65a2e8",
+          "name": "Registrar a decisão neste card",
+          "state": "incomplete",
+          "pos": 32768
+        }
+      ]
+    },
+    {
+      "id": "d113ed3e1d93e55759ef8a7f",
+      "idCard": "8e593916eb76767723872886",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "name": "Tarefas",
+      "pos": 16384,
+      "checkItems": [
+        {
+          "id": "8ced963f821c15309b258e5f",
+          "name": "Comparar taxas de Pix e cartão, prazo de recebimento e parcelamento",
+          "state": "incomplete",
+          "pos": 16384
+        },
+        {
+          "id": "1e24e028b93f2c48dda43bfa",
+          "name": "Validar webhook com assinatura e idempotência na documentação",
+          "state": "incomplete",
+          "pos": 32768
+        },
+        {
+          "id": "4c13ede0c142322c4df2efc1",
+          "name": "Conferir exigências de cadastro (CNPJ/CPF, KYC)",
+          "state": "incomplete",
+          "pos": 49152
+        },
+        {
+          "id": "7715a8568b37152e295f0068",
+          "name": "Decisão da Versatte e abertura da conta",
+          "state": "incomplete",
+          "pos": 65536
+        }
+      ]
+    },
+    {
+      "id": "7cfaf6de4beb640446c63f31",
+      "idCard": "f95173f0faa5d96809c015ee",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "name": "Tarefas",
+      "pos": 16384,
+      "checkItems": [
+        {
+          "id": "1801cfc07133547928e38f61",
+          "name": "Definir: encomenda, pronta entrega ou os dois",
+          "state": "incomplete",
+          "pos": 16384
+        },
+        {
+          "id": "14d7d9fc1f759e95de28442d",
+          "name": "Definir prazos de produção/entrega por tipo",
+          "state": "incomplete",
+          "pos": 32768
+        },
+        {
+          "id": "6bec2609ef035cab38d4dcd0",
+          "name": "Política de trocas e devoluções (incluindo os 7 dias do CDC)",
+          "state": "incomplete",
+          "pos": 49152
+        },
+        {
+          "id": "303615f845e849c16db5673d",
+          "name": "Tabela de preços por modelo (Torcedor, Jogador, Retrô, Feminina)",
+          "state": "incomplete",
+          "pos": 65536
+        },
+        {
+          "id": "d1a4d9afd214076be759062e",
+          "name": "Verificar com o contador: CNPJ e emissão de nota fiscal",
+          "state": "incomplete",
+          "pos": 81920
+        }
+      ]
+    },
+    {
+      "id": "a99e8a5edd0d331165675d17",
+      "idCard": "496d91e8f6506c8463aa0a31",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "name": "Tarefas",
+      "pos": 16384,
+      "checkItems": [
+        {
+          "id": "a8f0c529c7a8dd1d879e5ca0",
+          "name": "Escolher integração (Melhor Envio ou Correios)",
+          "state": "incomplete",
+          "pos": 16384
+        },
+        {
+          "id": "e5c96fd9ae7a8dc54f464bcf",
+          "name": "Definir frete grátis/promocional (se houver)",
+          "state": "incomplete",
+          "pos": 32768
+        },
+        {
+          "id": "8a1141ecc08820e5a024941c",
+          "name": "Medidas e peso padrão do pacote",
+          "state": "incomplete",
+          "pos": 49152
+        }
+      ]
+    },
+    {
+      "id": "9fbcc22ca8528820f74e6086",
+      "idCard": "8091979ef06daf7f4565bc14",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "name": "Tarefas",
+      "pos": 16384,
+      "checkItems": [
+        {
+          "id": "00bb16cd67382ef744366502",
+          "name": "Escolher hospedagem e banco",
+          "state": "incomplete",
+          "pos": 16384
+        },
+        {
+          "id": "0f288f8dc6b01ebdd2778ba4",
+          "name": "Escolher provedor de autenticação",
+          "state": "incomplete",
+          "pos": 32768
+        },
+        {
+          "id": "2b6d847ee17471594b1c8a15",
+          "name": "Documentar a arquitetura e os ambientes",
+          "state": "incomplete",
+          "pos": 49152
+        }
+      ]
+    },
+    {
+      "id": "0c046db01e387eb5523473ce",
+      "idCard": "2cf9e5743abfb8bf548834d5",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "name": "Tarefas",
+      "pos": 16384,
+      "checkItems": [
+        {
+          "id": "0989815c23d9278b79eb653b",
+          "name": "Criar ambientes dev, homologação e produção",
+          "state": "incomplete",
+          "pos": 16384
+        },
+        {
+          "id": "e5125fa65bb080a67c69ec3c",
+          "name": "Segredos só em variáveis de ambiente do provedor",
+          "state": "incomplete",
+          "pos": 32768
+        },
+        {
+          "id": "9ba65d55e39a4d3b30e30d19",
+          "name": "CI: testes e build a cada push; deploy de produção só pela main",
+          "state": "incomplete",
+          "pos": 49152
+        },
+        {
+          "id": "212ba306efe7b8a39179cc79",
+          "name": "Proteção da branch main (revisão antes de publicar)",
+          "state": "incomplete",
+          "pos": 65536
+        }
+      ]
+    },
+    {
+      "id": "b54470b5efda7d8b077eff28",
+      "idCard": "635d6601ce148b22afdfd1e4",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "name": "Tarefas",
+      "pos": 16384,
+      "checkItems": [
+        {
+          "id": "e5fc710dc28a3c5dbfd2a079",
+          "name": "Modelo de dados e migrações versionadas",
+          "state": "incomplete",
+          "pos": 16384
+        },
+        {
+          "id": "33c555491d40a9f6e5832a09",
+          "name": "Valores em centavos (inteiros), nunca em ponto flutuante",
+          "state": "incomplete",
+          "pos": 32768
+        },
+        {
+          "id": "fc538fa6ac7b3bc4a284a5ae",
+          "name": "Acesso ao banco só pelo backend (sem chave de serviço no navegador)",
+          "state": "incomplete",
+          "pos": 49152
+        },
+        {
+          "id": "b91893b386114f7d0ebeee99",
+          "name": "Backup automático diário com teste de restauração",
+          "state": "incomplete",
+          "pos": 65536
+        }
+      ]
+    },
+    {
+      "id": "b492cc5f3a4f4d97491e9a98",
+      "idCard": "621b6da09c7f5e382af5be6a",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "name": "Tarefas",
+      "pos": 16384,
+      "checkItems": [
+        {
+          "id": "72c97f0ea927ec75136be019",
+          "name": "Login de administrador com 2 fatores",
+          "state": "incomplete",
+          "pos": 16384
+        },
+        {
+          "id": "ecc854051ef927ffd866b703",
+          "name": "Cadastro de produtos (reaproveitar a importação de posts do Instagram)",
+          "state": "incomplete",
+          "pos": 32768
+        },
+        {
+          "id": "4a9f2dc30c8f75e19aab048a",
+          "name": "Preços por modelo e tamanhos disponíveis",
+          "state": "incomplete",
+          "pos": 49152
+        },
+        {
+          "id": "120b613459cf679d2be85114",
+          "name": "Lista de pedidos com status e filtros",
+          "state": "incomplete",
+          "pos": 65536
+        },
+        {
+          "id": "2907fe23108ab7c7a4433eb5",
+          "name": "Gestão de cupons",
+          "state": "incomplete",
+          "pos": 81920
+        }
+      ]
+    },
+    {
+      "id": "93568b458caa529bb960f22d",
+      "idCard": "bb017f91e4dd0e44a77e01af",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "name": "Tarefas",
+      "pos": 16384,
+      "checkItems": [
+        {
+          "id": "365870b3db743f18b20d2e9d",
+          "name": "HTTPS com HSTS",
+          "state": "incomplete",
+          "pos": 16384
+        },
+        {
+          "id": "f5215d206923b8df9e5899af",
+          "name": "Cabeçalhos de segurança: CSP, X-Frame-Options, Referrer-Policy",
+          "state": "incomplete",
+          "pos": 32768
+        },
+        {
+          "id": "bfcf63b975b49ad8cf446808",
+          "name": "Rate limiting em login, cadastro, cupom e checkout",
+          "state": "incomplete",
+          "pos": 49152
+        },
+        {
+          "id": "c7992c690b8e3aad49381df3",
+          "name": "Validação de toda entrada no servidor",
+          "state": "incomplete",
+          "pos": 65536
+        },
+        {
+          "id": "70943b4f2019d06e2d1e6119",
+          "name": "Logs de auditoria de ações do painel",
+          "state": "incomplete",
+          "pos": 81920
+        },
+        {
+          "id": "da90e6190bc0038d5f7006cb",
+          "name": "Dependências atualizadas e verificadas (npm audit / Dependabot)",
+          "state": "incomplete",
+          "pos": 98304
+        }
+      ]
+    },
+    {
+      "id": "707b896c95446f73d94e8a5b",
+      "idCard": "333513fd08234789b1a9a40c",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "name": "Tarefas",
+      "pos": 16384,
+      "checkItems": [
+        {
+          "id": "6d93f6c19199c8059f8f9035",
+          "name": "Página de produto: fotos (carrossel), modelos, tamanhos, preço",
+          "state": "incomplete",
+          "pos": 16384
+        },
+        {
+          "id": "9a7c739fcd75af181ccef884",
+          "name": "Tabela de medidas e guia Torcedor x Jogador na página do produto",
+          "state": "incomplete",
+          "pos": 32768
+        },
+        {
+          "id": "c0f17ac25a5382d0572cc51f",
+          "name": "Disponibilidade por variante (esgotado / sob encomenda)",
+          "state": "incomplete",
+          "pos": 49152
+        },
+        {
+          "id": "eccd109871e2ae8bd5d5a66d",
+          "name": "URLs amigáveis por produto (bom para SEO e para compartilhar)",
+          "state": "incomplete",
+          "pos": 65536
+        }
+      ]
+    },
+    {
+      "id": "540fc572b9e7892c37d7c008",
+      "idCard": "94f535823bd21e8287fd2bab",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "name": "Tarefas",
+      "pos": 16384,
+      "checkItems": [
+        {
+          "id": "dfb0e8bb4990eda0edd7ba4d",
+          "name": "Filtros por categoria e modelo",
+          "state": "incomplete",
+          "pos": 16384
+        },
+        {
+          "id": "1867b3abf6bfe9c49432faca",
+          "name": "Busca por nome do time",
+          "state": "incomplete",
+          "pos": 32768
+        }
+      ]
+    },
+    {
+      "id": "ff5ccd1102c7e6906e2eec8b",
+      "idCard": "54cd4fb1e5083d0ac5a2bd91",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "name": "Tarefas",
+      "pos": 16384,
+      "checkItems": [
+        {
+          "id": "11da9ec7ab939677f219b15f",
+          "name": "Adicionar, remover e alterar quantidade",
+          "state": "incomplete",
+          "pos": 16384
+        },
+        {
+          "id": "385ce36a4148872856b37b16",
+          "name": "Carrinho persistente (visitante e cliente logado), unindo os dois no login",
+          "state": "incomplete",
+          "pos": 32768
+        },
+        {
+          "id": "7eeb9bd0b969dd8dd152fb0d",
+          "name": "Recalcular preço e disponibilidade no servidor",
+          "state": "incomplete",
+          "pos": 49152
+        },
+        {
+          "id": "c4513051e761f1e48a8402ee",
+          "name": "Campo de CEP com cálculo de frete",
+          "state": "incomplete",
+          "pos": 65536
+        },
+        {
+          "id": "bc33b107599309b081f5405b",
+          "name": "Campo de cupom (validação no servidor)",
+          "state": "incomplete",
+          "pos": 81920
+        }
+      ]
+    },
+    {
+      "id": "93648c27de5266e357845fb1",
+      "idCard": "7d0550807e1165f981adbc82",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "name": "Tarefas",
+      "pos": 16384,
+      "checkItems": [
+        {
+          "id": "5d4b313ce90087977203a51f",
+          "name": "Cadastro com confirmação de e-mail",
+          "state": "incomplete",
+          "pos": 16384
+        },
+        {
+          "id": "07bb1c973916ba5fdd11289f",
+          "name": "Login com e-mail e senha; login com Google opcional",
+          "state": "incomplete",
+          "pos": 32768
+        },
+        {
+          "id": "5bfcacc7c06888544efa6e31",
+          "name": "Recuperação de senha com link de uso único e expiração",
+          "state": "incomplete",
+          "pos": 49152
+        },
+        {
+          "id": "0a51c6d9bcf3189af6e28072",
+          "name": "Bloqueio temporário após tentativas erradas",
+          "state": "incomplete",
+          "pos": 65536
+        },
+        {
+          "id": "bcbe4c1a1d0adb6703a3daba",
+          "name": "Sessão em cookie httpOnly, Secure e SameSite + proteção CSRF",
+          "state": "incomplete",
+          "pos": 81920
+        },
+        {
+          "id": "72bfa7450b29b056641b25d9",
+          "name": "Senha mínima forte e verificação contra senhas vazadas",
+          "state": "incomplete",
+          "pos": 98304
+        }
+      ]
+    },
+    {
+      "id": "335d580d38cfe359735db743",
+      "idCard": "82dc52c9a69e2594fb2a72da",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "name": "Tarefas",
+      "pos": 16384,
+      "checkItems": [
+        {
+          "id": "5aafdf169e70c3519aa980d7",
+          "name": "Meus pedidos com status e rastreio",
+          "state": "incomplete",
+          "pos": 16384
+        },
+        {
+          "id": "47116f08e139d696b6072d78",
+          "name": "Endereços salvos",
+          "state": "incomplete",
+          "pos": 32768
+        },
+        {
+          "id": "2aa84ab64658884299d9dcb1",
+          "name": "Editar dados",
+          "state": "incomplete",
+          "pos": 49152
+        },
+        {
+          "id": "5e655cfc92a5214191e8460d",
+          "name": "Baixar meus dados e excluir conta (direitos do titular, LGPD)",
+          "state": "incomplete",
+          "pos": 65536
+        }
+      ]
+    },
+    {
+      "id": "8fd3aac504c2c78c247b55e7",
+      "idCard": "8e14801f906865d28af4806e",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "name": "Tarefas",
+      "pos": 16384,
+      "checkItems": [
+        {
+          "id": "de5cd8d969f8356a9d8b0343",
+          "name": "Decidir com a Versatte",
+          "state": "incomplete",
+          "pos": 16384
+        }
+      ]
+    },
+    {
+      "id": "a85a9fd154890738cea4473b",
+      "idCard": "145098c90e90629ebe10664f",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "name": "Tarefas",
+      "pos": 16384,
+      "checkItems": [
+        {
+          "id": "5e7e867ae8e13becdbddd8a1",
+          "name": "Endereço com busca por CEP",
+          "state": "incomplete",
+          "pos": 16384
+        },
+        {
+          "id": "abcce15d5d96abcc2416f500",
+          "name": "Escolha do frete",
+          "state": "incomplete",
+          "pos": 32768
+        },
+        {
+          "id": "f47edcf2bf357b6aa87c1069",
+          "name": "Resumo com valores recalculados no servidor",
+          "state": "incomplete",
+          "pos": 49152
+        },
+        {
+          "id": "21c3701ca994a99a7f6e1dba",
+          "name": "Aceite dos termos e da política de trocas",
+          "state": "incomplete",
+          "pos": 65536
+        },
+        {
+          "id": "e65d5227ad76a21d3d855d18",
+          "name": "Pedido criado com número e status \"aguardando pagamento\"",
+          "state": "incomplete",
+          "pos": 81920
+        }
+      ]
+    },
+    {
+      "id": "639303c08a5293b62e2b52fd",
+      "idCard": "d0b0e6c7e2bdaf28657a43cc",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "name": "Tarefas",
+      "pos": 16384,
+      "checkItems": [
+        {
+          "id": "b3ac20d5ea64959d3a956b74",
+          "name": "Gerar QR Code e Pix copia e cola com expiração",
+          "state": "incomplete",
+          "pos": 16384
+        },
+        {
+          "id": "e97f3ea9dc187bc0df879877",
+          "name": "Tela de aguardando pagamento com atualização automática",
+          "state": "incomplete",
+          "pos": 32768
+        },
+        {
+          "id": "4d7a9db5b50d3276814b2f66",
+          "name": "Confirmação por webhook assinado",
+          "state": "incomplete",
+          "pos": 49152
+        },
+        {
+          "id": "b483d9c9e2393856b333fef7",
+          "name": "Expirar e cancelar pedido não pago no prazo",
+          "state": "incomplete",
+          "pos": 65536
+        }
+      ]
+    },
+    {
+      "id": "a9aa981995d43418fb4ad1f5",
+      "idCard": "a9f0ffe2c9aabd6e05453c31",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "name": "Tarefas",
+      "pos": 16384,
+      "checkItems": [
+        {
+          "id": "8ebb56f330a6c7308190afd4",
+          "name": "Tokenização no navegador ou checkout do gateway",
+          "state": "incomplete",
+          "pos": 16384
+        },
+        {
+          "id": "4b0cfc4920e008ea99566cef",
+          "name": "Parcelamento com juros configuráveis",
+          "state": "incomplete",
+          "pos": 32768
+        },
+        {
+          "id": "a63e99f8c2d12bcf8ca953ad",
+          "name": "Antifraude e 3-D Secure do gateway",
+          "state": "incomplete",
+          "pos": 49152
+        },
+        {
+          "id": "0124eeabb3a2b2d39efc3f79",
+          "name": "Mensagens claras para recusa",
+          "state": "incomplete",
+          "pos": 65536
+        }
+      ]
+    },
+    {
+      "id": "fad1035d0bb82265b4954ff6",
+      "idCard": "e38b951bd7b56de1a981f218",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "name": "Tarefas",
+      "pos": 16384,
+      "checkItems": [
+        {
+          "id": "52e54fb380d5efce1d4f8e90",
+          "name": "Validar assinatura de todo webhook",
+          "state": "incomplete",
+          "pos": 16384
+        },
+        {
+          "id": "f8bf8b7f1da9be9759ded960",
+          "name": "Idempotência: o mesmo evento processado duas vezes não duplica nada",
+          "state": "incomplete",
+          "pos": 32768
+        },
+        {
+          "id": "533a93a995756253c756fbb2",
+          "name": "Conferir valor e pedido do evento com o banco",
+          "state": "incomplete",
+          "pos": 49152
+        },
+        {
+          "id": "ae80b8d73ed9a6175a22da44",
+          "name": "Registrar todo evento recebido",
+          "state": "incomplete",
+          "pos": 65536
+        },
+        {
+          "id": "f2b03c05848bc7b0ed002d6d",
+          "name": "Alerta quando um webhook falhar",
+          "state": "incomplete",
+          "pos": 81920
+        }
+      ]
+    },
+    {
+      "id": "0295bbfc55a4055d799665bb",
+      "idCard": "e17e132ef71f7bc3251c107d",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "name": "Tarefas",
+      "pos": 16384,
+      "checkItems": [
+        {
+          "id": "6aecc9cb18eb70881d940dc2",
+          "name": "Pedido recebido",
+          "state": "incomplete",
+          "pos": 16384
+        },
+        {
+          "id": "10683ef530130f588e9a517f",
+          "name": "Pagamento aprovado",
+          "state": "incomplete",
+          "pos": 32768
+        },
+        {
+          "id": "ce40d772f5507de9237512c0",
+          "name": "Pedido enviado com código de rastreio",
+          "state": "incomplete",
+          "pos": 49152
+        },
+        {
+          "id": "c7e607ea8d1b65098ac9957a",
+          "name": "Pedido cancelado/estornado",
+          "state": "incomplete",
+          "pos": 65536
+        }
+      ]
+    },
+    {
+      "id": "a655f3803f3638772ecbf146",
+      "idCard": "f31f0ffb839ccb783200761c",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "name": "Tarefas",
+      "pos": 16384,
+      "checkItems": [
+        {
+          "id": "1e8a72de1094d4d3dc28b416",
+          "name": "Cancelar pedido não pago",
+          "state": "incomplete",
+          "pos": 16384
+        },
+        {
+          "id": "52a8773d0e53625a99e3474e",
+          "name": "Estorno total e parcial via API do gateway",
+          "state": "incomplete",
+          "pos": 32768
+        },
+        {
+          "id": "915063daa611bc6c04b7a5f6",
+          "name": "Registro de quem fez e quando",
+          "state": "incomplete",
+          "pos": 49152
+        }
+      ]
+    },
+    {
+      "id": "89b2d3211b068897e61e7082",
+      "idCard": "509e08893a085c345794bd92",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "name": "Tarefas",
+      "pos": 16384,
+      "checkItems": [
+        {
+          "id": "3ada0c82da6707a7bc9bb4d6",
+          "name": "Tipos: percentual, valor fixo e frete grátis",
+          "state": "incomplete",
+          "pos": 16384
+        },
+        {
+          "id": "01c02bc97fff088a2e5c57a6",
+          "name": "Validade (início e fim)",
+          "state": "incomplete",
+          "pos": 32768
+        },
+        {
+          "id": "6cafdac8e525c24d7b26d8fb",
+          "name": "Limite de usos total e por cliente",
+          "state": "incomplete",
+          "pos": 49152
+        },
+        {
+          "id": "3ca6564a79230803d69a9f13",
+          "name": "Valor mínimo do pedido",
+          "state": "incomplete",
+          "pos": 65536
+        },
+        {
+          "id": "2c79ae57612f14d300f273c1",
+          "name": "Restrição por modelo, categoria ou produto",
+          "state": "incomplete",
+          "pos": 81920
+        },
+        {
+          "id": "72bddeb48167c78903ec026c",
+          "name": "Cupom de primeira compra",
+          "state": "incomplete",
+          "pos": 98304
+        },
+        {
+          "id": "fc8bd98d7254a5f4f2ae2ddc",
+          "name": "Proteção contra tentativa de adivinhar cupons (rate limiting)",
+          "state": "incomplete",
+          "pos": 114688
+        }
+      ]
+    },
+    {
+      "id": "3359f8d5ce2707b0d1cec911",
+      "idCard": "4f079b7b21063701d0285e54",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "name": "Tarefas",
+      "pos": 16384,
+      "checkItems": [
+        {
+          "id": "6466db88799f7b59b584c7e1",
+          "name": "Cadastro de campanha (período, slide, cupom) no painel",
+          "state": "incomplete",
+          "pos": 16384
+        },
+        {
+          "id": "1859b09d0d4d8f5a2ed7c17b",
+          "name": "Desconto \"postou no Story\": cupom liberado manualmente pela Versatte",
+          "state": "incomplete",
+          "pos": 32768
+        },
+        {
+          "id": "ba561b771f73d4aaf4a03f74",
+          "name": "Relatório de uso por cupom e campanha",
+          "state": "incomplete",
+          "pos": 49152
+        }
+      ]
+    },
+    {
+      "id": "76f805daa7e6d32102e0e18d",
+      "idCard": "d6839445759d5df7bc09b6e6",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "name": "Tarefas",
+      "pos": 16384,
+      "checkItems": [
+        {
+          "id": "574f2a0f0b50d529242cf6f1",
+          "name": "Política de privacidade",
+          "state": "incomplete",
+          "pos": 16384
+        },
+        {
+          "id": "888e94aaf4db2225b6c9c538",
+          "name": "Termos de uso",
+          "state": "incomplete",
+          "pos": 32768
+        },
+        {
+          "id": "3e5ffc6542c6f5524d02ddf7",
+          "name": "Política de trocas e devoluções (CDC art. 49)",
+          "state": "incomplete",
+          "pos": 49152
+        },
+        {
+          "id": "c65d38cb65c75bfe90cee60a",
+          "name": "Aviso de cookies (se houver cookies não essenciais)",
+          "state": "incomplete",
+          "pos": 65536
+        },
+        {
+          "id": "8f4ff3bef789cb5c834a337a",
+          "name": "Revisão por advogado/contador",
+          "state": "incomplete",
+          "pos": 81920
+        }
+      ]
+    },
+    {
+      "id": "d4243ce43a6fe4cd1a24d96d",
+      "idCard": "91773e086579ad5dd7ae9286",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "name": "Tarefas",
+      "pos": 16384,
+      "checkItems": [
+        {
+          "id": "a355c8bc399e3764c55afc7e",
+          "name": "Minimização: CPF e telefone só onde forem necessários",
+          "state": "incomplete",
+          "pos": 16384
+        },
+        {
+          "id": "4faee6b9c42dafd858646842",
+          "name": "Criptografia de dados pessoais sensíveis no banco",
+          "state": "incomplete",
+          "pos": 32768
+        },
+        {
+          "id": "fe780fe6d36aaac0a5e48627",
+          "name": "Prazo de retenção e rotina de exclusão",
+          "state": "incomplete",
+          "pos": 49152
+        },
+        {
+          "id": "6a14a59f7bdd78f8c1ff7e76",
+          "name": "Canal para o titular pedir acesso/exclusão",
+          "state": "incomplete",
+          "pos": 65536
+        },
+        {
+          "id": "deccb4679f942994d78dae5d",
+          "name": "Registro das operações de tratamento",
+          "state": "incomplete",
+          "pos": 81920
+        }
+      ]
+    },
+    {
+      "id": "603870fabc9db74fd95e6585",
+      "idCard": "1373d1271d0300fad8889240",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "name": "Tarefas",
+      "pos": 16384,
+      "checkItems": [
+        {
+          "id": "4226a016ba4859c3718d6249",
+          "name": "Testes unitários: preço, desconto, cupom, frete, estados do pedido",
+          "state": "incomplete",
+          "pos": 16384
+        },
+        {
+          "id": "3852e695b588f17929464819",
+          "name": "Teste ponta a ponta do checkout com Pix e cartão no sandbox",
+          "state": "incomplete",
+          "pos": 32768
+        },
+        {
+          "id": "ce0d1246e8409c3cfe851f34",
+          "name": "Teste de webhook repetido, fora de ordem e com assinatura inválida",
+          "state": "incomplete",
+          "pos": 49152
+        },
+        {
+          "id": "dd714293c9fed5f05008d046",
+          "name": "Testes no celular (iPhone e Android) e no desktop",
+          "state": "incomplete",
+          "pos": 65536
+        }
+      ]
+    },
+    {
+      "id": "beba7008704a9b7cc99e65d9",
+      "idCard": "9a5aa73b4ac24c481338823b",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "name": "Tarefas",
+      "pos": 16384,
+      "checkItems": [
+        {
+          "id": "a0010c5bc609fa6fec0b91f8",
+          "name": "Tentar alterar preço/quantidade/cupom pelo navegador",
+          "state": "incomplete",
+          "pos": 16384
+        },
+        {
+          "id": "ce187dbcf5cd29a806230aea",
+          "name": "Tentar ver pedido ou dados de outro cliente (IDOR)",
+          "state": "incomplete",
+          "pos": 32768
+        },
+        {
+          "id": "dd102a45c06d763d7d7b0d28",
+          "name": "Injeção (SQL/XSS) nos campos",
+          "state": "incomplete",
+          "pos": 49152
+        },
+        {
+          "id": "78863c8681d1ade912e15cd5",
+          "name": "Força bruta em login e cupom",
+          "state": "incomplete",
+          "pos": 65536
+        },
+        {
+          "id": "3dac2f6e353f83e30f756bd1",
+          "name": "Revisão de permissões do painel",
+          "state": "incomplete",
+          "pos": 81920
+        },
+        {
+          "id": "a39e1b0b73369ba11c17c33c",
+          "name": "Corrigir e retestar tudo que for encontrado",
+          "state": "incomplete",
+          "pos": 98304
+        }
+      ]
+    },
+    {
+      "id": "7b33c84abae9fdba8d185d28",
+      "idCard": "33e8e170de92dedbeaebf5ed",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "name": "Tarefas",
+      "pos": 16384,
+      "checkItems": [
+        {
+          "id": "6f8b3ed491b945fb2d5271c9",
+          "name": "Monitor de erros (ex.: Sentry)",
+          "state": "incomplete",
+          "pos": 16384
+        },
+        {
+          "id": "8d3c8a94815c87e938bda9c6",
+          "name": "Monitor de disponibilidade do site e da API",
+          "state": "incomplete",
+          "pos": 32768
+        },
+        {
+          "id": "1d8086b39dfaea1d9ed3be8a",
+          "name": "Alertas de webhook falho e de pagamento pendente",
+          "state": "incomplete",
+          "pos": 49152
+        }
+      ]
+    },
+    {
+      "id": "d38f144f633df8c8f4e08807",
+      "idCard": "fbfe8d07ed8d7cae75b77b11",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "name": "Tarefas",
+      "pos": 16384,
+      "checkItems": [
+        {
+          "id": "c80872872c1f88bd6ff8c32d",
+          "name": "Publicar em homologação com o domínio de teste",
+          "state": "incomplete",
+          "pos": 16384
+        },
+        {
+          "id": "df1a7c389497b19c59108619",
+          "name": "Trocar o DNS do domínio para a nova hospedagem",
+          "state": "incomplete",
+          "pos": 32768
+        },
+        {
+          "id": "5ccfbaa05d5f0fc7df7b114a",
+          "name": "Conferir HTTPS, redirecionamentos e links antigos",
+          "state": "incomplete",
+          "pos": 49152
+        }
+      ]
+    },
+    {
+      "id": "89d9dd380b00e72745e6bf89",
+      "idCard": "6d0d4ffb9884e19812699f61",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "name": "Tarefas",
+      "pos": 16384,
+      "checkItems": [
+        {
+          "id": "557ef3503c9b7f71fc0b8444",
+          "name": "Ativar a conta de produção do gateway",
+          "state": "incomplete",
+          "pos": 16384
+        },
+        {
+          "id": "f0cf91b2213fe1e25210b812",
+          "name": "Pedido real com Pix e com cartão, seguido de estorno",
+          "state": "incomplete",
+          "pos": 32768
+        },
+        {
+          "id": "e7890423db117aa11fe39b42",
+          "name": "Treinamento da Versatte no painel",
+          "state": "incomplete",
+          "pos": 49152
+        },
+        {
+          "id": "a3a38db5e135fa4957080d28",
+          "name": "Manual curto de uso do painel",
+          "state": "incomplete",
+          "pos": 65536
+        }
+      ]
+    },
+    {
+      "id": "3d043134ee2938f52203604f",
+      "idCard": "1c41c2c2e61ceea574a3f59e",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "name": "Tarefas",
+      "pos": 16384,
+      "checkItems": [
+        {
+          "id": "1337a3cf88d7287ddda6f069",
+          "name": "Anúncio no Instagram com link do site",
+          "state": "incomplete",
+          "pos": 16384
+        },
+        {
+          "id": "69a2a586daf7f18a6807bbd6",
+          "name": "Acompanhar os pedidos e os erros da primeira semana",
+          "state": "incomplete",
+          "pos": 32768
+        },
+        {
+          "id": "b6199cf55d622216fbb8e527",
+          "name": "Ajustes pós-lançamento",
+          "state": "incomplete",
+          "pos": 49152
+        }
+      ]
+    },
+    {
+      "id": "67c8f8c08970bf72c9235115",
+      "idCard": "b6ee5ccd3c67fd75c3039561",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "name": "Tarefas",
+      "pos": 16384,
+      "checkItems": [
+        {
+          "id": "1253dc969bf1e759d93a9ebd",
+          "name": "Definir com a Versatte quando o jogo lança",
+          "state": "incomplete",
+          "pos": 16384
+        },
+        {
+          "id": "3c9f6753c97553006d9322bb",
+          "name": "Cupons gerados pelo jogo validados pela loja",
+          "state": "incomplete",
+          "pos": 32768
+        }
+      ]
+    },
+    {
+      "id": "b0790868d1af36fe87e30f11",
+      "idCard": "44030c8147a3e787adfffbfe",
+      "idBoard": "d5d5d8e1890870a5eda433b7",
+      "name": "Tarefas",
+      "pos": 16384,
+      "checkItems": [
+        {
+          "id": "c9f82b0fac81cd6a49377936",
+          "name": "Converter a conta para comercial e conectar à API",
+          "state": "incomplete",
+          "pos": 16384
+        },
+        {
+          "id": "d8fd0b1a27d0996c8a7979d9",
+          "name": "Endpoint no backend com cache",
+          "state": "incomplete",
+          "pos": 32768
+        }
+      ]
+    }
+  ],
+  "members": [],
+  "actions": []
+}
