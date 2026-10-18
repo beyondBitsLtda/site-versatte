@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Figtree:wght@400;500;600;700&family=Mr+Dafoe&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=20261012-5">
+  <link rel="stylesheet" href="css/style.css?v=20261018-1">
   <script>
     /* Celular com "Site para computador" ligado: o navegador ignora a tag viewport e desenha a
        página com ~980px numa tela de ~400px, deixando tudo minúsculo. Este script detecta o caso,
@@ -66,8 +66,8 @@
       window.addEventListener('orientationchange', function () { setTimeout(fit, 300); });
     })();
   </script>
-  <script src="js/posts.js?v=20261012-5" defer></script>
-  <script src="js/main.js?v=20261012-5" defer></script>
+  <script src="js/posts.js?v=20261018-1" defer></script>
+  <script src="js/main.js?v=20261018-1" defer></script>
 </head>
 <body>
 
@@ -86,7 +86,7 @@
       <a href="#guia">Guia do manto</a>
       <a href="#tamanhos">Tamanhos</a>
       <a href="#como-comprar">Como comprar</a>
-      <a href="#card-game">Card Game</a>
+      <a href="#card-game" hidden data-note="versatte-cards-off">Card Game</a>
       <a href="#contato">Contato</a>
     </nav>
 
@@ -192,8 +192,8 @@
       </div>
     </article>
 
-    <!-- Slide 3 · Versatte Cards (teaser) -->
-    <article class="slide slide--cards" data-slide data-label="Versatte Cards" aria-roledescription="slide">
+    <!-- Slide 3 · Versatte Cards (teaser) · VERSATTE CARDS ESCONDIDO por enquanto (campanha futura). Para voltar, remova o atributo "hidden" aqui e nos outros 3 lugares marcados com "versatte-cards-off": slide do hero, seção #card-game, menu e rodapé. -->
+    <article class="slide slide--cards" data-slide data-label="Versatte Cards" aria-roledescription="slide" hidden data-note="versatte-cards-off">
       <div class="slide__media slide__media--cards" aria-hidden="true"></div>
       <div class="slide__content wrap cards-teaser">
         <div class="cards-teaser__text">
@@ -369,8 +369,9 @@
   </div>
 </section>
 
-<!-- ============ VERSATTE CARDS · faixa fina, cartas escapando ============ -->
-<section class="game" id="card-game">
+<!-- ============ VERSATTE CARDS · faixa fina, cartas escapando ============
+     VERSATTE CARDS ESCONDIDO por enquanto (campanha futura). Para voltar, remova o atributo "hidden" aqui e nos outros 3 lugares marcados com "versatte-cards-off": slide do hero, seção #card-game, menu e rodapé. -->
+<section class="game" id="card-game" hidden data-note="versatte-cards-off">
   <div class="game__band">
     <div class="game__net" aria-hidden="true"></div>
     <div class="wrap game__inner">
@@ -412,14 +413,13 @@
       <a href="#guia">Guia do manto</a>
       <a href="#tamanhos">Tamanhos</a>
       <a href="#como-comprar">Como comprar</a>
-      <a href="#card-game">Versatte Cards</a>
+      <a href="#card-game" hidden data-note="versatte-cards-off">Versatte Cards</a>
     </div>
 
     <div class="footer__col">
       <h3>Fale com a gente</h3>
       <a href="https://ig.me/m/versatte_sports" target="_blank" rel="noopener" data-dm><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-ig"/></svg>Direct · @versatte_sports</a>
       <a href="https://wa.me/553193168184" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-wa"/></svg>+55 31 9316-8184</a>
-      <a href="mailto:contato@versattesports.com"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-mail"/></svg>contato@versattesports.com</a>
       <span><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-pin"/></svg>Belo Horizonte · MG</span>
     </div>
   </div>

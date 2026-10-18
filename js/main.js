@@ -41,6 +41,7 @@
     const now = new Date();
     // campanhas com data-until somem sozinhas depois do último dia (horário de Brasília)
     const slides = $$('[data-slide]', hero).filter(s => {
+      if (s.hidden) { s.remove(); return false; }   // slide escondido (ex.: Versatte Cards por enquanto)
       const until = s.dataset.until;
       if (until && now > new Date(`${until}T23:59:59-03:00`)) { s.remove(); return false; }
       return true;

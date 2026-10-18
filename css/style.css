@@ -70,6 +70,7 @@ body::before {
   mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'%3E%3Cpath d='M0 0H50.0A50.0 50.0 0 0 0 0 50.0Z'/%3E%3Cpath d='M100 100H50.0A50.0 50.0 0 0 0 100 50.0Z'/%3E%3Ccircle cx='50.0' cy='50.0' r='25.0'/%3E%3Cpath fill-rule='evenodd' d='M150.0 0H200V50.0A50.0 50.0 0 0 1 150.0 100H100V50.0A50.0 50.0 0 0 1 150.0 0ZM125.0 50.0a25.0 25.0 0 1 0 50.0 0a25.0 25.0 0 1 0 -50.0 0Z'/%3E%3Cpath fill-rule='evenodd' d='M50.0 100H100V150.0A50.0 50.0 0 0 1 50.0 200H0V150.0A50.0 50.0 0 0 1 50.0 100ZM25.0 150.0a25.0 25.0 0 1 0 50.0 0a25.0 25.0 0 1 0 -50.0 0Z'/%3E%3Cpath d='M100 100H150.0A50.0 50.0 0 0 0 100 150.0Z'/%3E%3Cpath d='M200 200H150.0A50.0 50.0 0 0 0 200 150.0Z'/%3E%3Ccircle cx='150.0' cy='150.0' r='25.0'/%3E%3C/svg%3E") 0 0 / 220px 220px;
 }
 @media (max-width: 699px) { body::before { -webkit-mask-size: 160px 160px; mask-size: 160px 160px; } }
+[hidden] { display: none !important; }   /* esconder de verdade, mesmo em elementos com display próprio */
 img { display: block; max-width: 100%; }
 main { overflow-x: clip; }
 a { color: inherit; }
