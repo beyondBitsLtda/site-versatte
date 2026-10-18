@@ -285,9 +285,8 @@
     a.addEventListener('click', e => { e.preventDefault(); setMenu(false); openDmTip(text); });
   });
 
-  /* ---------- formulário de contato (Web3Forms) ----------
-     Envia para o e-mail da Versatte cadastrado no Web3Forms; a chave fica no
-     campo access_key do formulário, no index.html. */
+  /* ---------- formulário de contato (FormSubmit) ----------
+     Envia para o e-mail configurado em data-endpoint, no index.html. */
   const contato = $('[data-contact]');
   if (contato) {
     const status = $('[data-contact-status]', contato);
@@ -307,27 +306,29 @@
       }
       const dados = Object.fromEntries(new FormData(contato));
       if (dados.botcheck) return; // robô marcou o campo escondido
-      if (!dados.access_key) { avisar('O formulário ainda está sendo configurado. Por enquanto, fale com a gente pelo Direct ou pelo WhatsApp.', 'err'); return; }
+      const endpoint = contato.dataset.endpoint;
+      if (!endpoint) { avisar('O formulário ainda está sendo configurado. Por enquanto, fale com a gente pelo Direct ou pelo WhatsApp.', 'err'); return; }
       enviar.disabled = true;
       enviar.textContent = 'Enviando…';
       avisar('');
       try {
-        // envio como formulário comum (FormData): não dispara a verificação prévia (preflight) do navegador,
-        // que o filtro anti-robô do Web3Forms bloqueia
+        // FormData (não JSON): evita a verificação prévia (preflight) do navegador
         const envio = new FormData();
-        envio.append('access_key', dados.access_key);
-        envio.append('subject', `Contato pelo site · ${dados.name.trim()}`);
-        envio.append('from_name', 'Site Versatte Sports');
-        envio.append('name', dados.name.trim());
-        envio.append('email', dados.email.trim());
-        envio.append('whatsapp', (dados.whatsapp || '').trim() || 'não informado');
-        envio.append('message', dados.message.trim());
-        const r = await fetch('https://api.web3forms.com/submit', { method: 'POST', headers: { Accept: 'application/json' }, body: envio });
+        envio.append('_subject', `Contato pelo site · ${dados.name.trim()}`);
+        envio.append('_template', 'table');
+        envio.append('_captcha', 'false');
+        envio.append('Nome', dados.name.trim());
+        envio.append('email', dados.email.trim());               // vira o "responder para"
+        envio.append('WhatsApp', (dados.whatsapp || '').trim() || 'não informado');
+        envio.append('Mensagem', dados.message.trim());
+        const r = await fetch(endpoint, { method: 'POST', headers: { Accept: 'application/json' }, body: envio });
         const resposta = await r.json().catch(() => ({}));
-        if (!r.ok || !resposta.success) throw new Error(resposta.message || `HTTP ${r.status}`);
+        const ok = resposta.success === true || resposta.success === 'true';
+        if (!r.ok || !ok) throw new Error(resposta.message || `HTTP ${r.status}`);
         contato.reset();
         avisar('Mensagem enviada! A gente responde no seu e-mail em breve.', 'ok');
-      } catch {
+      } catch (erro) {
+        console.warn('Formulário de contato:', erro.message);
         avisar('Não foi possível enviar agora. Tente de novo ou fale com a gente pelo WhatsApp.', 'err');
       } finally {
         enviar.disabled = false;

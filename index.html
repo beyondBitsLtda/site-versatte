@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Figtree:wght@400;500;600;700&family=Mr+Dafoe&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=20261018-4">
+  <link rel="stylesheet" href="css/style.css?v=20261018-5">
   <script>
     /* Celular com "Site para computador" ligado: o navegador ignora a tag viewport e desenha a
        página com ~980px numa tela de ~400px, deixando tudo minúsculo. Este script detecta o caso,
@@ -66,8 +66,8 @@
       window.addEventListener('orientationchange', function () { setTimeout(fit, 300); });
     })();
   </script>
-  <script src="js/posts.js?v=20261018-4" defer></script>
-  <script src="js/main.js?v=20261018-4" defer></script>
+  <script src="js/posts.js?v=20261018-5" defer></script>
+  <script src="js/main.js?v=20261018-5" defer></script>
 </head>
 <body>
 
@@ -394,9 +394,10 @@
 </section>
 
 <!-- ============ FALE COM A GENTE (formulário de contato) ============
-     As mensagens são enviadas pelo Web3Forms (web3forms.com) para o e-mail da Versatte.
-     O e-mail de destino não fica no código: só a chave de acesso abaixo (pública por natureza).
-     Para trocar o e-mail que recebe, gere uma chave nova em web3forms.com e troque o valor de access_key. -->
+     As mensagens são enviadas pelo FormSubmit (formsubmit.co) para o e-mail em data-endpoint.
+     Na primeira mensagem o FormSubmit manda um e-mail de ativação para esse endereço; depois de
+     ativar, ele envia um código que pode substituir o e-mail no endereço (esconde o e-mail do código).
+     Para trocar o e-mail que recebe, troque o final de data-endpoint e ative de novo. -->
 <section class="section contact" id="contato">
   <div class="wrap">
     <div class="contact__card reveal">
@@ -413,8 +414,7 @@
         </div>
       </div>
 
-      <form class="contact__form" data-contact novalidate>
-        <input type="hidden" name="access_key" value="d0ea65dd-2575-478b-ad64-030e252ae484">
+      <form class="contact__form" data-contact data-endpoint="https://formsubmit.co/ajax/versatte@zohomail.com" novalidate>
         <!-- armadilha para robôs: pessoas não veem nem marcam este campo -->
         <input type="checkbox" name="botcheck" class="contact__trap" tabindex="-1" autocomplete="off" aria-hidden="true">
 

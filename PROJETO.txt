@@ -81,15 +81,20 @@ Fixo na tela: botão flutuante do WhatsApp.
 
 4.1b Formulário "Fale com a gente"
     Seção antes do rodapé (link "Contato" do menu). Nome, e-mail, WhatsApp
-    (opcional) e mensagem. O envio é feito pelo Web3Forms (web3forms.com,
-    gratuito, ~250 mensagens/mês) para o e-mail cadastrado lá; a mensagem chega
-    com o assunto "Contato pelo site · Nome" e responder vai para quem escreveu.
-    - A chave fica no campo access_key do formulário, no index.html. Ela é
-      pública por natureza (não revela o e-mail de destino).
-    - Para trocar o e-mail que recebe: gere uma chave nova em
-      https://web3forms.com/#start com o e-mail novo e troque o access_key.
-    - O envio é feito como FormData (não JSON): JSON dispara uma verificação
-      prévia do navegador que o filtro anti-robô do Web3Forms bloqueia.
+    (opcional) e mensagem. O envio é feito pelo FormSubmit (formsubmit.co,
+    gratuito, sem cadastro) para o e-mail que está em data-endpoint, no
+    <form data-contact> do index.html (hoje: versatte@zohomail.com).
+    - Na primeira mensagem enviada a partir do site, o FormSubmit manda um
+      e-mail de ATIVAÇÃO para esse endereço; é preciso clicar em "Activate".
+    - Depois de ativar, ele envia um código aleatório que pode substituir o
+      e-mail no data-endpoint (https://formsubmit.co/ajax/CODIGO), escondendo
+      o e-mail do código do site.
+    - Para trocar o e-mail que recebe: troque o final do data-endpoint e
+      ative de novo.
+    - O envio é feito como FormData (não JSON), para o navegador não fazer a
+      verificação prévia (preflight).
+    - Histórico: o Web3Forms foi testado e entregava, mas o Zoho gratuito
+      barrava as mensagens dele.
 
 4.2 Campanhas no topo
     Copie o slide "Esquenta Novembro" no index.html e troque textos e imagens.
