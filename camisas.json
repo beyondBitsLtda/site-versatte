@@ -1,0 +1,10 @@
+{
+  "_leia-me": "Camisas da galeria do site, por grupo e na ordem em que aparecem. Campos de cada camisa: link (post do Instagram), etiqueta (selo pequeno no card), titulo (parte em caixa alta), cursiva (parte em letra cursiva), nome (como a camisa aparece na mensagem do Direct/WhatsApp; se faltar, usa titulo + cursiva) e, opcional, mensagem (texto próprio para o Direct/WhatsApp). Para criar outro grupo, copie o bloco \"Camisas destaque\" com outro nome. Depois de editar, rode: node tools/instagram.mjs",
+
+  "Camisas destaque": [
+    { "link": "https://www.instagram.com/p/DekhzfclZoE/", "etiqueta": "Modelo Torcedor", "titulo": "Cruzeiro", "cursiva": "a mais pedida", "nome": "Cruzeiro" },
+    { "link": "https://www.instagram.com/p/DeSt8_9DErk/", "etiqueta": "Modelo Torcedor", "titulo": "Chelsea", "cursiva": "Black & Gold", "nome": "Chelsea Black & Gold" },
+    { "link": "https://www.instagram.com/p/DefgVnTlZ0U/", "etiqueta": "Modelo Retrô", "titulo": "PSG", "cursiva": "anos 90", "nome": "PSG anos 90" },
+    { "link": "https://www.instagram.com/p/Dd-LvSkDP4B/", "etiqueta": "Lançamento", "titulo": "Argentina", "cursiva": "edição Messi", "nome": "Argentina edição Messi" }
+  ]
+}

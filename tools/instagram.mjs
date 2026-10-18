@@ -1,24 +1,25 @@
 #!/usr/bin/env node
 /*
-  Importa posts do Instagram da Versatte para a vitrine.
+  Importa os posts do Instagram da Versatte para a galeria do site.
 
-  Para cada post: baixa todas as fotos do carrossel na resolução original
-  (1440px para a prévia e 1080px para a galeria) e atualiza legenda,
-  curtidas, número de comentários e data em js/posts.js.
+  O que aparece na galeria é definido no arquivo camisas.json (raiz do site):
+  cada grupo (ex.: "Camisas destaque") tem a lista de camisas, com o link do
+  post e os textos do card. Esta ferramenta lê esse arquivo, baixa as fotos
+  de cada post (todas as do carrossel, na resolução original) com legenda,
+  curtidas, comentários e data, e gera js/posts.js, que o site carrega.
 
   Uso (na pasta do site, precisa de Node 22+ e Edge ou Chrome instalados):
-    node tools/instagram.mjs                      atualiza todos os posts de js/posts.js
-    node tools/instagram.mjs <link ou código>...  adiciona/atualiza posts específicos
+    node tools/instagram.mjs          baixa só os posts novos e regenera o site
+    node tools/instagram.mjs --tudo   baixa de novo todos (atualiza curtidas e fotos)
 
-  Exemplo:
-    node tools/instagram.mjs https://www.instagram.com/p/DeSt8_9DErk/
-
-  Depois de adicionar um post novo, edite em js/posts.js os campos de texto
-  da vitrine (tag, caps, script e name). Eles nunca são sobrescritos.
-  Para tirar um post da vitrine, apague o bloco dele em js/posts.js.
+  Fluxo para trocar as camisas:
+    1. edite camisas.json (adicione, tire ou reordene os links e textos);
+    2. rode: node tools/instagram.mjs
+    3. publique (commit + push).
+  Fotos de posts que saíram do camisas.json são apagadas de assets/posts/.
 */
 import { spawn } from 'node:child_process';
-import { existsSync, mkdirSync, readFileSync, writeFileSync, rmSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync, rmSync, readdirSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -28,22 +29,47 @@ const DATA_FILE = path.join(ROOT, 'js', 'posts.js');
 const POSTS_DIR = path.join(ROOT, 'assets', 'posts');
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
-/* ---------- posts.js ---------- */
-const HEADER = `// Posts da vitrine. Gerado por tools/instagram.mjs (veja as instruções lá).
-// Pode editar à mão: tag, caps, script, name e msg (mensagem opcional para o direct).
-// Mantenha o formato JSON (aspas duplas, sem vírgula sobrando).
-window.VERSATTE_POSTS = `;
+/* ---------- camisas.json (entrada) e js/posts.js (saída) ---------- */
+const CONFIG_FILE = path.join(ROOT, 'camisas.json');
+const HEADER = `// GERADO por tools/instagram.mjs a partir de camisas.json. Não edite aqui:
+// mude camisas.json e rode "node tools/instagram.mjs".
+window.VERSATTE_CAMISAS = `;
 
-function readPosts() {
-  if (!existsSync(DATA_FILE)) return [];
-  const src = readFileSync(DATA_FILE, 'utf8');
-  const start = src.indexOf('[');
-  const end = src.lastIndexOf(']');
-  return JSON.parse(src.slice(start, end + 1));
+const codeFrom = s => {
+  const t = String(s || '').trim();
+  return (t.match(/instagram\.com\/(?:[^/]+\/)?(?:p|reel)\/([A-Za-z0-9_-]+)/) || t.match(/^([A-Za-z0-9_-]{8,})$/) || [])[1];
+};
+
+function readConfig() {
+  if (!existsSync(CONFIG_FILE)) throw new Error('não achei camisas.json na raiz do site');
+  let cfg;
+  try { cfg = JSON.parse(readFileSync(CONFIG_FILE, 'utf8')); }
+  catch (e) { throw new Error(`camisas.json tem um erro de formato (${e.message}). Confira aspas e vírgulas.`); }
+  return Object.entries(cfg)
+    .filter(([grupo, lista]) => !grupo.startsWith('_') && Array.isArray(lista))
+    .map(([grupo, lista]) => ({
+      grupo,
+      camisas: lista.map((item, i) => {
+        const c = typeof item === 'string' ? { link: item } : item;
+        const code = codeFrom(c.link);
+        if (!code) throw new Error(`"${grupo}", item ${i + 1}: link do Instagram inválido (${c.link})`);
+        return { ...c, code };
+      }),
+    }));
 }
-const writePosts = posts => writeFileSync(DATA_FILE, `${HEADER}${JSON.stringify(posts, null, 2)};\n`);
 
-const codeFrom = s => (s.match(/(?:\/p\/|\/reel\/)?([A-Za-z0-9_-]{8,})\/?(?:\?.*)?$/) || [])[1];
+// dados já baixados (aceita o formato antigo, VERSATTE_POSTS, e o atual)
+function readCache() {
+  const cache = new Map();
+  if (!existsSync(DATA_FILE)) return cache;
+  const src = readFileSync(DATA_FILE, 'utf8');
+  try {
+    const data = JSON.parse(src.slice(src.indexOf('['), src.lastIndexOf(']') + 1));
+    const posts = data.flatMap(d => (Array.isArray(d.camisas) ? d.camisas : [d]));
+    for (const p of posts) if (p.code && p.images?.length) cache.set(p.code, p);
+  } catch {}
+  return cache;
+}
 
 /* ---------- navegador headless (Edge ou Chrome) ---------- */
 function findBrowser() {
@@ -154,52 +180,86 @@ async function download(url, file) {
 }
 
 /* ---------- principal ---------- */
-const posts = readPosts();
-const args = process.argv.slice(2);
-const codes = args.length ? args.map(codeFrom).filter(Boolean) : posts.map(p => p.code);
-if (!codes.length) { console.log('Nenhum post para importar. Passe um link: node tools/instagram.mjs https://www.instagram.com/p/CODIGO/'); process.exit(0); }
+const tudo = process.argv.includes('--tudo');
+const grupos = readConfig();
+const cache = readCache();
+const codes = [...new Set(grupos.flatMap(g => g.camisas.map(c => c.code)))];
+const imagesOk = p => p?.images?.length && p.images.every(f => existsSync(path.join(ROOT, f)));
+const baixar = codes.filter(code => tudo || !imagesOk(cache.get(code)));
 
-const browser = await openBrowser();
 let failures = 0;
-try {
-  for (const code of codes) {
-    process.stdout.write(`• ${code} ... `);
-    try {
-      const [embed, meta] = [await scrapeEmbed(browser, code), await scrapeMeta(code)];
-      if (!embed.slides.length) throw new Error('nenhuma foto encontrada (o post é público?)');
-      if (embed.dots && embed.dots !== embed.slides.length) console.log(`\n  aviso: o carrossel tem ${embed.dots} itens, baixei ${embed.slides.length} (vídeos não entram)`);
-      const dir = path.join(POSTS_DIR, code);
-      rmSync(dir, { recursive: true, force: true }); // remove fotos antigas do post
-      mkdirSync(dir, { recursive: true });
-      const images = [], thumbs = [];
-      for (const [i, s] of embed.slides.entries()) {
-        await download(s.large, path.join(dir, `${i + 1}.jpg`));
-        images.push(`assets/posts/${code}/${i + 1}.jpg`);
-        if (s.small === s.large) { thumbs.push(images[i]); continue; } // o Instagram só tem uma versão
-        await download(s.small, path.join(dir, `${i + 1}-1080.jpg`));
-        thumbs.push(`assets/posts/${code}/${i + 1}-1080.jpg`);
+if (baixar.length) {
+  const browser = await openBrowser();
+  try {
+    for (const code of baixar) {
+      process.stdout.write(`• ${code} ... `);
+      try {
+        const [embed, meta] = [await scrapeEmbed(browser, code), await scrapeMeta(code)];
+        if (!embed.slides.length) throw new Error('nenhuma foto encontrada (o post é público?)');
+        if (embed.dots && embed.dots !== embed.slides.length) console.log(`\n  aviso: o carrossel tem ${embed.dots} itens, baixei ${embed.slides.length} (vídeos não entram)`);
+        const dir = path.join(POSTS_DIR, code);
+        rmSync(dir, { recursive: true, force: true }); // remove fotos antigas do post
+        mkdirSync(dir, { recursive: true });
+        const images = [], thumbs = [];
+        for (const [i, s] of embed.slides.entries()) {
+          await download(s.large, path.join(dir, `${i + 1}.jpg`));
+          images.push(`assets/posts/${code}/${i + 1}.jpg`);
+          if (s.small === s.large) { thumbs.push(images[i]); continue; } // o Instagram só tem uma versão
+          await download(s.small, path.join(dir, `${i + 1}-1080.jpg`));
+          thumbs.push(`assets/posts/${code}/${i + 1}-1080.jpg`);
+        }
+        const antigo = cache.get(code) || {};
+        cache.set(code, {
+          code, images, thumbs,
+          caption: embed.caption || antigo.caption || '',
+          likes: embed.likes ?? meta.likes ?? antigo.likes ?? 0,
+          comments: meta.comments ?? antigo.comments ?? 0,
+          date: meta.date || antigo.date || null,
+        });
+        console.log(`ok (${images.length} foto${images.length > 1 ? 's' : ''}, ${cache.get(code).likes} curtidas)`);
+      } catch (e) {
+        failures++;
+        console.log(`falhou: ${e.message}`);
       }
-      let post = posts.find(p => p.code === code);
-      if (!post) {
-        post = { code, tag: 'Destaque', caps: 'Nova', script: 'camisa', name: 'Nova camisa' };
-        posts.unshift(post);
-        console.log('\n  post novo: edite tag, caps, script e name em js/posts.js');
-      }
-      Object.assign(post, {
-        images, thumbs,
-        caption: embed.caption || post.caption || '',
-        likes: embed.likes ?? meta.likes ?? post.likes ?? 0,
-        comments: meta.comments ?? post.comments ?? 0,
-        date: meta.date || post.date || null,
-      });
-      writePosts(posts);
-      console.log(`ok (${images.length} foto${images.length > 1 ? 's' : ''}, ${post.likes} curtidas, ${post.comments} comentários)`);
-    } catch (e) {
-      failures++;
-      console.log(`falhou: ${e.message}`);
     }
+  } finally {
+    browser.close();
   }
-} finally {
-  browser.close();
+} else {
+  console.log('Nenhum post novo para baixar (use --tudo para atualizar todos).');
 }
+
+// monta js/posts.js na ordem do camisas.json
+const semTexto = [];
+const saida = grupos.map(({ grupo, camisas }) => ({
+  grupo,
+  camisas: camisas.filter(c => cache.has(c.code)).map(c => {
+    const d = cache.get(c.code);
+    if (!c.titulo) semTexto.push(`${grupo}: ${c.link}`);
+    const caps = c.titulo || 'Camisa';
+    const script = c.cursiva || '';
+    return {
+      code: c.code,
+      link: `https://www.instagram.com/p/${c.code}/`,
+      tag: c.etiqueta || grupo,
+      caps, script,
+      name: c.nome || [caps, script].filter(Boolean).join(' '),
+      ...(c.mensagem ? { msg: c.mensagem } : {}),
+      images: d.images, thumbs: d.thumbs,
+      caption: d.caption, likes: d.likes, comments: d.comments, date: d.date,
+    };
+  }),
+}));
+writeFileSync(DATA_FILE, `${HEADER}${JSON.stringify(saida, null, 2)};\n`);
+
+// apaga fotos de posts que saíram do camisas.json
+if (existsSync(POSTS_DIR)) {
+  for (const nome of readdirSync(POSTS_DIR)) {
+    if (!codes.includes(nome)) { rmSync(path.join(POSTS_DIR, nome), { recursive: true, force: true }); console.log(`removido: assets/posts/${nome} (saiu do camisas.json)`); }
+  }
+}
+
+const total = saida.reduce((n, g) => n + g.camisas.length, 0);
+console.log(`\njs/posts.js gerado: ${saida.map(g => `${g.grupo} (${g.camisas.length})`).join(', ')} · ${total} camisa(s).`);
+if (semTexto.length) console.log(`Faltam textos (titulo/cursiva/etiqueta) em camisas.json para:\n  ${semTexto.join('\n  ')}`);
 process.exitCode = failures ? 1 : 0;

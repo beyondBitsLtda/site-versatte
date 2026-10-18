@@ -11,7 +11,9 @@
 
   const WA_NUMBER = '553193168184';
   const IG_USER = 'versatte_sports';
-  const POSTS = window.VERSATTE_POSTS || [];
+  // camisas da galeria, por grupo (gerado de camisas.json por tools/instagram.mjs)
+  const GRUPOS = window.VERSATTE_CAMISAS || (window.VERSATTE_POSTS ? [{ grupo: '', camisas: window.VERSATTE_POSTS }] : []);
+  const POSTS = GRUPOS.flatMap(g => g.camisas);
   const postUrl = code => `https://www.instagram.com/p/${code}/`;
   const waLink = text => `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(text)}`;
   // o Instagram não documenta texto pronto no ig.me; mandamos ?text= mesmo assim e copiamos a mensagem
@@ -286,7 +288,9 @@
   /* ---------- galeria de camisas (a partir de js/posts.js) ---------- */
   const shop = $('[data-shop]');
   if (shop) {
-    shop.innerHTML = POSTS.map((p, i) => {
+    let i = -1;
+    const cardHTMLDaCamisa = p => {
+      i++;
       const imgs = (p.thumbs || p.images || []).slice(0, 2);
       const total = (p.images || []).length;
       return `
@@ -304,7 +308,10 @@
           </div>
         </div>
       </li>`;
-    }).join('');
+    };
+    // com mais de um grupo, cada grupo ganha um título próprio dentro da galeria
+    shop.innerHTML = GRUPOS.map(g => (GRUPOS.length > 1 && g.grupo ? `<li class="shop__group"><h3>${esc(g.grupo)}</h3></li>` : '')
+      + g.camisas.map(cardHTMLDaCamisa).join('')).join('');
   }
   const postOf = el => {
     const code = el.closest('[data-code]')?.dataset.code;

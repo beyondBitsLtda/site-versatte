@@ -24,7 +24,8 @@ index.html              página única, com todas as seções
 css/style.css           todo o visual (cores, fontes e medidas ficam no :root)
 js/main.js              comportamento: slider, galeria, prévia do post,
                         pedido, Direct/WhatsApp, cartas do jogo, faixa animada
-js/posts.js             DADOS das camisas da galeria (gerado pela ferramenta)
+camisas.json            QUAIS camisas aparecem na galeria (edite este)
+js/posts.js             dados das camisas, gerado pela ferramenta (não edite)
 tools/instagram.mjs     ferramenta que importa posts do Instagram
 assets/img/             imagens otimizadas que o site usa (WebP)
 assets/posts/<código>/  fotos de cada post, baixadas do Instagram
@@ -43,7 +44,7 @@ logo.png                logo original em alta (fonte de assets/img/logo-vs.*)
    - Teaser do Versatte Cards.
    Embaixo do topo há uma borda curva com uma faixa de "tecido" laranja que
    acompanha a curva, com texto correndo (desenhada em SVG pelo main.js).
-2) Camisas em destaque: cards montados a partir de js/posts.js. Tocar na foto
+2) Camisas em destaque: cards montados a partir de camisas.json (via js/posts.js). Tocar na foto
    abre a prévia no formato do Instagram (carrossel, legenda, curtidas).
 3) Guia do manto: diferença entre Versão Torcedor e Versão Jogador, com fotos
    de detalhe.
@@ -58,23 +59,25 @@ Fixo na tela: botão flutuante do WhatsApp.
 
 4. COMO ATUALIZAR
 --------------------------------------------------------------------------------
-4.1 Adicionar ou atualizar uma camisa da galeria
-    Precisa de Node 22+ e Edge ou Chrome instalados. Na pasta do site:
-
-      node tools/instagram.mjs https://www.instagram.com/p/CODIGO/
-
-    A ferramenta abre o post de forma invisível, percorre o carrossel, baixa
-    todas as fotos na resolução original (1440 px na primeira, 1080 px nas
-    demais) e grava legenda, curtidas, comentários e data em js/posts.js.
-    Depois, edite em js/posts.js os textos da vitrine daquele post:
-      tag     etiqueta do card (ex.: "Modelo Torcedor")
-      caps    parte em caixa alta do título (ex.: "Chelsea")
-      script  parte em letra cursiva (ex.: "Black & Gold")
-      name    nome usado nas mensagens (ex.: "Chelsea Black & Gold")
-      msg     opcional: mensagem própria para o Direct/WhatsApp
-    Para atualizar curtidas e fotos de todos os posts:  node tools/instagram.mjs
-    Para tirar uma camisa do site: apague o bloco dela em js/posts.js.
-    A ordem dos blocos em js/posts.js é a ordem dos cards no site.
+4.1 Camisas da galeria (camisas.json)
+    A galeria mostra SOMENTE posts de venda de camisas listados em camisas.json,
+    na raiz do site, separados por grupo (hoje: "Camisas destaque"). Cada camisa:
+      link      link do post no Instagram
+      etiqueta  selo pequeno do card (ex.: "Modelo Torcedor", "Lançamento")
+      titulo    parte em caixa alta (ex.: "Chelsea")
+      cursiva   parte em letra cursiva (ex.: "Black & Gold")
+      nome      como a camisa aparece na mensagem do Direct/WhatsApp
+                (sem o modelo, que o cliente escolhe na janela de pedido)
+      mensagem  opcional: texto próprio para a mensagem
+    Para trocar, adicionar, tirar ou reordenar camisas: edite camisas.json e rode
+      node tools/instagram.mjs
+    (precisa de Node 22+ e Edge ou Chrome). A ferramenta baixa só os posts novos,
+    com todas as fotos do carrossel em resolução original, legenda, curtidas e
+    data, gera js/posts.js (não edite esse arquivo à mão) e apaga de
+    assets/posts/ as fotos dos posts que saíram da lista.
+    Para atualizar curtidas e fotos de todos:  node tools/instagram.mjs --tudo
+    Para criar outro grupo (ex.: "Retrô"), copie o bloco "Camisas destaque" com
+    outro nome: cada grupo ganha um título próprio na galeria.
 
 4.2 Campanhas no topo
     Copie o slide "Esquenta Novembro" no index.html e troque textos e imagens.
