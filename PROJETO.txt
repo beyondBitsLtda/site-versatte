@@ -79,6 +79,18 @@ Fixo na tela: botão flutuante do WhatsApp.
     Para criar outro grupo (ex.: "Retrô"), copie o bloco "Camisas destaque" com
     outro nome: cada grupo ganha um título próprio na galeria.
 
+4.1b Formulário "Fale com a gente"
+    Seção antes do rodapé (link "Contato" do menu). Nome, e-mail, WhatsApp
+    (opcional) e mensagem. O envio é feito pelo Web3Forms (web3forms.com,
+    gratuito, ~250 mensagens/mês) para o e-mail cadastrado lá; a mensagem chega
+    com o assunto "Contato pelo site · Nome" e responder vai para quem escreveu.
+    - A chave fica no campo access_key do formulário, no index.html. Ela é
+      pública por natureza (não revela o e-mail de destino).
+    - Para trocar o e-mail que recebe: gere uma chave nova em
+      https://web3forms.com/#start com o e-mail novo e troque o access_key.
+    - O envio é feito como FormData (não JSON): JSON dispara uma verificação
+      prévia do navegador que o filtro anti-robô do Web3Forms bloqueia.
+
 4.2 Campanhas no topo
     Copie o slide "Esquenta Novembro" no index.html e troque textos e imagens.
     O atributo data-until="AAAA-MM-DD" esconde o slide automaticamente depois

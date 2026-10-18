@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Figtree:wght@400;500;600;700&family=Mr+Dafoe&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=20261018-2">
+  <link rel="stylesheet" href="css/style.css?v=20261018-4">
   <script>
     /* Celular com "Site para computador" ligado: o navegador ignora a tag viewport e desenha a
        página com ~980px numa tela de ~400px, deixando tudo minúsculo. Este script detecta o caso,
@@ -66,8 +66,8 @@
       window.addEventListener('orientationchange', function () { setTimeout(fit, 300); });
     })();
   </script>
-  <script src="js/posts.js?v=20261018-2" defer></script>
-  <script src="js/main.js?v=20261018-2" defer></script>
+  <script src="js/posts.js?v=20261018-4" defer></script>
+  <script src="js/main.js?v=20261018-4" defer></script>
 </head>
 <body>
 
@@ -393,10 +393,61 @@
   </div>
 </section>
 
+<!-- ============ FALE COM A GENTE (formulário de contato) ============
+     As mensagens são enviadas pelo Web3Forms (web3forms.com) para o e-mail da Versatte.
+     O e-mail de destino não fica no código: só a chave de acesso abaixo (pública por natureza).
+     Para trocar o e-mail que recebe, gere uma chave nova em web3forms.com e troque o valor de access_key. -->
+<section class="section contact" id="contato">
+  <div class="wrap">
+    <div class="contact__card reveal">
+      <div class="contact__intro">
+        <p class="eyebrow">Fale com a gente</p>
+        <h2 class="display display--sm">
+          <span class="display__caps">Mande sua</span>
+          <span class="display__script">mensagem</span>
+        </h2>
+        <p class="contact__lead">Dúvida sobre uma camisa, tamanho ou pedido? Escreva aqui que a gente responde por e-mail. Se preferir algo mais rápido, chama no Direct ou no WhatsApp.</p>
+        <div class="contact__alt">
+          <a class="btn btn--line btn--sm" href="https://ig.me/m/versatte_sports" target="_blank" rel="noopener" data-dm><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-send"/></svg> Direct</a>
+          <a class="btn btn--wa btn--sm" href="https://wa.me/553193168184?text=Ol%C3%A1!%20Vi%20o%20site%20da%20Versatte%20Sports." target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-wa"/></svg> WhatsApp</a>
+        </div>
+      </div>
+
+      <form class="contact__form" data-contact novalidate>
+        <input type="hidden" name="access_key" value="934d4118-70d5-4045-a1a1-f87fc028247f">
+        <!-- armadilha para robôs: pessoas não veem nem marcam este campo -->
+        <input type="checkbox" name="botcheck" class="contact__trap" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+        <label class="field">
+          <span>Nome *</span>
+          <input type="text" name="name" autocomplete="name" required maxlength="80">
+        </label>
+        <div class="field-row">
+          <label class="field">
+            <span>E-mail *</span>
+            <input type="email" name="email" autocomplete="email" required maxlength="120">
+          </label>
+          <label class="field">
+            <span>WhatsApp <small>(opcional)</small></span>
+            <input type="tel" name="whatsapp" autocomplete="tel" inputmode="tel" maxlength="20" placeholder="(31) 9 0000-0000">
+          </label>
+        </div>
+        <label class="field">
+          <span>Mensagem *</span>
+          <textarea name="message" rows="5" required maxlength="2000"></textarea>
+        </label>
+        <p class="contact__privacy">Usamos seus dados só para responder este contato.</p>
+        <button class="btn btn--solid" type="submit" data-contact-send>Enviar mensagem</button>
+        <p class="contact__status" role="status" aria-live="polite" data-contact-status></p>
+      </form>
+    </div>
+  </div>
+</section>
+
 </main>
 
 <!-- ============ RODAPÉ ============ -->
-<footer class="footer" id="contato">
+<footer class="footer" id="rodape">
   <div class="wrap footer__grid">
     <div class="footer__brand">
       <img src="assets/img/logo-vs.webp" alt="Versatte Sports" width="480" height="573" loading="lazy">

@@ -285,6 +285,57 @@
     a.addEventListener('click', e => { e.preventDefault(); setMenu(false); openDmTip(text); });
   });
 
+  /* ---------- formulário de contato (Web3Forms) ----------
+     Envia para o e-mail da Versatte cadastrado no Web3Forms; a chave fica no
+     campo access_key do formulário, no index.html. */
+  const contato = $('[data-contact]');
+  if (contato) {
+    const status = $('[data-contact-status]', contato);
+    const enviar = $('[data-contact-send]', contato);
+    const avisar = (texto, tipo = '') => { status.textContent = texto; status.className = `contact__status${tipo ? ` is-${tipo}` : ''}`; };
+    contato.addEventListener('input', e => e.target.closest('.field')?.classList.remove('is-invalid'));
+    contato.addEventListener('submit', async e => {
+      e.preventDefault();
+      const obrigatorios = [...contato.querySelectorAll('input[required], textarea[required]')];
+      const invalidos = obrigatorios.filter(c => !c.value.trim() || !c.checkValidity());
+      obrigatorios.forEach(c => c.closest('.field').classList.toggle('is-invalid', invalidos.includes(c)));
+      if (invalidos.length) {
+        const emailErrado = invalidos.some(c => c.type === 'email' && c.value.trim());
+        avisar(emailErrado ? 'Confira o e-mail digitado.' : 'Preencha nome, e-mail e mensagem.', 'err');
+        invalidos[0].focus();
+        return;
+      }
+      const dados = Object.fromEntries(new FormData(contato));
+      if (dados.botcheck) return; // robô marcou o campo escondido
+      if (!dados.access_key) { avisar('O formulário ainda está sendo configurado. Por enquanto, fale com a gente pelo Direct ou pelo WhatsApp.', 'err'); return; }
+      enviar.disabled = true;
+      enviar.textContent = 'Enviando…';
+      avisar('');
+      try {
+        // envio como formulário comum (FormData): não dispara a verificação prévia (preflight) do navegador,
+        // que o filtro anti-robô do Web3Forms bloqueia
+        const envio = new FormData();
+        envio.append('access_key', dados.access_key);
+        envio.append('subject', `Contato pelo site · ${dados.name.trim()}`);
+        envio.append('from_name', 'Site Versatte Sports');
+        envio.append('name', dados.name.trim());
+        envio.append('email', dados.email.trim());
+        envio.append('whatsapp', (dados.whatsapp || '').trim() || 'não informado');
+        envio.append('message', dados.message.trim());
+        const r = await fetch('https://api.web3forms.com/submit', { method: 'POST', headers: { Accept: 'application/json' }, body: envio });
+        const resposta = await r.json().catch(() => ({}));
+        if (!r.ok || !resposta.success) throw new Error(resposta.message || `HTTP ${r.status}`);
+        contato.reset();
+        avisar('Mensagem enviada! A gente responde no seu e-mail em breve.', 'ok');
+      } catch {
+        avisar('Não foi possível enviar agora. Tente de novo ou fale com a gente pelo WhatsApp.', 'err');
+      } finally {
+        enviar.disabled = false;
+        enviar.textContent = 'Enviar mensagem';
+      }
+    });
+  }
+
   /* ---------- galeria de camisas (a partir de js/posts.js) ---------- */
   const shop = $('[data-shop]');
   if (shop) {
