@@ -1,0 +1,28 @@
+{
+  "_leia-me": "Catálogo do site (seção Catálogo). A ferramenta tools/catalogo.mjs lê os álbuns da(s) fonte(s), classifica cada camisa num modelo, baixa as fotos e gera js/catalogo.js. Campos: fonte (deixe vazio: o link fica no segredo CATALOGO_FONTE do GitHub e, no computador, no arquivo catalogo.local.json, que não vai para o Git; este arquivo é público), fotosPorCamisa (quantas fotos cada camisa mostra), modelos (nome, preço e palavras do título que identificam o modelo; a primeira regra que bater vence, e o modelo sem palavras recebe o resto; no site as abas aparecem do mais barato ao mais caro), excluir (palavras do título que tiram o álbum do catálogo: feminina, infantil, treino etc.), esconder (códigos de camisas que não devem aparecer) e ajustes (correções por código: time, detalhe e/ou modelo). O código de cada camisa aparece na mensagem do pedido. Depois de editar, rode: node tools/catalogo.mjs (ou node tools/catalogo.mjs --local para só aplicar preço/nomes sem baixar nada).",
+
+  "fonte": "",
+  "fotosPorCamisa": 4,
+
+  "modelos": [
+    { "id": "retro", "nome": "Retrô", "preco": 189.90, "palavras": ["retro", "vintage", "reissue"] },
+    { "id": "jogador", "nome": "Jogador", "preco": 169.90, "palavras": ["player", "players"] },
+    { "id": "torcedor", "nome": "Torcedor", "preco": 144.90, "palavras": [] }
+  ],
+
+  "excluir": [
+    "women", "womens", "woman", "ladies", "female", "cropped",
+    "kids", "kid", "children", "child", "baby", "infant",
+    "training", "trainning", "train", "pre match", "prematch", "warm up",
+    "vest", "sleeveless", "tank top",
+    "long sleeve", "long sleeves", "long sleeved",
+    "polo", "windbreaker", "jacket", "coat", "hoodie", "sweater", "suit", "tracksuit",
+    "shorts", "short", "pants", "trousers", "socks", "hat", "cap", "bag",
+    "t shirt", "tshirt", "casual", "clothes", "clothing", "wear", "kit", "set",
+    "nbb", "basketball", "baseball", "american football", "nfl", "trench"
+  ],
+
+  "esconder": [],
+
+  "ajustes": {}
+}

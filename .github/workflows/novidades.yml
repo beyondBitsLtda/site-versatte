@@ -1,0 +1,47 @@
+# Novidades do Insta: a cada 6 horas pega os 4 posts mais recentes do Instagram e publica no site.
+# Precisa do segredo INSTAGRAM_FEED (link do feed JSON do Behold) em
+# Settings > Secrets and variables > Actions > New repository secret. Sem ele, não faz nada.
+# Para rodar na hora: aba Actions > Novidades do Insta > Run workflow.
+name: Novidades do Insta
+
+on:
+  schedule:
+    - cron: '17 */6 * * *'   # a cada 6 horas (o Behold grátis atualiza o feed 1 vez por dia)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: dados-do-site
+  cancel-in-progress: false
+
+jobs:
+  novidades:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Busca os posts mais recentes
+        env:
+          INSTAGRAM_FEED: ${{ secrets.INSTAGRAM_FEED }}
+        run: |
+          if [ -z "$INSTAGRAM_FEED" ]; then
+            echo "::warning::Configure o segredo INSTAGRAM_FEED para as Novidades do Insta se atualizarem sozinhas."
+            exit 0
+          fi
+          node tools/instagram.mjs
+
+      - name: Publica se mudou
+        run: |
+          git add js/posts.js assets/posts
+          if git diff --cached --quiet; then echo "Nenhuma novidade."; exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Novidades do Insta: posts mais recentes"
+          git push

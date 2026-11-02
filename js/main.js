@@ -11,6 +11,9 @@
 
   const WA_NUMBER = '553193168184';
   const IG_USER = 'versatte_sports';
+  const SITE_URL = 'https://versattesports.com.br/';   // vai na mensagem do pedido do catálogo
+  const dateBR = d => d ? new Date(`${d}T12:00:00`).toLocaleDateString('pt-BR', { day: 'numeric', month: 'long' }) : '';
+  const brl = v => Number(v).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
   // camisas da galeria, por grupo (gerado de camisas.json por tools/instagram.mjs)
   const GRUPOS = window.VERSATTE_CAMISAS || (window.VERSATTE_POSTS ? [{ grupo: '', camisas: window.VERSATTE_POSTS }] : []);
   const POSTS = GRUPOS.flatMap(g => g.camisas);
@@ -209,14 +212,19 @@
 
   /* ---------- modais ---------- */
   let lastFocus = null;
-  const openModal = dlg => { lastFocus = document.activeElement; document.body.classList.add('modal-open'); dlg.showModal(); };
+  // de um modal para outro (ex.: camisa -> pedido), o foco volta para quem abriu o primeiro
+  const openModal = dlg => {
+    if (!document.activeElement?.closest('dialog')) lastFocus = document.activeElement;
+    document.body.classList.add('modal-open');
+    dlg.showModal();
+  };
   const closedModal = () => { if (!$('dialog[open]')) document.body.classList.remove('modal-open'); };
 
   /* ---------- mensagens ---------- */
   const messageFor = (post, extra = '') => {
     if (!post) return 'Olá! Vi o site da Versatte Sports e quero comprar uma camisa.';
     if (post.msg) return `Olá! ${post.msg}${extra} ${postUrl(post.code)}`;
-    return `Olá! Vi no site da Versatte e tenho interesse na camisa ${post.name}${extra}. ${postUrl(post.code)}`;
+    return `Olá! Vi no site da Versatte e tenho interesse na camisa ${post.name || 'deste post'}${extra}. ${postUrl(post.code)}`;
   };
 
   const toastEl = $('[data-toast]');
@@ -337,7 +345,12 @@
     });
   }
 
-  /* ---------- galeria de camisas (a partir de js/posts.js) ---------- */
+  /* ---------- novidades do Insta (a partir de js/posts.js) ---------- */
+  // primeira linha da legenda, sem hashtags (para posts sem título próprio no camisas.json)
+  const resumo = text => {
+    const linha = String(text || '').replace(/#[\p{L}\p{N}_]+/gu, '').split('\n').map(s => s.trim()).find(Boolean) || '';
+    return linha.length > 120 ? `${linha.slice(0, 117).trimEnd()}…` : linha;
+  };
   const shop = $('[data-shop]');
   if (shop) {
     let i = -1;
@@ -345,15 +358,18 @@
       i++;
       const imgs = (p.thumbs || p.images || []).slice(0, 2);
       const total = (p.images || []).length;
+      const alt = p.name || resumo(p.caption) || 'Post da Versatte';
       return `
       <li class="post reveal" data-index="${i}">
-        <button class="post__media" type="button" data-open-post aria-label="Ver todas as fotos: ${esc(p.name)}">
-          ${imgs.map((src, k) => `<img src="${esc(src)}" alt="${k ? '' : esc(p.name)}" loading="lazy" decoding="async" width="1080" height="1350">`).join('')}
-          ${total > 1 ? `<span class="post__count"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-stack"/></svg>${total}</span>` : ''}
+        <button class="post__media" type="button" data-open-post aria-label="Ver o post completo: ${esc(alt)}">
+          ${imgs.map((src, k) => `<img src="${esc(src)}" alt="${k ? '' : esc(alt)}" loading="lazy" decoding="async" width="1080" height="1350">`).join('')}
+          ${p.video ? '<span class="post__count"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-play"/></svg>Reels</span>'
+            : total > 1 ? `<span class="post__count"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-stack"/></svg>${total}</span>` : ''}
         </button>
         <div class="post__body">
-          <span class="post__tag">${esc(p.tag)}</span>
-          <h3 class="post__title"><span>${esc(p.caps)}</span><em>${esc(p.script)}</em></h3>
+          <span class="post__tag">${esc(p.tag || (p.date ? `Postado em ${dateBR(p.date)}` : 'Novidade'))}</span>
+          ${p.caps ? `<h3 class="post__title"><span>${esc(p.caps)}</span><em>${esc(p.script)}</em></h3>`
+            : `<p class="post__excerpt">${esc(resumo(p.caption))}</p>`}
           <div class="post__buy">
             <button class="btn btn--solid btn--sm" type="button" data-order-open>${p.msg ? 'Me ajuda a escolher' : 'Quero essa'}</button>
             <button class="btn btn--line btn--sm" type="button" data-open-post>Ver post</button>
@@ -370,58 +386,66 @@
     return code ? POSTS.find(p => p.code === code) : POSTS[+el.closest('[data-index]')?.dataset.index];
   };
 
+  // carrossel de fotos dos modais (prévia do post e camisa do catálogo); devolve a função que troca as fotos
+  const carrossel = box => {
+    const track = $('.ig__track', box), dots = $('.ig__dots', box);
+    const prev = $('.ig__arrow--prev', box), next = $('.ig__arrow--next', box);
+    let atual = 0;
+    const show = n => {
+      const count = track.children.length;
+      atual = Math.max(0, Math.min(count - 1, n));
+      track.style.transform = `translateX(${-atual * 100}%)`;
+      [...dots.children].forEach((d, i) => d.classList.toggle('on', i === atual));
+      prev.hidden = atual === 0;
+      next.hidden = atual >= count - 1;
+    };
+    prev.addEventListener('click', () => show(atual - 1));
+    next.addEventListener('click', () => show(atual + 1));
+    swipe($('.ig__media', box), dir => show(atual + dir));
+    box.addEventListener('keydown', e => {
+      if (e.key === 'ArrowLeft') show(atual - 1);
+      if (e.key === 'ArrowRight') show(atual + 1);
+    });
+    return (imgs, alt) => {
+      track.innerHTML = imgs.map((src, i) => `<img src="${esc(src)}" alt="${esc(alt)}, foto ${i + 1} de ${imgs.length}" ${i ? 'loading="lazy"' : ''} decoding="async" draggable="false">`).join('');
+      dots.innerHTML = imgs.length > 1 ? imgs.map(() => '<i></i>').join('') : '';
+      show(0);
+    };
+  };
+
   /* ---------- prévia no formato do Instagram ---------- */
   const viewer = $('[data-viewer]');
-  const track = $('[data-ig-track]', viewer);
-  const igDots = $('[data-ig-dots]', viewer);
-  let viewerPost = null, slide = 0;
+  const viewerFotos = carrossel(viewer);
+  let viewerPost = null;
 
   const linkify = text => esc(text)
     .replace(/(^|\s)#([\p{L}\p{N}_]+)/gu, '$1<a href="https://www.instagram.com/explore/tags/$2/" target="_blank" rel="noopener">#$2</a>')
     .replace(/(^|[\s(])@([A-Za-z0-9._]+[A-Za-z0-9_])/g, '$1<a href="https://www.instagram.com/$2/" target="_blank" rel="noopener">@$2</a>');
-  const dateBR = d => d ? new Date(`${d}T12:00:00`).toLocaleDateString('pt-BR', { day: 'numeric', month: 'long' }) : '';
-
-  const showSlide = n => {
-    const count = track.children.length;
-    slide = Math.max(0, Math.min(count - 1, n));
-    track.style.transform = `translateX(${-slide * 100}%)`;
-    [...igDots.children].forEach((d, i) => d.classList.toggle('on', i === slide));
-    $('[data-ig-prev]', viewer).hidden = slide === 0;
-    $('[data-ig-next]', viewer).hidden = slide >= count - 1;
-  };
-
 
   const openViewer = post => {
     viewerPost = post;
-    const imgs = post.images || [];
-    track.innerHTML = imgs.map((src, i) => `<img src="${esc(src)}" alt="${esc(post.name)}, foto ${i + 1} de ${imgs.length}" ${i ? 'loading="lazy"' : ''} decoding="async" draggable="false">`).join('');
-    igDots.innerHTML = imgs.length > 1 ? imgs.map(() => '<i></i>').join('') : '';
-    $('[data-ig-name]', viewer).textContent = post.name;
+    viewerFotos(post.images || [], post.name || 'Post da Versatte');
+    $('[data-ig-name]', viewer).textContent = post.name || dateBR(post.date);
     $('[data-ig-caption]', viewer).innerHTML = linkify(post.caption || '');
     const date = $('[data-ig-date]', viewer);
     date.textContent = dateBR(post.date);
     date.dateTime = post.date || '';
     $('[data-ig-likes]', viewer).textContent = post.likes ? `${post.likes} curtida${post.likes > 1 ? 's' : ''}` : '';
     const url = postUrl(post.code);
-    $('[data-ig-comments]', viewer).innerHTML = post.comments
-      ? `<a href="${url}" target="_blank" rel="noopener">Ver ${post.comments === 1 ? 'o comentário' : `os ${post.comments} comentários`} no Instagram →</a>`
-      : `Ainda não há comentários. <a href="${url}" target="_blank" rel="noopener">Seja o primeiro no Instagram →</a>`;
+    // sem o número de comentários (o feed nem sempre traz), só leva ao post
+    $('[data-ig-comments]', viewer).innerHTML = post.comments == null
+      ? `<a href="${url}" target="_blank" rel="noopener">Ver os comentários no Instagram →</a>`
+      : post.comments
+        ? `<a href="${url}" target="_blank" rel="noopener">Ver ${post.comments === 1 ? 'o comentário' : `os ${post.comments} comentários`} no Instagram →</a>`
+        : `Ainda não há comentários. <a href="${url}" target="_blank" rel="noopener">Seja o primeiro no Instagram →</a>`;
     $$('[data-ig-link]', viewer).forEach(a => { a.href = url; });
     $('[data-ig-wa]', viewer).href = waLink(messageFor(post));
     $('[data-order-open]', viewer).textContent = post.msg ? 'Me ajuda a escolher' : 'Quero essa camisa';
-    showSlide(0);
     $('.ig__box', viewer).scrollTop = 0;
     $('.ig__scroll', viewer).scrollTop = 0;
     openModal(viewer);
   };
 
-  $('[data-ig-prev]', viewer).addEventListener('click', () => showSlide(slide - 1));
-  $('[data-ig-next]', viewer).addEventListener('click', () => showSlide(slide + 1));
-  swipe($('[data-ig-media]', viewer), dir => showSlide(slide + dir));
-  viewer.addEventListener('keydown', e => {
-    if (e.key === 'ArrowLeft') showSlide(slide - 1);
-    if (e.key === 'ArrowRight') showSlide(slide + 1);
-  });
   $('[data-viewer-close]', viewer).addEventListener('click', () => viewer.close());
   viewer.addEventListener('click', e => { if (e.target === viewer) viewer.close(); }); // clique fora fecha
   viewer.addEventListener('close', () => {
@@ -434,6 +458,18 @@
     toast(await copy(url) ? 'Link do post copiado!' : url);
   });
 
+  /* ---------- catálogo: dados (js/catalogo.js, gerado por tools/catalogo.mjs) ---------- */
+  const CAT = window.VERSATTE_CATALOGO || { modelos: [], camisas: [] };
+  const MODELOS = [...CAT.modelos].sort((a, b) => a.preco - b.preco);   // abas do mais barato ao mais caro
+  const TAMANHOS = CAT.tamanhos || ['P', 'M', 'G', 'GG', '2XL', '3XL', '4XL'];
+  const modeloDe = c => MODELOS.find(m => m.id === c.modelo) || { nome: c.modelo, preco: 0 };
+  const doCatalogo = item => Boolean(item && item.modelo && item.capa);
+  const camisaUrl = c => `${SITE_URL}#camisa-${c.id}`;
+  const mensagemCatalogo = (c, tamanho = '') => {
+    const m = modeloDe(c);
+    return `Olá! Vi no catálogo do site da Versatte e quero a camisa ${c.nome} (modelo ${m.nome}${tamanho ? `, tamanho ${tamanho}` : ''}, ${brl(m.preco)}). Cód. ${c.id} ${camisaUrl(c)}`;
+  };
+
   /* ---------- "Quero essa camisa": monta a mensagem ---------- */
   const order = $('[data-order]');
   const form = $('[data-order-form]', order);
@@ -442,6 +478,7 @@
 
   const composeOrder = () => {
     const modelo = form.modelo.value, tamanho = form.tamanho.value;
+    if (doCatalogo(orderPost)) return mensagemCatalogo(orderPost, tamanho);
     const extra = [modelo && `modelo ${modelo}`, tamanho && `tamanho ${tamanho}`].filter(Boolean).join(', ');
     return messageFor(orderPost, extra ? ` (${extra})` : '');
   };
@@ -450,23 +487,32 @@
     $('[data-order-wa]', order).href = waLink(msgBox.value);
     $('[data-order-dm]', order).href = dmLink(msgBox.value);
   };
+  // post do Instagram ou camisa do catálogo (essa já tem modelo e preço, então some a escolha de modelo)
   const openOrder = post => {
     orderPost = post;
     edited = false;
     form.reset();
-    $('[data-order-name]', order).textContent = post.name;
+    const cat = doCatalogo(post);
+    const nome = post.nome || post.name || 'Camisa do post';
+    $('[data-order-name]', order).textContent = nome;
+    $('[data-chips="modelo"]', order).hidden = cat;
+    const preco = $('[data-order-price]', order);
+    preco.hidden = !cat;
+    if (cat) preco.textContent = `Modelo ${modeloDe(post).nome} · ${brl(modeloDe(post).preco)}`;
     const thumb = $('[data-order-thumb]', order);
-    thumb.src = (post.thumbs || post.images || [])[0] || '';
-    thumb.alt = post.name;
+    thumb.src = cat ? post.capa : (post.thumbs || post.images || [])[0] || '';
+    thumb.alt = nome;
     syncOrder();
     if (viewer.open) viewer.close();
+    if (product.open) product.close();
     openModal(order);
   };
-  // cada modelo tem uma faixa de tamanhos (ver seção "Tabela de medidas")
+  // cada modelo tem uma faixa de tamanhos (ver seção "Tabela de medidas");
+  // no catálogo vale a faixa da própria camisa, lida do título
   const SIZE_MAX = { Torcedor: '4XL', Jogador: '3XL', Feminina: 'GG' };
   const sizeInputs = [...form.querySelectorAll('input[name=tamanho]')];
   const limitSizes = () => {
-    const max = SIZE_MAX[form.modelo.value];
+    const max = doCatalogo(orderPost) ? orderPost.max || SIZE_MAX[modeloDe(orderPost).nome] : SIZE_MAX[form.modelo.value];
     const last = max ? sizeInputs.findIndex(i => i.value === max) : sizeInputs.length - 1;
     sizeInputs.forEach((input, i) => {
       input.disabled = i > last;
@@ -481,12 +527,167 @@
   order.addEventListener('click', e => { if (e.target === order) order.close(); });
   order.addEventListener('close', () => { closedModal(); if (lastFocus) lastFocus.focus({ preventScroll: true }); });
 
-  // cliques da galeria e da prévia
+  /* ---------- camisa do catálogo: fotos, preço e pedido ---------- */
+  const product = $('[data-product]');
+  const productFotos = carrossel(product);
+  let productItem = null;
+  const faixa = c => `${TAMANHOS[0]} ao ${c.max || SIZE_MAX[modeloDe(c).nome] || TAMANHOS.at(-1)}`;
+  const openProduct = c => {
+    productItem = c;
+    const m = modeloDe(c);
+    productFotos(c.fotos, c.nome);
+    $('[data-prod-model]', product).textContent = `Modelo ${m.nome}`;
+    $('[data-prod-tag]', product).textContent = `Modelo ${m.nome}`;
+    $('[data-prod-team]', product).textContent = c.time;
+    $('[data-prod-detail]', product).textContent = c.detalhe;
+    $('[data-prod-price]', product).innerHTML = `<small>R$</small>${esc(brl(m.preco).replace(/^R\$\s*/, ''))}`;
+    $('[data-prod-sizes]', product).textContent = faixa(c);
+    $('[data-prod-code]', product).textContent = c.id;
+    $('[data-prod-wa]', product).href = waLink(mensagemCatalogo(c));
+    $('.ig__box', product).scrollTop = 0;
+    openModal(product);
+  };
+  $('[data-product-close]', product).addEventListener('click', () => product.close());
+  $('[data-prod-guide]', product).addEventListener('click', () => product.close());
+  product.addEventListener('click', e => { if (e.target === product) product.close(); });
+  product.addEventListener('close', () => {
+    closedModal();
+    // tira o #camisa-... do endereço, para o mesmo link poder abrir a camisa de novo
+    if (/^#camisa-/.test(location.hash)) history.replaceState(null, '', location.pathname + location.search);
+    if (lastFocus && !order.open) lastFocus.focus({ preventScroll: true });
+  });
+
+  /* ---------- catálogo: abas por modelo, filtro por time, busca e "ver mais" ---------- */
+  const catGrid = $('[data-cat-grid]');
+  const POR_PAGINA = 24;
+  const semAcento = s => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+  CAT.camisas.forEach(c => { c.busca = semAcento(`${c.nome} ${c.detalhe}`); });
+  const cat = { modelo: MODELOS[0]?.id, time: '', busca: '', limite: POR_PAGINA };
+  const daAba = (modelo = cat.modelo) => CAT.camisas.filter(c => c.modelo === modelo);
+  const termos = () => semAcento(cat.busca).split(/\s+/).filter(Boolean);
+  const confere = c => termos().every(t => c.busca.includes(t));
+  const filtradas = () => daAba().filter(c => (!cat.time || c.time === cat.time) && confere(c));
+
+  const catCard = c => {
+    const m = modeloDe(c);
+    return `
+      <li class="cat-card">
+        <button class="cat-card__media" type="button" data-cat-open="${esc(c.id)}" aria-label="Ver fotos: ${esc(c.nome)}">
+          <img src="${esc(c.capa)}" alt="${esc(c.nome)}" loading="lazy" decoding="async" width="480" height="480">
+          ${c.fotos.length > 1 ? `<span class="post__count"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-stack"/></svg>${c.fotos.length}</span>` : ''}
+        </button>
+        <div class="cat-card__body">
+          <h3 class="cat-card__team">${esc(c.time)}</h3>
+          <p class="cat-card__detail">${esc(c.detalhe)}</p>
+          <div class="cat-card__buy">
+            <span class="cat-card__price"><small>R$</small>${esc(brl(m.preco).replace(/^R\$\s*/, ''))}</span>
+            <button class="btn btn--solid btn--sm" type="button" data-cat-order="${esc(c.id)}">Quero essa</button>
+          </div>
+        </div>
+      </li>`;
+  };
+
+  const renderTimes = () => {
+    const contagem = new Map();
+    daAba().filter(confere).forEach(c => contagem.set(c.time, (contagem.get(c.time) || 0) + 1));
+    if (cat.time && !contagem.has(cat.time)) cat.time = '';
+    const times = [...contagem].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], 'pt-BR'));
+    const total = times.reduce((n, [, q]) => n + q, 0);
+    $('[data-cat-teams]').innerHTML = [['', total], ...times].map(([time, q]) =>
+      `<button class="catalog__team" type="button" data-cat-time="${esc(time)}" aria-pressed="${time === cat.time}">${time ? esc(time) : 'Todos os times'} <small>${q}</small></button>`).join('');
+  };
+
+  const renderGrid = (soMais = false) => {
+    const lista = filtradas();
+    const m = MODELOS.find(x => x.id === cat.modelo);
+    const visiveis = lista.slice(0, cat.limite);
+    if (soMais) catGrid.insertAdjacentHTML('beforeend', visiveis.slice(catGrid.children.length).map(catCard).join(''));
+    else catGrid.innerHTML = visiveis.map(catCard).join('');
+    $('[data-cat-count]').textContent = lista.length
+      ? `${lista.length} camisa${lista.length > 1 ? 's' : ''} ${m ? `${m.nome} · ${brl(m.preco)} cada` : ''}${cat.time ? ` · ${cat.time}` : ''}`
+      : '';
+    $('[data-cat-more-box]').hidden = visiveis.length >= lista.length;
+    // sem resultado: mostra se a busca acha camisas nos outros modelos
+    const vazio = !lista.length;
+    $('[data-cat-empty]').hidden = !vazio;
+    if (vazio) {
+      $('[data-cat-other]').innerHTML = MODELOS.filter(x => x.id !== cat.modelo).map(x => {
+        const q = daAba(x.id).filter(c => (!cat.time || c.time === cat.time) && confere(c)).length;
+        return q ? `<button class="btn btn--line btn--sm" type="button" data-cat-tab="${esc(x.id)}">Ver ${q} no modelo ${esc(x.nome)}</button>` : '';
+      }).join('');
+    }
+  };
+
+  const setModelo = id => {
+    cat.modelo = id;
+    cat.limite = POR_PAGINA;
+    $$('[data-cat-tab]', $('[data-cat-tabs]')).forEach(b => {
+      const on = b.dataset.catTab === id;
+      b.setAttribute('aria-selected', String(on));
+      b.tabIndex = on ? 0 : -1;
+    });
+    renderTimes();
+    renderGrid();
+  };
+
+  if (catGrid && MODELOS.length) {
+    const tabs = $('[data-cat-tabs]');
+    tabs.innerHTML = MODELOS.map(m => `
+      <button class="catalog__tab" type="button" role="tab" aria-selected="false" data-cat-tab="${esc(m.id)}">
+        <b>${esc(m.nome)}</b><span>${esc(brl(m.preco))}</span>
+      </button>`).join('');
+    tabs.addEventListener('keydown', e => {
+      const i = MODELOS.findIndex(m => m.id === cat.modelo);
+      const dir = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+      if (!dir) return;
+      const prox = MODELOS[(i + dir + MODELOS.length) % MODELOS.length];
+      setModelo(prox.id);
+      $(`[data-cat-tab="${prox.id}"]`, tabs).focus();
+    });
+    let espera;
+    $('[data-cat-search]').addEventListener('input', e => {
+      clearTimeout(espera);
+      espera = setTimeout(() => { cat.busca = e.target.value; cat.limite = POR_PAGINA; renderTimes(); renderGrid(); }, 160);
+    });
+    $('[data-cat-teams]').addEventListener('click', e => {
+      const b = e.target.closest('[data-cat-time]');
+      if (!b) return;
+      cat.time = b.dataset.catTime;
+      cat.limite = POR_PAGINA;
+      $$('[data-cat-time]').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+      renderGrid();
+    });
+    $('[data-cat-more]').addEventListener('click', () => { cat.limite += POR_PAGINA; renderGrid(true); });
+    $('#catalogo').addEventListener('click', e => {
+      const tab = e.target.closest('[data-cat-tab]');
+      if (tab) { setModelo(tab.dataset.catTab); return; }
+      const id = (e.target.closest('[data-cat-open], [data-cat-order]') || {}).dataset;
+      const c = id && CAT.camisas.find(x => x.id === (id.catOpen || id.catOrder));
+      if (!c) return;
+      if (id.catOpen) openProduct(c); else openOrder(c);
+    });
+    setModelo(cat.modelo);
+
+    // link direto para uma camisa (vai na mensagem do pedido): versattesports.com.br/#camisa-<código>
+    const abrirDoLink = () => {
+      const c = CAT.camisas.find(x => `#camisa-${x.id}` === location.hash);
+      if (!c) return;
+      if (c.modelo !== cat.modelo) setModelo(c.modelo);
+      $('#catalogo').scrollIntoView();
+      openProduct(c);
+    };
+    abrirDoLink();
+    addEventListener('hashchange', abrirDoLink);
+  } else if (catGrid) {
+    $('#catalogo').hidden = true;   // sem js/catalogo.js, a seção não aparece
+  }
+
+  // cliques da galeria e das prévias
   document.addEventListener('click', e => {
     const opener = e.target.closest('[data-open-post]');
     if (opener) { openViewer(postOf(opener)); return; }
     const buy = e.target.closest('[data-order-open]');
-    if (buy) openOrder(buy.closest('[data-viewer]') ? viewerPost : postOf(buy));
+    if (buy) openOrder(buy.closest('[data-viewer]') ? viewerPost : buy.closest('[data-product]') ? productItem : postOf(buy));
   });
 
   /* ---------- revelar ao rolar ---------- */

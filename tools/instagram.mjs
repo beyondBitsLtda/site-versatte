@@ -1,38 +1,43 @@
 #!/usr/bin/env node
 /*
-  Importa os posts do Instagram da Versatte para a galeria do site.
+  Importa os posts do Instagram da Versatte para a seção "Novidades do Insta" do site.
 
-  O que aparece na galeria é definido no arquivo camisas.json (raiz do site):
-  cada grupo (ex.: "Camisas destaque") tem a lista de camisas, com o link do
-  post e os textos do card. Esta ferramenta lê esse arquivo, baixa as fotos
-  de cada post (todas as do carrossel, na resolução original) com legenda,
-  curtidas, comentários e data, e gera js/posts.js, que o site carrega.
+  Dois modos:
+  1. AUTOMÁTICO (feed): com a variável INSTAGRAM_FEED apontando para o feed JSON do
+     Behold (behold.so, que lê o Instagram pela API oficial), pega os 4 posts mais
+     recentes do perfil, baixa as fotos e gera js/posts.js. É o modo usado pelo
+     GitHub Actions (.github/workflows/novidades.yml), que roda sozinho a cada 6 horas.
+  2. MANUAL (sem feed): os posts são os links listados em camisas.json; a ferramenta lê
+     o embed público de cada post (fotos do carrossel, legenda, curtidas e data).
 
-  Uso (na pasta do site, precisa de Node 22+ e Edge ou Chrome instalados):
+  Nos dois modos, camisas.json também guarda textos opcionais por post (etiqueta,
+  titulo, cursiva, nome, mensagem): se o link do post estiver lá, o card usa esses textos;
+  se não estiver, o card mostra o começo da legenda.
+
+  Uso (na pasta do site, precisa de Node 22+; o modo manual também precisa de Edge ou Chrome):
     node tools/instagram.mjs          baixa só os posts novos e regenera o site
     node tools/instagram.mjs --tudo   baixa de novo todos (atualiza curtidas e fotos)
+  Modo automático no PowerShell:
+    $env:INSTAGRAM_FEED = "https://feeds.behold.so/SEU-FEED"; node tools/instagram.mjs
 
-  Fluxo para trocar as camisas:
-    1. edite camisas.json (adicione, tire ou reordene os links e textos);
-    2. rode: node tools/instagram.mjs
-    3. publique (commit + push).
-  Fotos de posts que saíram do camisas.json são apagadas de assets/posts/.
+  Fotos de posts que saíram da seção são apagadas de assets/posts/.
 */
-import { spawn } from 'node:child_process';
 import { existsSync, mkdirSync, readFileSync, writeFileSync, rmSync, readdirSync } from 'node:fs';
-import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { openBrowser, sleep } from './navegador.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const DATA_FILE = path.join(ROOT, 'js', 'posts.js');
 const POSTS_DIR = path.join(ROOT, 'assets', 'posts');
-const sleep = ms => new Promise(r => setTimeout(r, ms));
+const FEED = (process.argv.find(a => a.startsWith('--feed=')) || '').slice(7) || process.env.INSTAGRAM_FEED || '';
+const NOVIDADES = 4;                       // quantos posts recentes aparecem no modo automático
+const GRUPO_FEED = 'Novidades do Insta';
 
 /* ---------- camisas.json (entrada) e js/posts.js (saída) ---------- */
 const CONFIG_FILE = path.join(ROOT, 'camisas.json');
-const HEADER = `// GERADO por tools/instagram.mjs a partir de camisas.json. Não edite aqui:
-// mude camisas.json e rode "node tools/instagram.mjs".
+const HEADER = `// GERADO por tools/instagram.mjs (feed do Instagram + textos de camisas.json). Não edite aqui:
+// rode "node tools/instagram.mjs".
 window.VERSATTE_CAMISAS = `;
 
 const codeFrom = s => {
@@ -41,7 +46,10 @@ const codeFrom = s => {
 };
 
 function readConfig() {
-  if (!existsSync(CONFIG_FILE)) throw new Error('não achei camisas.json na raiz do site');
+  if (!existsSync(CONFIG_FILE)) {
+    if (FEED) return [];  // no modo automático o camisas.json só traz textos opcionais
+    throw new Error('não achei camisas.json na raiz do site');
+  }
   let cfg;
   try { cfg = JSON.parse(readFileSync(CONFIG_FILE, 'utf8')); }
   catch (e) { throw new Error(`camisas.json tem um erro de formato (${e.message}). Confira aspas e vírgulas.`); }
@@ -69,51 +77,6 @@ function readCache() {
     for (const p of posts) if (p.code && p.images?.length) cache.set(p.code, p);
   } catch {}
   return cache;
-}
-
-/* ---------- navegador headless (Edge ou Chrome) ---------- */
-function findBrowser() {
-  const c = [
-    process.env.BROWSER,
-    'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',
-    'C:/Program Files/Microsoft/Edge/Application/msedge.exe',
-    'C:/Program Files/Google/Chrome/Application/chrome.exe',
-    '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
-    '/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge',
-    '/usr/bin/google-chrome', '/usr/bin/chromium', '/usr/bin/chromium-browser', '/usr/bin/microsoft-edge',
-  ].filter(Boolean);
-  const found = c.find(p => existsSync(p));
-  if (!found) throw new Error('Não achei Edge nem Chrome. Defina a variável BROWSER com o caminho do navegador.');
-  return found;
-}
-
-async function openBrowser() {
-  const port = 9400 + Math.floor(Math.random() * 400);
-  const profile = path.join(tmpdir(), `vs-ig-${port}`);
-  mkdirSync(profile, { recursive: true });
-  const proc = spawn(findBrowser(), ['--headless=new', `--remote-debugging-port=${port}`, `--user-data-dir=${profile}`, '--no-first-run', '--window-size=600,1300'], { stdio: 'ignore' });
-  let targets;
-  for (let i = 0; i < 100; i++) {
-    try { targets = await (await fetch(`http://127.0.0.1:${port}/json/list`)).json(); if (targets.some(t => t.type === 'page')) break; } catch {}
-    await sleep(200);
-  }
-  const page = targets?.find(t => t.type === 'page');
-  if (!page) throw new Error('O navegador headless não respondeu.');
-  const ws = new WebSocket(page.webSocketDebuggerUrl);
-  await new Promise((ok, err) => { ws.onopen = ok; ws.onerror = err; });
-  let id = 0; const pending = new Map();
-  ws.onmessage = m => { const d = JSON.parse(m.data); if (d.id && pending.has(d.id)) { pending.get(d.id)(d); pending.delete(d.id); } };
-  const send = (method, params = {}) => new Promise(r => { const i = ++id; pending.set(i, r); ws.send(JSON.stringify({ id: i, method, params })); });
-  await send('Page.enable');
-  return {
-    send,
-    async evaluate(expression) {
-      const r = await send('Runtime.evaluate', { expression, awaitPromise: true, returnByValue: true });
-      if (r.result?.exceptionDetails) throw new Error(r.result.exceptionDetails.exception?.description || 'erro no navegador');
-      return r.result?.result?.value;
-    },
-    close() { try { ws.close(); } catch {} proc.kill(); setTimeout(() => { try { rmSync(profile, { recursive: true, force: true }); } catch {} }, 800); },
-  };
 }
 
 // roda dentro do embed: percorre o carrossel e devolve fotos, legenda e curtidas
@@ -179,15 +142,82 @@ async function download(url, file) {
   writeFileSync(file, Buffer.from(await res.arrayBuffer()));
 }
 
+// baixa e escolhe a extensão pelo tipo da imagem (o feed pode entregar JPG ou WebP)
+async function downloadAs(url, dir, nome) {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`HTTP ${res.status} ao baixar imagem`);
+  const tipo = res.headers.get('content-type') || '';
+  const ext = /webp/.test(tipo) ? 'webp' : /png/.test(tipo) ? 'png' : 'jpg';
+  writeFileSync(path.join(dir, `${nome}.${ext}`), Buffer.from(await res.arrayBuffer()));
+  return `${nome}.${ext}`;
+}
+
+/* ---------- modo automático: feed JSON do Behold (API oficial do Instagram) ---------- */
+const midiaDe = (m, tam) => m.sizes?.[tam]?.mediaUrl || m.sizes?.full?.mediaUrl || (m.mediaType === 'VIDEO' ? m.thumbnailUrl : m.mediaUrl);
+const dataBR = ts => (ts ? new Date(ts).toLocaleDateString('sv-SE', { timeZone: 'America/Sao_Paulo' }) : null);
+
+async function lerFeed() {
+  const res = await fetch(FEED);
+  if (!res.ok) throw new Error(`o feed respondeu HTTP ${res.status}`);
+  const feed = await res.json();
+  const posts = (Array.isArray(feed) ? feed : feed.posts || []).slice(0, NOVIDADES);
+  if (!posts.length) throw new Error('o feed veio sem posts');
+  return posts.map(p => {
+    const code = codeFrom(p.permalink);
+    const midias = p.mediaType === 'CAROUSEL_ALBUM' && p.children?.length ? p.children : [p];
+    const slides = midias.map(m => ({ large: midiaDe(m, 'large'), small: midiaDe(m, 'medium') })).filter(s => s.large);
+    return {
+      code, slides, video: p.mediaType === 'VIDEO',
+      caption: p.caption || '', likes: p.likeCount ?? null, comments: p.commentsCount ?? null, date: dataBR(p.timestamp),
+    };
+  }).filter(p => p.code && p.slides.length);
+}
+
 /* ---------- principal ---------- */
 const tudo = process.argv.includes('--tudo');
 const grupos = readConfig();
+// textos opcionais por post (de qualquer grupo do camisas.json)
+const textos = new Map(grupos.flatMap(g => g.camisas.map(c => [c.code, c])));
 const cache = readCache();
-const codes = [...new Set(grupos.flatMap(g => g.camisas.map(c => c.code)))];
 const imagesOk = p => p?.images?.length && p.images.every(f => existsSync(path.join(ROOT, f)));
-const baixar = codes.filter(code => tudo || !imagesOk(cache.get(code)));
-
 let failures = 0;
+let lista = grupos;  // grupos e posts na ordem em que aparecem no site
+
+if (FEED) {
+  let recentes;
+  try { recentes = await lerFeed(); }
+  catch (e) {
+    // sem o feed, o site continua com os posts que já tem (não apaga nada)
+    console.log(`Não consegui ler o feed do Instagram: ${e.message}. O site continua com os posts atuais.`);
+    process.exit(1);
+  }
+  lista = [{ grupo: GRUPO_FEED, camisas: recentes.map(p => ({ ...textos.get(p.code), code: p.code })) }];
+  for (const p of recentes) {
+    const antigo = cache.get(p.code);
+    const dados = { caption: p.caption, likes: p.likes ?? antigo?.likes ?? null, comments: p.comments ?? antigo?.comments ?? null, date: p.date || antigo?.date || null, ...(p.video ? { video: true } : {}) };
+    if (!tudo && imagesOk(antigo)) { cache.set(p.code, { ...antigo, ...dados }); continue; }
+    process.stdout.write(`• ${p.code} ... `);
+    try {
+      const dir = path.join(POSTS_DIR, p.code);
+      rmSync(dir, { recursive: true, force: true });
+      mkdirSync(dir, { recursive: true });
+      const images = [], thumbs = [];
+      for (const [i, s] of p.slides.entries()) {
+        images.push(`assets/posts/${p.code}/${await downloadAs(s.large, dir, `${i + 1}`)}`);
+        thumbs.push(s.small && s.small !== s.large ? `assets/posts/${p.code}/${await downloadAs(s.small, dir, `${i + 1}-thumb`)}` : images[i]);
+      }
+      cache.set(p.code, { code: p.code, images, thumbs, ...dados });
+      console.log(`ok (${images.length} foto${images.length > 1 ? 's' : ''})`);
+    } catch (e) {
+      failures++;
+      console.log(`falhou: ${e.message}`);
+    }
+  }
+}
+
+/* ---------- modo manual: posts listados no camisas.json ---------- */
+const codes = [...new Set(lista.flatMap(g => g.camisas.map(c => c.code)))];
+const baixar = FEED ? [] : codes.filter(code => tudo || !imagesOk(cache.get(code)));
 if (baixar.length) {
   const browser = await openBrowser();
   try {
@@ -225,26 +255,27 @@ if (baixar.length) {
   } finally {
     browser.close();
   }
-} else {
+} else if (!FEED) {
   console.log('Nenhum post novo para baixar (use --tudo para atualizar todos).');
 }
 
-// monta js/posts.js na ordem do camisas.json
+// monta js/posts.js na ordem do feed (ou do camisas.json, no modo manual)
 const semTexto = [];
-const saida = grupos.map(({ grupo, camisas }) => ({
+const saida = lista.map(({ grupo, camisas }) => ({
   grupo,
   camisas: camisas.filter(c => cache.has(c.code)).map(c => {
     const d = cache.get(c.code);
-    if (!c.titulo) semTexto.push(`${grupo}: ${c.link}`);
-    const caps = c.titulo || 'Camisa';
+    if (!c.titulo) semTexto.push(`${grupo}: https://www.instagram.com/p/${c.code}/`);
+    const caps = c.titulo || '';     // sem título, o card mostra o começo da legenda
     const script = c.cursiva || '';
     return {
       code: c.code,
       link: `https://www.instagram.com/p/${c.code}/`,
-      tag: c.etiqueta || grupo,
+      tag: c.etiqueta || '',
       caps, script,
       name: c.nome || [caps, script].filter(Boolean).join(' '),
       ...(c.mensagem ? { msg: c.mensagem } : {}),
+      ...(d.video ? { video: true } : {}),
       images: d.images, thumbs: d.thumbs,
       caption: d.caption, likes: d.likes, comments: d.comments, date: d.date,
     };
@@ -252,14 +283,14 @@ const saida = grupos.map(({ grupo, camisas }) => ({
 }));
 writeFileSync(DATA_FILE, `${HEADER}${JSON.stringify(saida, null, 2)};\n`);
 
-// apaga fotos de posts que saíram do camisas.json
+// apaga fotos de posts que saíram da seção
 if (existsSync(POSTS_DIR)) {
   for (const nome of readdirSync(POSTS_DIR)) {
-    if (!codes.includes(nome)) { rmSync(path.join(POSTS_DIR, nome), { recursive: true, force: true }); console.log(`removido: assets/posts/${nome} (saiu do camisas.json)`); }
+    if (!codes.includes(nome)) { rmSync(path.join(POSTS_DIR, nome), { recursive: true, force: true }); console.log(`removido: assets/posts/${nome} (saiu da seção)`); }
   }
 }
 
 const total = saida.reduce((n, g) => n + g.camisas.length, 0);
-console.log(`\njs/posts.js gerado: ${saida.map(g => `${g.grupo} (${g.camisas.length})`).join(', ')} · ${total} camisa(s).`);
-if (semTexto.length) console.log(`Faltam textos (titulo/cursiva/etiqueta) em camisas.json para:\n  ${semTexto.join('\n  ')}`);
+console.log(`\njs/posts.js gerado (${FEED ? 'modo automático, pelo feed' : 'modo manual, pelo camisas.json'}): ${saida.map(g => `${g.grupo} (${g.camisas.length})`).join(', ')} · ${total} post(s).`);
+if (semTexto.length) console.log(`Posts sem textos no camisas.json (o card mostra o começo da legenda; para um título próprio, adicione o link lá):\n  ${semTexto.join('\n  ')}`);
 process.exitCode = failures ? 1 : 0;

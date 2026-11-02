@@ -1,0 +1,49 @@
+# Catálogo: toda segunda-feira sincroniza o catálogo com a fonte
+# (baixa as camisas novas, tira as que saíram) e publica no site.
+# Precisa do segredo CATALOGO_FONTE (link da página de categoria da fonte) em
+# Settings > Secrets and variables > Actions > New repository secret. Sem ele, não faz nada.
+# Para rodar na hora: aba Actions > Catálogo > Run workflow.
+name: Catálogo
+
+on:
+  schedule:
+    - cron: '0 9 * * 1'   # segunda-feira, 6h no horário de Brasília
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: dados-do-site
+  cancel-in-progress: false
+
+jobs:
+  catalogo:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Sincroniza com a fonte
+        env:
+          CATALOGO_FONTE: ${{ secrets.CATALOGO_FONTE }}
+        run: |
+          if [ -z "$CATALOGO_FONTE" ]; then
+            echo "::warning::Configure o segredo CATALOGO_FONTE para o catálogo se sincronizar sozinho."
+            exit 0
+          fi
+          # se algumas camisas falharem, publica as que deram certo (as outras entram na próxima vez)
+          node tools/catalogo.mjs || echo "::warning::Algumas camisas não foram baixadas; elas entram na próxima sincronização."
+
+      - name: Publica se mudou
+        run: |
+          git add js/catalogo.js assets/catalogo
+          if git diff --cached --quiet; then echo "Catálogo sem mudanças."; exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Catálogo: sincronizado com a fonte"
+          git push

@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Versatte Sports · Vista o manto do seu time</title>
-  <meta name="description" content="Vitrine da Versatte Sports: camisas de clubes e seleções nos modelos Torcedor, Jogador e Retrô. Viu, curtiu? Chame no direct ou no WhatsApp.">
+  <meta name="description" content="Vitrine e catálogo da Versatte Sports: camisas de clubes e seleções nos modelos Torcedor, Jogador e Retrô. Viu, curtiu? Chame no direct ou no WhatsApp.">
   <meta name="theme-color" content="#F7F3EC">
   <meta property="og:title" content="Versatte Sports · Vista o manto do seu time">
   <meta property="og:description" content="Camisas de clubes e seleções nos modelos Torcedor, Jogador e Retrô.">
@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Figtree:wght@400;500;600;700&family=Mr+Dafoe&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=20261018-5">
+  <link rel="stylesheet" href="css/style.css?v=20261102-1">
   <script>
     /* Celular com "Site para computador" ligado: o navegador ignora a tag viewport e desenha a
        página com ~980px numa tela de ~400px, deixando tudo minúsculo. Este script detecta o caso,
@@ -66,12 +66,13 @@
       window.addEventListener('orientationchange', function () { setTimeout(fit, 300); });
     })();
   </script>
-  <script src="js/posts.js?v=20261018-5" defer></script>
-  <script src="js/main.js?v=20261018-5" defer></script>
+  <script src="js/posts.js?v=20261102-1" defer></script>
+  <script src="js/catalogo.js?v=20261102-1" defer></script>
+  <script src="js/main.js?v=20261102-1" defer></script>
 </head>
 <body>
 
-<a class="skip" href="#camisas">Pular para as camisas</a>
+<a class="skip" href="#catalogo">Pular para o catálogo</a>
 
 <!-- ============ NAV (pílula flutuante) ============ -->
 <header class="nav" data-nav>
@@ -82,7 +83,8 @@
     </a>
 
     <nav class="nav__links" id="menu" aria-label="Seções">
-      <a href="#camisas">Camisas</a>
+      <a href="#novidades">Novidades</a>
+      <a href="#catalogo">Catálogo</a>
       <a href="#guia">Guia do manto</a>
       <a href="#tamanhos">Tamanhos</a>
       <a href="#como-comprar">Como comprar</a>
@@ -127,7 +129,7 @@
         </h1>
         <p class="lead" data-welcome="lead">Camisas de clubes e seleções nos modelos Torcedor, Jogador e Retrô.</p>
         <div class="actions">
-          <a class="btn btn--solid" href="#camisas">Ver camisas</a>
+          <a class="btn btn--solid" href="#catalogo">Ver catálogo</a>
           <a class="btn btn--glass" href="https://ig.me/m/versatte_sports" target="_blank" rel="noopener" data-dm>
             <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-send"/></svg> Chamar no direct
           </a>
@@ -228,29 +230,68 @@
   </div>
 </section>
 
-<!-- ============ CAMISAS ============
-     Os cards são montados a partir de js/posts.js.
-     Para adicionar uma camisa: node tools/instagram.mjs <link do post> -->
-<section class="section shop" id="camisas">
+<!-- ============ NOVIDADES DO INSTA ============
+     Os 4 posts mais recentes do Instagram, de js/posts.js. Ele é atualizado sozinho pelo GitHub Actions
+     (.github/workflows/novidades.yml) com o feed do Instagram, ou à mão com: node tools/instagram.mjs -->
+<section class="section shop" id="novidades">
   <div class="wrap">
     <header class="section__head reveal">
-      <p class="eyebrow">Camisas em destaque</p>
+      <p class="eyebrow">Direto do @versatte_sports</p>
+      <h2 class="display display--md">
+        <span class="display__caps">Novidades</span>
+        <span class="display__script">do Insta</span>
+      </h2>
+      <p class="section__lead">Os posts mais recentes do nosso Instagram. Toque na foto para ver o post completo. Curtiu? Clique em <b>Quero essa</b> e a mensagem já vai pronta.</p>
+    </header>
+
+    <ul class="shop__grid" role="list" data-shop></ul>
+    <noscript><p class="section__lead">Veja os posts no <a href="https://www.instagram.com/versatte_sports/">@versatte_sports</a>.</p></noscript>
+
+    <div class="shop__more reveal">
+      <p>Novidade toda semana no feed. Não achou o seu time? <b>Pergunta no direct.</b></p>
+      <a class="btn btn--line" href="https://www.instagram.com/versatte_sports/" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-ig"/></svg> Seguir no Instagram
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CATÁLOGO ============
+     Cards montados a partir de js/catalogo.js, gerado por tools/catalogo.mjs a partir do catalogo.json
+     (lá ficam o nome e o preço de cada modelo). As abas aparecem do modelo mais barato ao mais caro. -->
+<section class="section catalog" id="catalogo">
+  <div class="wrap">
+    <header class="section__head reveal">
+      <p class="eyebrow">Catálogo Versatte</p>
       <h2 class="display display--md">
         <span class="display__caps">Escolha o</span>
         <span class="display__script">seu manto</span>
       </h2>
-      <p class="section__lead">Toque na camisa para ver todas as fotos do post. Curtiu? Clique em <b>Quero essa</b> e a mensagem já vai pronta.</p>
+      <p class="section__lead">Clubes brasileiros e a Seleção nos modelos Torcedor, Jogador e Retrô. Escolha o modelo, filtre pelo seu time e clique em <b>Quero essa</b>: a mensagem já vai pronta.</p>
     </header>
 
-    <ul class="shop__grid" role="list" data-shop></ul>
-    <noscript><p class="section__lead">Veja todas as camisas no <a href="https://www.instagram.com/versatte_sports/">@versatte_sports</a>.</p></noscript>
+    <div class="catalog__tabs" role="tablist" aria-label="Modelo da camisa" data-cat-tabs></div>
+    <div class="catalog__tools">
+      <label class="catalog__search">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-search"/></svg>
+        <input type="search" placeholder="Buscar time, ano, goleiro..." autocomplete="off" enterkeyhint="search" aria-label="Buscar no catálogo" data-cat-search>
+      </label>
+      <div class="catalog__teams" role="group" aria-label="Filtrar por time" data-cat-teams></div>
+    </div>
+    <p class="catalog__count" role="status" aria-live="polite" data-cat-count></p>
 
-    <div class="shop__more reveal">
-      <p>Tem muito mais no nosso feed. Não achou o seu time? <b>Pergunta no direct.</b></p>
-      <a class="btn btn--line" href="https://www.instagram.com/versatte_sports/" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-ig"/></svg> Ver todas no Instagram
+    <ul class="catalog__grid" role="list" data-cat-grid></ul>
+    <div class="catalog__empty" hidden data-cat-empty>
+      <p><b>Não achamos essa camisa por aqui.</b> Chama a gente no Direct que a gente procura pra você.</p>
+      <div class="catalog__other" data-cat-other></div>
+      <a class="btn btn--solid btn--sm" href="https://ig.me/m/versatte_sports" target="_blank" rel="noopener" data-dm="Procurei no catálogo do site e não achei a camisa que eu quero. Vocês conseguem?">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-send"/></svg> Pedir no Direct
       </a>
     </div>
+    <div class="catalog__more" data-cat-more-box>
+      <button class="btn btn--line" type="button" data-cat-more>Ver mais camisas</button>
+    </div>
+    <noscript><p class="section__lead">Para ver o catálogo, ative o JavaScript ou fale com a gente no <a href="https://www.instagram.com/versatte_sports/">@versatte_sports</a>.</p></noscript>
   </div>
 </section>
 
@@ -348,7 +389,7 @@
         </h2>
       </div>
       <ol class="buy__steps" role="list">
-        <li><b>1</b><span>Escolha a camisa aqui ou no feed</span></li>
+        <li><b>1</b><span>Escolha a camisa no catálogo ou no feed</span></li>
         <li><b>2</b><span>Chame no direct ou WhatsApp com modelo e tamanho</span></li>
         <li><b>3</b><span>Receba em casa, em qualquer lugar do Brasil</span></li>
       </ol>
@@ -460,7 +501,8 @@
 
     <div class="footer__col">
       <h3>Navegue</h3>
-      <a href="#camisas">Camisas</a>
+      <a href="#novidades">Novidades do Insta</a>
+      <a href="#catalogo">Catálogo</a>
       <a href="#guia">Guia do manto</a>
       <a href="#tamanhos">Tamanhos</a>
       <a href="#como-comprar">Como comprar</a>
@@ -531,6 +573,47 @@
   </div>
 </dialog>
 
+<!-- ============ CAMISA DO CATÁLOGO (fotos, preço e pedido) ============ -->
+<dialog class="ig ig--prod" data-product aria-labelledby="prod-team">
+  <button class="ig__close" type="button" data-product-close aria-label="Fechar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+  <div class="ig__box">
+    <header class="ig__head">
+      <img class="ig__avatar" src="assets/img/logo-vs.webp" alt="" width="40" height="48">
+      <div class="ig__who">
+        <b>Catálogo Versatte</b>
+        <span data-prod-model></span>
+      </div>
+    </header>
+
+    <div class="ig__media">
+      <div class="ig__track"></div>
+      <button class="ig__arrow ig__arrow--prev" type="button" aria-label="Foto anterior"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 6 8.5 12l6 6"/></svg></button>
+      <button class="ig__arrow ig__arrow--next" type="button" aria-label="Próxima foto"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.5 6l6 6-6 6"/></svg></button>
+      <div class="ig__dots"></div>
+    </div>
+
+    <div class="ig__body">
+      <div class="ig__scroll prod">
+        <span class="post__tag" data-prod-tag></span>
+        <h2 class="prod__team" id="prod-team" data-prod-team></h2>
+        <p class="prod__detail" data-prod-detail></p>
+        <p class="prod__price" data-prod-price></p>
+        <dl class="prod__facts">
+          <div><dt>Tamanhos</dt><dd data-prod-sizes></dd></div>
+          <div><dt>Código</dt><dd data-prod-code></dd></div>
+        </dl>
+        <p class="prod__note">Escolha o tamanho e mande o pedido pelo Direct ou pelo WhatsApp: a gente confirma tudo com você por lá. <a href="#guia" data-prod-guide>Torcedor ou Jogador? Veja a diferença</a></p>
+      </div>
+      <div class="ig__foot">
+        <div class="ig__buy">
+          <button class="btn btn--solid btn--sm" type="button" data-order-open>Quero essa camisa</button>
+          <a class="round-btn round-btn--wa" href="#" target="_blank" rel="noopener" data-prod-wa aria-label="Pedir pelo WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-wa"/></svg></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</dialog>
+
 <!-- ============ QUERO ESSA CAMISA (monta a mensagem) ============ -->
 <dialog class="order" data-order aria-labelledby="order-title">
   <form method="dialog" class="order__box" data-order-form>
@@ -540,6 +623,7 @@
       <div>
         <p class="order__kicker">Quero essa camisa</p>
         <h2 id="order-title" class="order__name" data-order-name></h2>
+        <p class="order__price" hidden data-order-price></p>
       </div>
     </div>
 
@@ -604,6 +688,8 @@
   <symbol id="i-share" viewBox="0 0 24 24"><path d="M12 3v12M7 8l5-5 5 5M5 14v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   <symbol id="i-stack" viewBox="0 0 24 24"><rect x="7" y="3" width="14" height="14" rx="3" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M17 21H6a3 3 0 0 1-3-3V7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
   <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m4 7 8 6 8-6" fill="none" stroke="currentColor" stroke-width="1.8"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m16 16 4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5Z" fill="currentColor"/></symbol>
   <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-6.5-6-6.5-11a6.5 6.5 0 0 1 13 0c0 5-6.5 11-6.5 11Z" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="10" r="2.3" fill="currentColor"/></symbol>
 </svg>
 

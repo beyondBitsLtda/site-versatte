@@ -1,8 +1,8 @@
-// GERADO por tools/instagram.mjs a partir de camisas.json. Não edite aqui:
-// mude camisas.json e rode "node tools/instagram.mjs".
+// GERADO por tools/instagram.mjs (feed do Instagram + textos de camisas.json). Não edite aqui:
+// rode "node tools/instagram.mjs".
 window.VERSATTE_CAMISAS = [
   {
-    "grupo": "Camisas destaque",
+    "grupo": "Novidades do Insta",
     "camisas": [
       {
         "code": "DekhzfclZoE",

@@ -6,8 +6,9 @@
 1. O QUE É
 --------------------------------------------------------------------------------
 Site vitrine da Versatte Sports (@versatte_sports). Não tem carrinho nem
-pagamento: o objetivo é mostrar as camisas anunciadas no Instagram e levar a
-pessoa a comprar pelo Direct ou pelo WhatsApp, com a mensagem já montada.
+pagamento: o objetivo é mostrar as camisas (os posts mais recentes do Instagram
+e o catálogo completo, com o preço da Versatte) e levar a pessoa a comprar pelo
+Direct ou pelo WhatsApp, com a mensagem já montada.
 
 Premissas:
   - funcionar muito bem no celular e se adaptar a tablet e desktop;
@@ -24,11 +25,18 @@ index.html              página única, com todas as seções
 css/style.css           todo o visual (cores, fontes e medidas ficam no :root)
 js/main.js              comportamento: slider, galeria, prévia do post,
                         pedido, Direct/WhatsApp, cartas do jogo, faixa animada
-camisas.json            QUAIS camisas aparecem na galeria (edite este)
-js/posts.js             dados das camisas, gerado pela ferramenta (não edite)
-tools/instagram.mjs     ferramenta que importa posts do Instagram
+camisas.json            textos dos posts das Novidades do Insta (e a lista de
+                        posts no modo manual)
+js/posts.js             dados das Novidades do Insta, gerado pela ferramenta (não edite)
+catalogo.json           catálogo: fonte, preços dos modelos, exclusões e ajustes (edite este)
+js/catalogo.js          dados do catálogo, gerado pela ferramenta (não edite)
+tools/instagram.mjs     ferramenta que importa os posts do Instagram
+tools/catalogo.mjs      ferramenta que monta o catálogo
+tools/navegador.mjs     navegador headless usado pelas duas ferramentas
+.github/workflows/      automações do GitHub (Novidades a cada 6 h, catálogo semanal)
 assets/img/             imagens otimizadas que o site usa (WebP)
 assets/posts/<código>/  fotos de cada post, baixadas do Instagram
+assets/catalogo/<cód>/  fotos de cada camisa do catálogo (capa.webp + 1..N.webp)
 assets/*.png            artes originais em alta (fonte das imagens otimizadas;
                         o site NÃO carrega esses arquivos)
 assets/exemplos/        referências de design usadas no início do projeto
@@ -44,24 +52,50 @@ logo.png                logo original em alta (fonte de assets/img/logo-vs.*)
    - Teaser do Versatte Cards.
    Embaixo do topo há uma borda curva com uma faixa de "tecido" laranja que
    acompanha a curva, com texto correndo (desenhada em SVG pelo main.js).
-2) Camisas em destaque: cards montados a partir de camisas.json (via js/posts.js). Tocar na foto
-   abre a prévia no formato do Instagram (carrossel, legenda, curtidas).
-3) Guia do manto: diferença entre Versão Torcedor e Versão Jogador, com fotos
+2) Novidades do Insta: os 4 posts mais recentes do Instagram (js/posts.js). Tocar
+   na foto abre a prévia no formato do Instagram (carrossel, legenda, curtidas).
+   No celular os cards correm para o lado; em telas largas ficam numa linha só.
+3) Catálogo: camisas da fonte do catalogo.json (js/catalogo.js), em abas por
+   modelo (Torcedor, Jogador, Retrô, do mais barato ao mais caro), com filtro por
+   time, busca e "Ver mais camisas" (24 por vez). Tocar na foto abre a camisa
+   (fotos, preço, tamanhos e código); "Quero essa" abre o pedido.
+4) Guia do manto: diferença entre Versão Torcedor e Versão Jogador, com fotos
    de detalhe.
-4) Tabela de medidas: faixas de tamanho por modelo
+5) Tabela de medidas: faixas de tamanho por modelo
    (Torcedor P ao 4XL, Jogador P ao 3XL, Feminina P ao GG).
-5) Como comprar: 3 passos + botões de Direct e WhatsApp.
-6) Versatte Cards (em breve): faixa fina com as cartas do jogo escapando para
+6) Como comprar: 3 passos + botões de Direct e WhatsApp.
+7) Versatte Cards (em breve): faixa fina com as cartas do jogo escapando para
    fora; as cartas têm efeito 3D/holográfico e viram ao toque.
-7) Rodapé: contatos e crédito Beyond Bits.
+8) Fale com a gente (formulário) e rodapé: contatos e crédito Beyond Bits.
 Fixo na tela: botão flutuante do WhatsApp.
 
 
 4. COMO ATUALIZAR
 --------------------------------------------------------------------------------
-4.1 Camisas da galeria (camisas.json)
-    A galeria mostra SOMENTE posts de venda de camisas listados em camisas.json,
-    na raiz do site, separados por grupo (hoje: "Camisas destaque"). Cada camisa:
+4.1 Novidades do Insta (automático pelo feed, ou manual pelo camisas.json)
+    MODO AUTOMÁTICO (recomendado): a seção sempre mostra os 4 posts mais
+    recentes do perfil. Quem lê o Instagram é o Behold (behold.so), que usa a
+    API oficial do Instagram e entrega um "feed JSON"; o GitHub Actions
+    (.github/workflows/novidades.yml) lê esse feed a cada 6 horas, baixa as fotos
+    para assets/posts/, gera js/posts.js e publica sozinho.
+    Configuração (uma vez só):
+      1. criar conta grátis em behold.so e conectar o Instagram @versatte_sports
+         (precisa ser conta profissional: comercial ou criador de conteúdo);
+      2. criar um feed do tipo JSON e copiar o link dele;
+      3. no GitHub: Settings > Secrets and variables > Actions > New repository
+         secret, nome INSTAGRAM_FEED, valor = link do feed;
+      4. aba Actions > Novidades do Insta > Run workflow (para a 1ª vez).
+    Limites do Behold grátis: até 6 posts, feed atualizado 1 vez por dia e 1.200
+    leituras por mês. Por isso o site NÃO lê o feed a cada visita: só o GitHub
+    lê (4 vezes por dia, ~120 leituras no mês). O link do feed fica só no
+    segredo do GitHub, não no código, para ninguém gastar essas leituras.
+    Para rodar no computador (PowerShell):
+      $env:INSTAGRAM_FEED = "link do feed"; node tools/instagram.mjs
+    Se o feed falhar, a ferramenta não apaga nada: o site fica com os posts atuais.
+
+    Textos dos cards (camisas.json): se o link de um post estiver no
+    camisas.json, o card usa os textos de lá; senão, mostra a data do post e o
+    começo da legenda (sem hashtags). Campos de cada post:
       link      link do post no Instagram
       etiqueta  selo pequeno do card (ex.: "Modelo Torcedor", "Lançamento")
       titulo    parte em caixa alta (ex.: "Chelsea")
@@ -69,15 +103,60 @@ Fixo na tela: botão flutuante do WhatsApp.
       nome      como a camisa aparece na mensagem do Direct/WhatsApp
                 (sem o modelo, que o cliente escolhe na janela de pedido)
       mensagem  opcional: texto próprio para a mensagem
-    Para trocar, adicionar, tirar ou reordenar camisas: edite camisas.json e rode
+
+    MODO MANUAL (sem o feed configurado): a seção mostra exatamente os posts
+    listados em camisas.json. Para trocar: edite camisas.json e rode
       node tools/instagram.mjs
     (precisa de Node 22+ e Edge ou Chrome). A ferramenta baixa só os posts novos,
     com todas as fotos do carrossel em resolução original, legenda, curtidas e
     data, gera js/posts.js (não edite esse arquivo à mão) e apaga de
     assets/posts/ as fotos dos posts que saíram da lista.
     Para atualizar curtidas e fotos de todos:  node tools/instagram.mjs --tudo
-    Para criar outro grupo (ex.: "Retrô"), copie o bloco "Camisas destaque" com
-    outro nome: cada grupo ganha um título próprio na galeria.
+
+4.1a Catálogo (catalogo.json)
+    A ferramenta tools/catalogo.mjs lê todos os álbuns da página de categoria
+    em "fonte", decide o modelo de cada camisa pelas palavras do título e
+    traduz o nome (ex.: "Retro Flamengo 00/01 Home S-XXL" vira "Flamengo ·
+    2000/01 · Titular", tamanhos P ao 2XL). Baixa a capa e até "fotosPorCamisa"
+    fotos de cada álbum, converte para WebP e gera js/catalogo.js.
+      node tools/catalogo.mjs            sincroniza: baixa só as camisas novas
+                                         e apaga as que saíram da fonte
+      node tools/catalogo.mjs --local    só aplica preços/nomes/ajustes, sem baixar
+      node tools/catalogo.mjs --simular  lista como cada álbum seria classificado
+      node tools/catalogo.mjs --tudo     baixa de novo as fotos de todas
+    O GitHub Actions (.github/workflows/catalogo.yml) faz a sincronização toda
+    segunda-feira às 6h e publica sozinho; também dá para rodar na hora pela aba
+    Actions > Catálogo > Run workflow.
+    Campos do catalogo.json:
+      fonte          fica VAZIO de propósito: o repositório é público e os
+                     arquivos da raiz são publicados no site, então o link da
+                     fonte não pode ficar aqui. Ele fica:
+                       - no GitHub: segredo CATALOGO_FONTE (Settings > Secrets
+                         and variables > Actions), usado pela sincronização semanal;
+                       - no computador: arquivo catalogo.local.json
+                         ({ "fonte": "link" }), que está no .gitignore e nunca
+                         vai para o GitHub. Num computador novo, crie esse arquivo.
+                     O modo --local (preços, nomes, ajustes) não precisa do link.
+      fotosPorCamisa quantas fotos cada camisa mostra (hoje 4)
+      modelos        id, nome, preço e palavras do título que identificam o
+                     modelo; a primeira regra que bater vence (Retrô: retro,
+                     vintage, reissue; Jogador: player); o modelo sem palavras
+                     (Torcedor) fica com o resto. PREÇOS: mude aqui e rode
+                     node tools/catalogo.mjs --local
+      excluir        palavras que tiram o álbum do catálogo (feminina, infantil,
+                     treino, manga longa, regata, pré-jogo, jaqueta etc.). Para
+                     vender um desses tipos, crie um modelo com preço e palavras
+                     próprias (ex.: Feminina com "women") e tire a palavra daqui
+      esconder       códigos de camisas que não devem aparecer
+      ajustes        correções por código, ex.:
+                     "200037351": { "time": "Santos", "detalhe": "2025/26 · Neymar Jr" }
+                     (aceita time, detalhe, modelo e max = maior tamanho)
+    Camisas sem time reconhecido aparecem como "Outros" (veja com --simular).
+    Títulos repetidos aparecem uma vez só. Álbuns sem time e sem temporada no
+    título (capas de seção, "....") ficam de fora.
+    O código da camisa (número do álbum) vai na mensagem do pedido, junto com o
+    link versattesports.com.br/#camisa-<código>, que abre a camisa no site: é
+    assim que a equipe sabe qual camisa o cliente quer e onde pedir.
 
 4.1b Formulário "Fale com a gente"
     Seção antes do rodapé (link "Contato" do menu). Nome, e-mail, WhatsApp
@@ -134,6 +213,11 @@ Fixo na tela: botão flutuante do WhatsApp.
 monta a mensagem, por exemplo:
   "Olá! Vi no site da Versatte e tenho interesse na camisa Chelsea Black &
    Gold (modelo Torcedor, tamanho G). https://www.instagram.com/p/..."
+No catálogo o modelo já vem da camisa (a janela pede só o tamanho, limitado à
+faixa da camisa) e a mensagem leva preço, código e link:
+  "Olá! Vi no catálogo do site da Versatte e quero a camisa Flamengo 2000/01
+   Titular (modelo Retrô, tamanho G, R$ 189,90). Cód. 135129801
+   https://versattesports.com.br/#camisa-135129801"
 
   - WhatsApp: a mensagem já chega escrita (o link wa.me aceita texto pronto).
   - Direct do Instagram: o Instagram NÃO permite que sites preencham o campo
@@ -158,6 +242,17 @@ monta a mensagem, por exemplo:
   ajustes. Vídeos de carrossel não são baixados, só fotos.
 - As fotos dos posts trazem a arte original da campanha (inclusive preços da
   época); quando a campanha acabar, vale trocar ou remover esses posts.
+- Catálogo: a fonte não deixa usar as fotos dela direto em outro site (bloqueia
+  o carregamento fora dela), por isso as fotos são baixadas para
+  assets/catalogo/. Se a fonte mudar o layout das páginas, tools/catalogo.mjs
+  pode precisar de ajustes. A tradução dos nomes é automática: confira com
+  --simular e corrija o que precisar em "ajustes".
+- Novidades do Insta no modo automático: o Behold grátis atualiza o feed uma vez
+  por dia, então um post novo pode levar até um dia para aparecer no site.
+  Curtidas e comentários dependem do que o feed entrega; sem esses números a
+  prévia só leva ao post.
+- O GitHub Actions publica com o usuário github-actions[bot]. Se um dia o site
+  sair do GitHub Pages, rode as ferramentas no computador e publique à mão.
 
 
 7. IMAGENS E DESEMPENHO
@@ -168,6 +263,10 @@ Tamanhos de referência para novas imagens:
   - topo (desktop): ~2000 px de largura; topo (celular): ~900 x 1200 px
   - fotos de detalhe do guia: 1200 x 750 px
 As imagens fora da primeira tela carregam só quando a pessoa chega até elas.
+Catálogo: tools/catalogo.mjs converte as fotos no próprio Edge/Chrome (canvas),
+sem instalar nada: capa de 480 px (cards, ~15 KB) e fotos de 720 px (janela da
+camisa, ~20 a 60 KB). O catálogo inteiro (769 camisas, ~3.300 imagens) ocupa
+perto de 130 MB; para diminuir, reduza "fotosPorCamisa" e rode com --tudo.
 Arquivos que estão na pasta mas não são usados pelo site:
   assets/*.png (originais), assets/img/retrato-time.webp,
   assets/hero-promoção-02.png e a pasta uploads/.
