@@ -100,8 +100,6 @@
     hero.addEventListener('focusout', e => { if (!hero.contains(e.relatedTarget)) pause('focus', false); });
     document.addEventListener('visibilitychange', () => pause('tab', document.hidden));
     new IntersectionObserver(([e]) => pause('offscreen', !e.isIntersecting), { threshold: .2 }).observe(hero);
-    // o WhatsApp flutuante aparece só depois do topo, para não cobrir os botões do hero
-    new IntersectionObserver(([e]) => document.body.classList.toggle('past-hero', !e.isIntersecting), { threshold: .35 }).observe(hero);
 
     $('[data-hero-prev]', hero).addEventListener('click', () => go(current - 1));
     $('[data-hero-next]', hero).addEventListener('click', () => go(current + 1));
@@ -113,6 +111,12 @@
     pause('init', false);
     go(0);
   }
+
+  // o WhatsApp flutuante aparece só depois do topo (slider da home ou topo do catálogo),
+  // para não cobrir os botões de lá
+  const topo = $('.hero');
+  if (topo) new IntersectionObserver(([e]) => document.body.classList.toggle('past-hero', !e.isIntersecting), { threshold: .35 }).observe(topo);
+  else document.body.classList.add('past-hero');
 
   /* ---------- borda do hero + faixa de tecido que corre pela curva ---------- */
   const edge = $('[data-edge]');
@@ -413,50 +417,52 @@
     };
   };
 
-  /* ---------- prévia no formato do Instagram ---------- */
+  /* ---------- prévia no formato do Instagram (só na home) ---------- */
   const viewer = $('[data-viewer]');
-  const viewerFotos = carrossel(viewer);
-  let viewerPost = null;
+  let viewerPost = null, openViewer = () => {};
 
   const linkify = text => esc(text)
     .replace(/(^|\s)#([\p{L}\p{N}_]+)/gu, '$1<a href="https://www.instagram.com/explore/tags/$2/" target="_blank" rel="noopener">#$2</a>')
     .replace(/(^|[\s(])@([A-Za-z0-9._]+[A-Za-z0-9_])/g, '$1<a href="https://www.instagram.com/$2/" target="_blank" rel="noopener">@$2</a>');
 
-  const openViewer = post => {
-    viewerPost = post;
-    viewerFotos(post.images || [], post.name || 'Post da Versatte');
-    $('[data-ig-name]', viewer).textContent = post.name || dateBR(post.date);
-    $('[data-ig-caption]', viewer).innerHTML = linkify(post.caption || '');
-    const date = $('[data-ig-date]', viewer);
-    date.textContent = dateBR(post.date);
-    date.dateTime = post.date || '';
-    $('[data-ig-likes]', viewer).textContent = post.likes ? `${post.likes} curtida${post.likes > 1 ? 's' : ''}` : '';
-    const url = postUrl(post.code);
-    // sem o número de comentários (o feed nem sempre traz), só leva ao post
-    $('[data-ig-comments]', viewer).innerHTML = post.comments == null
-      ? `<a href="${url}" target="_blank" rel="noopener">Ver os comentários no Instagram →</a>`
-      : post.comments
-        ? `<a href="${url}" target="_blank" rel="noopener">Ver ${post.comments === 1 ? 'o comentário' : `os ${post.comments} comentários`} no Instagram →</a>`
-        : `Ainda não há comentários. <a href="${url}" target="_blank" rel="noopener">Seja o primeiro no Instagram →</a>`;
-    $$('[data-ig-link]', viewer).forEach(a => { a.href = url; });
-    $('[data-ig-wa]', viewer).href = waLink(messageFor(post));
-    $('[data-order-open]', viewer).textContent = post.msg ? 'Me ajuda a escolher' : 'Quero essa camisa';
-    $('.ig__box', viewer).scrollTop = 0;
-    $('.ig__scroll', viewer).scrollTop = 0;
-    openModal(viewer);
-  };
+  if (viewer) {
+    const viewerFotos = carrossel(viewer);
+    openViewer = post => {
+      viewerPost = post;
+      viewerFotos(post.images || [], post.name || 'Post da Versatte');
+      $('[data-ig-name]', viewer).textContent = post.name || dateBR(post.date);
+      $('[data-ig-caption]', viewer).innerHTML = linkify(post.caption || '');
+      const date = $('[data-ig-date]', viewer);
+      date.textContent = dateBR(post.date);
+      date.dateTime = post.date || '';
+      $('[data-ig-likes]', viewer).textContent = post.likes ? `${post.likes} curtida${post.likes > 1 ? 's' : ''}` : '';
+      const url = postUrl(post.code);
+      // sem o número de comentários (o feed nem sempre traz), só leva ao post
+      $('[data-ig-comments]', viewer).innerHTML = post.comments == null
+        ? `<a href="${url}" target="_blank" rel="noopener">Ver os comentários no Instagram →</a>`
+        : post.comments
+          ? `<a href="${url}" target="_blank" rel="noopener">Ver ${post.comments === 1 ? 'o comentário' : `os ${post.comments} comentários`} no Instagram →</a>`
+          : `Ainda não há comentários. <a href="${url}" target="_blank" rel="noopener">Seja o primeiro no Instagram →</a>`;
+      $$('[data-ig-link]', viewer).forEach(a => { a.href = url; });
+      $('[data-ig-wa]', viewer).href = waLink(messageFor(post));
+      $('[data-order-open]', viewer).textContent = post.msg ? 'Me ajuda a escolher' : 'Quero essa camisa';
+      $('.ig__box', viewer).scrollTop = 0;
+      $('.ig__scroll', viewer).scrollTop = 0;
+      openModal(viewer);
+    };
 
-  $('[data-viewer-close]', viewer).addEventListener('click', () => viewer.close());
-  viewer.addEventListener('click', e => { if (e.target === viewer) viewer.close(); }); // clique fora fecha
-  viewer.addEventListener('close', () => {
-    closedModal();
-    if (lastFocus && !order.open) lastFocus.focus({ preventScroll: true });
-  });
-  $('[data-ig-share]', viewer).addEventListener('click', async () => {
-    const url = postUrl(viewerPost.code);
-    if (navigator.share) { try { await navigator.share({ title: viewerPost.name, url }); return; } catch { return; } }
-    toast(await copy(url) ? 'Link do post copiado!' : url);
-  });
+    $('[data-viewer-close]', viewer).addEventListener('click', () => viewer.close());
+    viewer.addEventListener('click', e => { if (e.target === viewer) viewer.close(); }); // clique fora fecha
+    viewer.addEventListener('close', () => {
+      closedModal();
+      if (lastFocus && !order.open) lastFocus.focus({ preventScroll: true });
+    });
+    $('[data-ig-share]', viewer).addEventListener('click', async () => {
+      const url = postUrl(viewerPost.code);
+      if (navigator.share) { try { await navigator.share({ title: viewerPost.name, url }); return; } catch { return; } }
+      toast(await copy(url) ? 'Link do post copiado!' : url);
+    });
+  }
 
   /* ---------- catálogo: dados (js/catalogo.js, gerado por tools/catalogo.mjs) ---------- */
   const CAT = window.VERSATTE_CATALOGO || { modelos: [], camisas: [] };
@@ -464,7 +470,8 @@
   const TAMANHOS = CAT.tamanhos || ['P', 'M', 'G', 'GG', '2XL', '3XL', '4XL'];
   const modeloDe = c => MODELOS.find(m => m.id === c.modelo) || { nome: c.modelo, preco: 0 };
   const doCatalogo = item => Boolean(item && item.modelo && item.capa);
-  const camisaUrl = c => `${SITE_URL}#camisa-${c.id}`;
+  const CATALOGO_URL = `${SITE_URL}catalogo.html`;
+  const camisaUrl = c => `${CATALOGO_URL}#camisa-${c.id}`;
   const mensagemCatalogo = (c, tamanho = '') => {
     const m = modeloDe(c);
     return `Olá! Vi no catálogo do site da Versatte e quero a camisa ${c.nome} (modelo ${m.nome}${tamanho ? `, tamanho ${tamanho}` : ''}, ${brl(m.preco)}). Cód. ${c.id} ${camisaUrl(c)}`;
@@ -503,9 +510,10 @@
     thumb.src = cat ? post.capa : (post.thumbs || post.images || [])[0] || '';
     thumb.alt = nome;
     syncOrder();
-    if (viewer.open) viewer.close();
+    if (viewer?.open) viewer.close();
     if (product.open) product.close();
     openModal(order);
+    document.dispatchEvent(new CustomEvent('vs:pedido', { detail: post }));   // a loja (js/loja.js) escuta
   };
   // cada modelo tem uma faixa de tamanhos (ver seção "Tabela de medidas");
   // no catálogo vale a faixa da própria camisa, lida do título
@@ -553,39 +561,74 @@
   product.addEventListener('close', () => {
     closedModal();
     // tira o #camisa-... do endereço, para o mesmo link poder abrir a camisa de novo
-    if (/^#camisa-/.test(location.hash)) history.replaceState(null, '', location.pathname + location.search);
+    // (no catálogo completo o endereço volta para a aba aberta, ex.: #retro)
+    if (/^#camisa-/.test(location.hash)) history.replaceState(null, '', location.pathname + location.search + (catGrid ? `#${cat.modelo}` : ''));
     if (lastFocus && !order.open) lastFocus.focus({ preventScroll: true });
   });
 
-  /* ---------- catálogo: abas por modelo, filtro por time, busca e "ver mais" ---------- */
-  const catGrid = $('[data-cat-grid]');
-  const POR_PAGINA = 24;
-  const semAcento = s => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+  /* ---------- catálogo: cards (destaques da home e catálogo completo) ---------- */
+  const POR_PAGINA = 24;   // catálogo completo: camisas por vez ("Ver mais camisas")
+  const DESTAQUES = 8;     // home: camisas em destaque
+  // frase de cada modelo nos atalhos da home (o id é o do catalogo.json)
+  const FRASE_MODELO = { torcedor: 'Escudo bordado e conforto pro dia a dia', jogador: 'A mesma tecnologia usada em campo', retro: 'Os clássicos que marcaram época' };
+  const semAcento = s => String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
   CAT.camisas.forEach(c => { c.busca = semAcento(`${c.nome} ${c.detalhe}`); });
-  const cat = { modelo: MODELOS[0]?.id, time: '', busca: '', limite: POR_PAGINA };
-  const daAba = (modelo = cat.modelo) => CAT.camisas.filter(c => c.modelo === modelo);
-  const termos = () => semAcento(cat.busca).split(/\s+/).filter(Boolean);
-  const confere = c => termos().every(t => c.busca.includes(t));
-  const filtradas = () => daAba().filter(c => (!cat.time || c.time === cat.time) && confere(c));
+  const precoHTML = m => `<small>R$</small>${esc(brl(m.preco).replace(/^R\$\s*/, ''))}`;
+  const doModelo = id => CAT.camisas.filter(c => c.modelo === id);
 
-  const catCard = c => {
-    const m = modeloDe(c);
-    return `
+  const catCard = (c, comModelo = false) => `
       <li class="cat-card">
         <button class="cat-card__media" type="button" data-cat-open="${esc(c.id)}" aria-label="Ver fotos: ${esc(c.nome)}">
           <img src="${esc(c.capa)}" alt="${esc(c.nome)}" loading="lazy" decoding="async" width="480" height="480">
+          ${comModelo ? `<span class="cat-card__model">${esc(modeloDe(c).nome)}</span>` : ''}
           ${c.fotos.length > 1 ? `<span class="post__count"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-stack"/></svg>${c.fotos.length}</span>` : ''}
         </button>
         <div class="cat-card__body">
           <h3 class="cat-card__team">${esc(c.time)}</h3>
           <p class="cat-card__detail">${esc(c.detalhe)}</p>
           <div class="cat-card__buy">
-            <span class="cat-card__price"><small>R$</small>${esc(brl(m.preco).replace(/^R\$\s*/, ''))}</span>
+            <span class="cat-card__price">${precoHTML(modeloDe(c))}</span>
             <button class="btn btn--solid btn--sm" type="button" data-cat-order="${esc(c.id)}">Quero essa</button>
           </div>
         </div>
       </li>`;
-  };
+
+  /* ---------- home: atalhos por modelo e camisas em destaque ---------- */
+  const destaquesBox = $('[data-cat-destaques]');
+  if (destaquesBox && MODELOS.length) {
+    $('[data-cat-models]').innerHTML = MODELOS.map(m => {
+      const camisas = doModelo(m.id);
+      return `
+      <a class="cat-model" href="catalogo.html#${esc(m.id)}">
+        ${camisas[0] ? `<img class="cat-model__img" src="${esc(camisas[0].capa)}" alt="" loading="lazy" decoding="async" width="480" height="480">` : ''}
+        <span class="cat-model__name">${esc(m.nome)}</span>
+        <span class="cat-model__desc">${esc(FRASE_MODELO[m.id] || '')}</span>
+        <span class="cat-model__foot">
+          <span class="cat-model__price">${precoHTML(m)}</span>
+          <span class="cat-model__count">${camisas.length} camisas <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow"/></svg></span>
+        </span>
+      </a>`;
+    }).join('');
+    // primeiro os escolhidos no catalogo.json ("destaques"); o resto são as mais recentes, alternando os modelos
+    const escolhidas = (CAT.destaques || []).map(id => CAT.camisas.find(c => c.id === String(id))).filter(Boolean);
+    const filas = MODELOS.map(m => doModelo(m.id).filter(c => !escolhidas.includes(c)));
+    for (let i = 0; escolhidas.length < DESTAQUES && filas.some(f => f.length); i++) {
+      const fila = filas[i % filas.length];
+      if (fila.length) escolhidas.push(fila.shift());
+    }
+    destaquesBox.innerHTML = escolhidas.slice(0, DESTAQUES).map(c => catCard(c, true)).join('');
+    $('[data-cat-all]').textContent = `Ver as ${CAT.camisas.length} camisas do catálogo`;
+  } else if (destaquesBox) {
+    $('#catalogo').hidden = true;   // sem js/catalogo.js, a seção não aparece
+  }
+
+  /* ---------- catálogo completo (catalogo.html): abas por modelo, filtro por time, busca e "ver mais" ---------- */
+  const catGrid = $('[data-cat-grid]');
+  const cat = { modelo: MODELOS[0]?.id, time: '', busca: '', limite: POR_PAGINA };
+  const daAba = (modelo = cat.modelo) => doModelo(modelo);
+  const termos = () => semAcento(cat.busca).split(/\s+/).filter(Boolean);
+  const confere = c => termos().every(t => c.busca.includes(t));
+  const filtradas = () => daAba().filter(c => (!cat.time || c.time === cat.time) && confere(c));
 
   const renderTimes = () => {
     const contagem = new Map();
@@ -601,8 +644,8 @@
     const lista = filtradas();
     const m = MODELOS.find(x => x.id === cat.modelo);
     const visiveis = lista.slice(0, cat.limite);
-    if (soMais) catGrid.insertAdjacentHTML('beforeend', visiveis.slice(catGrid.children.length).map(catCard).join(''));
-    else catGrid.innerHTML = visiveis.map(catCard).join('');
+    if (soMais) catGrid.insertAdjacentHTML('beforeend', visiveis.slice(catGrid.children.length).map(c => catCard(c)).join(''));
+    else catGrid.innerHTML = visiveis.map(c => catCard(c)).join('');
     $('[data-cat-count]').textContent = lista.length
       ? `${lista.length} camisa${lista.length > 1 ? 's' : ''} ${m ? `${m.nome} · ${brl(m.preco)} cada` : ''}${cat.time ? ` · ${cat.time}` : ''}`
       : '';
@@ -618,7 +661,8 @@
     }
   };
 
-  const setModelo = id => {
+  // troca a aba; quando é a pessoa que troca, o endereço guarda a aba (catalogo.html#retro)
+  const setModelo = (id, marcar = false) => {
     cat.modelo = id;
     cat.limite = POR_PAGINA;
     $$('[data-cat-tab]', $('[data-cat-tabs]')).forEach(b => {
@@ -626,6 +670,8 @@
       b.setAttribute('aria-selected', String(on));
       b.tabIndex = on ? 0 : -1;
     });
+    $$('[data-cat-head-models] a').forEach(a => a.classList.toggle('is-on', a.hash === `#${id}`));
+    if (marcar) history.replaceState(null, '', `#${id}`);
     renderTimes();
     renderGrid();
   };
@@ -641,7 +687,7 @@
       const dir = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
       if (!dir) return;
       const prox = MODELOS[(i + dir + MODELOS.length) % MODELOS.length];
-      setModelo(prox.id);
+      setModelo(prox.id, true);
       $(`[data-cat-tab="${prox.id}"]`, tabs).focus();
     });
     let espera;
@@ -660,35 +706,78 @@
     $('[data-cat-more]').addEventListener('click', () => { cat.limite += POR_PAGINA; renderGrid(true); });
     $('#catalogo').addEventListener('click', e => {
       const tab = e.target.closest('[data-cat-tab]');
-      if (tab) { setModelo(tab.dataset.catTab); return; }
-      const id = (e.target.closest('[data-cat-open], [data-cat-order]') || {}).dataset;
-      const c = id && CAT.camisas.find(x => x.id === (id.catOpen || id.catOrder));
-      if (!c) return;
-      if (id.catOpen) openProduct(c); else openOrder(c);
+      if (tab) setModelo(tab.dataset.catTab, true);
     });
-    setModelo(cat.modelo);
 
-    // link direto para uma camisa (vai na mensagem do pedido): versattesports.com.br/#camisa-<código>
-    const abrirDoLink = () => {
-      const c = CAT.camisas.find(x => `#camisa-${x.id}` === location.hash);
-      if (!c) return;
-      if (c.modelo !== cat.modelo) setModelo(c.modelo);
-      $('#catalogo').scrollIntoView();
-      openProduct(c);
-    };
-    abrirDoLink();
-    addEventListener('hashchange', abrirDoLink);
+    // topo da página: preço de cada modelo (atalho para a aba) e a camisa mais recente de cada um
+    const headModels = $('[data-cat-head-models]');
+    if (headModels) headModels.innerHTML = MODELOS.map(m => `<li><a href="#${esc(m.id)}">${esc(m.nome)} <b>${esc(brl(m.preco))}</b></a></li>`).join('');
+    const collage = $('[data-cat-collage]');
+    if (collage) collage.innerHTML = MODELOS.map(m => doModelo(m.id)[0]).filter(Boolean)
+      .map(c => `<img src="${esc(c.capa)}" alt="" decoding="async" width="480" height="480">`).join('');
+
+    setModelo(MODELOS.find(m => `#${m.id}` === location.hash)?.id || cat.modelo);
   } else if (catGrid) {
     $('#catalogo').hidden = true;   // sem js/catalogo.js, a seção não aparece
   }
 
-  // cliques da galeria e das prévias
+  // link direto para uma camisa (vai na mensagem do pedido): versattesports.com.br/catalogo.html#camisa-<código>
+  // (links antigos, versattesports.com.br/#camisa-<código>, também abrem a camisa, na home)
+  const abrirDoLink = mudou => {
+    const c = CAT.camisas.find(x => `#camisa-${x.id}` === location.hash);
+    if (c) {
+      if (catGrid && c.modelo !== cat.modelo) setModelo(c.modelo);
+      openProduct(c);
+      return;
+    }
+    const m = catGrid && MODELOS.find(x => `#${x.id}` === location.hash);
+    if (m && mudou) {          // atalhos do topo do catálogo (#torcedor, #jogador, #retro)
+      if (m.id !== cat.modelo) setModelo(m.id);
+      $('#catalogo').scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth' });
+    }
+  };
+  abrirDoLink(false);
+  addEventListener('hashchange', () => abrirDoLink(true));
+
+  // cliques da galeria, das prévias e dos cards do catálogo
   document.addEventListener('click', e => {
     const opener = e.target.closest('[data-open-post]');
     if (opener) { openViewer(postOf(opener)); return; }
+    const card = e.target.closest('[data-cat-open], [data-cat-order]');
+    if (card) {
+      const c = CAT.camisas.find(x => x.id === (card.dataset.catOpen || card.dataset.catOrder));
+      if (c) card.dataset.catOpen ? openProduct(c) : openOrder(c);
+      return;
+    }
     const buy = e.target.closest('[data-order-open]');
     if (buy) openOrder(buy.closest('[data-viewer]') ? viewerPost : buy.closest('[data-product]') ? productItem : postOf(buy));
   });
+
+  /* ---------- loja (carrinho + pagamento pelo Mercado Pago) · DESLIGADA por enquanto ----------
+     Só carrega js/loja.js quando o loja.json tem "ativa": true. Para testar antes de liberar,
+     abra o site com ?loja=teste (fica ligado neste navegador; desliga com ?loja=off). */
+  window.VERSATTE_SITE = { toast, abrirModal: openModal, modalFechado: closedModal, brl, esc, SITE_URL };
+  (async () => {
+    const modo = new URLSearchParams(location.search).get('loja');
+    let teste = false;
+    try {
+      if (modo === 'teste') localStorage.setItem('vs-loja-teste', '1');
+      if (modo === 'off') localStorage.removeItem('vs-loja-teste');
+      teste = localStorage.getItem('vs-loja-teste') === '1';
+    } catch {}
+    let cfg;
+    try { cfg = await (await fetch('loja.json', { cache: 'no-cache' })).json(); } catch { return; }
+    if (!cfg.ativa && !teste) return;
+    window.VERSATTE_LOJA = { ...cfg, teste: !cfg.ativa };
+    const css = document.createElement('link');
+    css.rel = 'stylesheet';
+    css.href = 'css/loja.css?v=20261103-1';
+    css.onload = () => dispatchEvent(new Event('resize'));   // js/tela.js reaplica o ajuste nas regras novas
+    document.head.appendChild(css);
+    const js = document.createElement('script');
+    js.src = 'js/loja.js?v=20261103-1';
+    document.head.appendChild(js);
+  })();
 
   /* ---------- revelar ao rolar ---------- */
   const reveals = $$('.reveal');

@@ -21,10 +21,13 @@ build). Basta publicar a pasta em qualquer hospedagem estática.
 
 2. ESTRUTURA DE PASTAS
 --------------------------------------------------------------------------------
-index.html              página única, com todas as seções
+index.html              página inicial, com todas as seções
+catalogo.html           subpágina com o catálogo completo
 css/style.css           todo o visual (cores, fontes e medidas ficam no :root)
-js/main.js              comportamento: slider, galeria, prévia do post,
+js/main.js              comportamento: slider, galeria, prévia do post, catálogo,
                         pedido, Direct/WhatsApp, cartas do jogo, faixa animada
+                        (serve as duas páginas: cada parte só roda se existir na página)
+js/tela.js              ajuste do modo "Site para computador" no celular (seção 9)
 camisas.json            textos dos posts das Novidades do Insta (e a lista de
                         posts no modo manual)
 js/posts.js             dados das Novidades do Insta, gerado pela ferramenta (não edite)
@@ -34,6 +37,12 @@ tools/instagram.mjs     ferramenta que importa os posts do Instagram
 tools/catalogo.mjs      ferramenta que monta o catálogo
 tools/navegador.mjs     navegador headless usado pelas duas ferramentas
 .github/workflows/      automações do GitHub (Novidades a cada 6 h, catálogo semanal)
+loja.json               LOJA (desligada): interruptor, endereço do servidor, frete
+js/loja.js, css/loja.css  carrinho e pagamento; só carregam com a loja ligada ou em teste
+pedido.html             volta do pagamento (fora do menu e das buscas)
+politicas.html          entrega, trocas e privacidade: MODELO a preencher (fora do menu)
+servidor/               servidor da loja no Cloudflare (worker.js) e o passo a passo
+                        para ligar o Mercado Pago (LEIA-ME.txt)
 assets/img/             imagens otimizadas que o site usa (WebP)
 assets/posts/<código>/  fotos de cada post, baixadas do Instagram
 assets/catalogo/<cód>/  fotos de cada camisa do catálogo (capa.webp + 1..N.webp)
@@ -44,8 +53,9 @@ uploads/                arquivos do site antigo (não usados)
 logo.png                logo original em alta (fonte de assets/img/logo-vs.*)
 
 
-3. SEÇÕES DA PÁGINA (na ordem)
+3. SEÇÕES DAS PÁGINAS (na ordem)
 --------------------------------------------------------------------------------
+PÁGINA INICIAL (index.html):
 1) Topo (hero) com slider de 3 slides:
    - Boas-vindas: a cada visita alterna entre 3 combinações de imagem + texto.
    - Campanha "Esquenta Novembro": some sozinha depois de 25/10/2026.
@@ -55,10 +65,12 @@ logo.png                logo original em alta (fonte de assets/img/logo-vs.*)
 2) Novidades do Insta: os 4 posts mais recentes do Instagram (js/posts.js). Tocar
    na foto abre a prévia no formato do Instagram (carrossel, legenda, curtidas).
    No celular os cards correm para o lado; em telas largas ficam numa linha só.
-3) Catálogo: camisas da fonte do catalogo.json (js/catalogo.js), em abas por
-   modelo (Torcedor, Jogador, Retrô, do mais barato ao mais caro), com filtro por
-   time, busca e "Ver mais camisas" (24 por vez). Tocar na foto abre a camisa
-   (fotos, preço, tamanhos e código); "Quero essa" abre o pedido.
+3) Destaques do catálogo: um atalho para cada modelo (preço, quantidade de
+   camisas e a capa da mais recente; leva a catalogo.html#modelo) e 8 camisas em
+   destaque (as do campo "destaques" do catalogo.json; o que faltar o site
+   completa com as mais recentes, alternando os modelos). Botão "Ver as N camisas
+   do catálogo" leva à subpágina. Tocar na foto abre a camisa; "Quero essa" abre
+   o pedido.
 4) Guia do manto: diferença entre Versão Torcedor e Versão Jogador, com fotos
    de detalhe.
 5) Tabela de medidas: faixas de tamanho por modelo
@@ -68,6 +80,20 @@ logo.png                logo original em alta (fonte de assets/img/logo-vs.*)
    fora; as cartas têm efeito 3D/holográfico e viram ao toque.
 8) Fale com a gente (formulário) e rodapé: contatos e crédito Beyond Bits.
 Fixo na tela: botão flutuante do WhatsApp.
+
+CATÁLOGO (catalogo.html):
+1) Topo escuro curto, com a mesma borda curva e faixa de tecido da home, o
+   preço de cada modelo (atalho para a aba) e, em telas largas, uma colagem com
+   a camisa mais recente de cada modelo.
+2) Catálogo completo (js/catalogo.js): abas por modelo (Torcedor, Jogador, Retrô,
+   do mais barato ao mais caro), filtro por time, busca e "Ver mais camisas"
+   (24 por vez). O endereço guarda a aba: catalogo.html#torcedor, #jogador,
+   #retro. Tocar na foto abre a camisa (fotos, preço, tamanhos e código).
+3) Como comprar e rodapé (iguais aos da home).
+Menu, rodapé e as janelas da camisa, do pedido e do Direct estão escritos nas
+duas páginas: ao mudar um deles (ex.: número do WhatsApp, links do menu), mude
+no index.html e no catalogo.html. No catalogo.html os links do menu levam de
+volta às seções da home (index.html#guia etc.).
 
 
 4. COMO ATUALIZAR
@@ -151,12 +177,39 @@ Fixo na tela: botão flutuante do WhatsApp.
       ajustes        correções por código, ex.:
                      "200037351": { "time": "Santos", "detalhe": "2025/26 · Neymar Jr" }
                      (aceita time, detalhe, modelo e max = maior tamanho)
+      destaques      códigos das camisas fixas nos destaques da home, na ordem
+                     (até 8), ex.: ["135129801", "259643688"]. Vazio: o site
+                     mostra as mais recentes de cada modelo. Depois de mudar,
+                     rode node tools/catalogo.mjs --local
     Camisas sem time reconhecido aparecem como "Outros" (veja com --simular).
     Títulos repetidos aparecem uma vez só. Álbuns sem time e sem temporada no
     título (capas de seção, "....") ficam de fora.
-    O código da camisa (número do álbum) vai na mensagem do pedido, junto com o
-    link versattesports.com.br/#camisa-<código>, que abre a camisa no site: é
-    assim que a equipe sabe qual camisa o cliente quer e onde pedir.
+    O código da camisa (número do álbum) aparece na janela da camisa e vai na
+    mensagem do pedido, junto com o link
+    versattesports.com.br/catalogo.html#camisa-<código>, que abre a camisa no
+    site: é assim que a equipe sabe qual camisa o cliente quer e onde pedir.
+    (Links antigos, versattesports.com.br/#camisa-<código>, continuam abrindo.)
+
+4.1c Loja: carrinho e pagamento pelo Mercado Pago (DESLIGADA)
+    Está pronta, mas desligada até a conta do Mercado Pago ficar configurada.
+    Com "ativa": false no loja.json, NADA da loja aparece: o site nem carrega o
+    js/loja.js e o css/loja.css, e pedido.html e politicas.html não estão em
+    nenhum link e não aparecem no Google (noindex).
+    Para testar antes de liberar: abra o site com ?loja=teste
+      (ex.: versattesports.com.br/catalogo.html?loja=teste). Fica ligado só neste
+      navegador, com um aviso "modo de teste" no canto; desliga com ?loja=off.
+      Sem "api" no loja.json, o pagamento é simulado no próprio navegador.
+    Como funciona: na janela "Quero essa camisa" de uma camisa do catálogo
+    aparece "Adicionar ao carrinho" (posts do Instagram continuam só com
+    WhatsApp/Direct). O carrinho fica no menu; depois vêm entrega e contato
+    (com busca de endereço pelo CEP) e o pagamento na página do Mercado Pago
+    (Pix, cartão ou boleto). Na volta, pedido.html mostra aprovado, em análise
+    ou não concluído.
+    Preço e frete são sempre recalculados pelo servidor (servidor/worker.js),
+    com o catálogo e o loja.json publicados no site.
+    Para liberar: siga servidor/LEIA-ME.txt (Cloudflare, Mercado Pago, testes),
+    preencha politicas.html, defina frete e prazo no loja.json, coloque o link
+    "Políticas da loja" no rodapé das páginas e mude "ativa" para true.
 
 4.1b Formulário "Fale com a gente"
     Seção antes do rodapé (link "Contato" do menu). Nome, e-mail, WhatsApp
@@ -194,9 +247,9 @@ Fixo na tela: botão flutuante do WhatsApp.
 
 4.5 Contatos
     WhatsApp: 55 31 9316-8184 · Instagram: @versatte_sports
-    No js/main.js: WA_NUMBER e IG_USER. No index.html também há links diretos
-    (rodapé, botão flutuante, "Como comprar"): ao trocar o número, busque por
-    "553193168184" e substitua em todos os lugares.
+    No js/main.js: WA_NUMBER e IG_USER. No index.html e no catalogo.html também
+    há links diretos (rodapé, botão flutuante, "Como comprar"): ao trocar o
+    número, busque por "553193168184" e substitua em todos os lugares.
 
 4.6 Visual
     Cores, fontes, raios e espaçamentos ficam em :root no css/style.css.
@@ -217,7 +270,7 @@ No catálogo o modelo já vem da camisa (a janela pede só o tamanho, limitado �
 faixa da camisa) e a mensagem leva preço, código e link:
   "Olá! Vi no catálogo do site da Versatte e quero a camisa Flamengo 2000/01
    Titular (modelo Retrô, tamanho G, R$ 189,90). Cód. 135129801
-   https://versattesports.com.br/#camisa-135129801"
+   https://versattesports.com.br/catalogo.html#camisa-135129801"
 
   - WhatsApp: a mensagem já chega escrita (o link wa.me aceita texto pronto).
   - Direct do Instagram: o Instagram NÃO permite que sites preencham o campo
@@ -296,15 +349,16 @@ Se a hospedagem tiver limite de espaço, eles podem ficar fora da publicação.
   Ao criar algo novo que saia das bordas, mantenha o corte dentro da seção.
 - Celular com "Site para computador" (Chrome) ou "Versão para PC" (Samsung
   Internet) ligado: o navegador ignora a tag viewport e desenha a página com
-  ~980px, deixando tudo minúsculo. Um script no <head> do index.html detecta
-  esse caso (tela de toque estreita desenhada larga), amplia a página para o
-  tamanho real e faz as regras @media responderem à largura real da tela.
+  ~980px, deixando tudo minúsculo. O js/tela.js, carregado no <head> das duas
+  páginas logo depois do CSS e sem defer, detecta esse caso (tela de toque
+  estreita desenhada larga), amplia a página para o tamanho real e faz as regras
+  @media responderem à largura real da tela.
   Por isso, no CSS, use calc(N * var(--vw)) e var(--vh) em vez de vw/vh: o
   script ajusta essas variáveis para compensar o zoom.
 - Em celulares baixos (ex.: iPhone SE) o topo usa uma versão compacta para que
   textos e botões caibam na primeira tela.
 - O botão flutuante do WhatsApp só aparece depois do topo, para não cobrir os
   botões do hero.
-- Os arquivos CSS/JS são chamados com ?v=AAAAMMDD-N no index.html. Ao publicar
-  mudanças, aumente esse número para o celular não usar uma versão antiga em
-  cache.
+- Os arquivos CSS/JS são chamados com ?v=AAAAMMDD-N no index.html e no
+  catalogo.html. Ao publicar mudanças, aumente esse número nas duas páginas para
+  o celular não usar uma versão antiga em cache.

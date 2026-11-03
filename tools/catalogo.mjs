@@ -63,6 +63,7 @@ function readConfig() {
     excluir: (cfg.excluir || []).map(normal).filter(Boolean),
     esconder: new Set((cfg.esconder || []).map(String)),
     ajustes: cfg.ajustes || {},
+    destaques: (cfg.destaques || []).map(String),
   };
 }
 
@@ -80,8 +81,8 @@ function readCache() {
 
 /* ---------- leitura do título ---------- */
 // minúsculas, sem acento, hifens e travessões viram "-", espaços simples
-const normal = s => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase()
-  .replace(/[‐-―−]/g, '-').replace(/\s+/g, ' ').trim();
+const normal = s => String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
+  .replace(/[\u2010-\u2015\u2212]/g, '-').replace(/\s+/g, ' ').trim();
 // versão só com letras e números, para procurar palavras inteiras
 const palavras = s => ` ${normal(s).replace(/[^a-z0-9]+/g, ' ').trim()} `;
 const tem = (p, termo) => p.includes(` ${termo} `);
@@ -262,7 +263,7 @@ for (const a of lista) {
   camisas.push({
     ...a, modelo,
     time: time || 'Outros',
-    detalhe: ajuste.detalhe ?? (lido.time ? lido.detalhe : a.titulo.replace(/\bS ?[-‐-―] ?\S*XL\S*/i, '').trim()),
+    detalhe: ajuste.detalhe ?? (lido.time ? lido.detalhe : a.titulo.replace(/\bS ?[-\u2010-\u2015] ?\S*XL\S*/i, '').trim()),
     max: ajuste.max || lido.max,
   });
 }
@@ -328,7 +329,12 @@ const saida = camisas.filter(c => fotosOk(cache.get(c.id))).map(c => {
 });
 const hoje = new Date().toLocaleDateString('sv-SE', { timeZone: 'America/Sao_Paulo' });
 const modelos = cfg.modelos.map(({ id, nome, preco }) => ({ id, nome, preco }));
-writeFileSync(DATA_FILE, `${HEADER}{\n  "atualizado": "${hoje}",\n  "tamanhos": ${JSON.stringify(TAMANHOS)},\n  "modelos": ${JSON.stringify(modelos)},\n  "camisas": [\n${saida.map(c => `    ${JSON.stringify(c)}`).join(',\n')}\n  ]\n};\n`);
+// camisas fixas nos destaques da home (o site completa com as mais recentes de cada modelo)
+const noCatalogo = new Set(saida.map(c => c.id));
+const destaques = cfg.destaques.filter(id => noCatalogo.has(id));
+const semDestaque = cfg.destaques.filter(id => !noCatalogo.has(id));
+if (semDestaque.length) console.log(`Destaques que não estão no catálogo (ignorados): ${semDestaque.join(', ')}`);
+writeFileSync(DATA_FILE, `${HEADER}{\n  "atualizado": "${hoje}",\n  "tamanhos": ${JSON.stringify(TAMANHOS)},\n  "modelos": ${JSON.stringify(modelos)},\n  "destaques": ${JSON.stringify(destaques)},\n  "camisas": [\n${saida.map(c => `    ${JSON.stringify(c)}`).join(',\n')}\n  ]\n};\n`);
 
 // 5. apaga fotos de camisas que saíram da fonte (ou foram escondidas)
 if (!local && existsSync(FOTOS_DIR)) {

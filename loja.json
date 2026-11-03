@@ -1,0 +1,12 @@
+{
+  "_leia-me": "Loja do site (carrinho + pagamento pelo Mercado Pago). DESLIGADA até a conta do Mercado Pago ficar pronta: com \"ativa\": false nada da loja aparece no site. Para testar antes, abra o site com ?loja=teste (desliga com ?loja=off): aparece o carrinho e nenhum pagamento é cobrado. Campos: ativa (liga a loja para todo mundo), api (endereço do servidor da loja no Cloudflare, ver servidor/LEIA-ME.txt; vazio = simulação no próprio navegador), frete (valor fixo por pedido em reais e, opcional, gratisAcima = pedido a partir desse valor não paga frete; 0 desliga), prazoEntrega (texto mostrado no carrinho), maxPorCamisa (quantidade máxima de cada camisa) e maxItens (camisas diferentes por pedido). O servidor usa as mesmas regras: este arquivo vale para os dois.",
+
+  "ativa": false,
+  "api": "",
+
+  "frete": { "valor": 25.00, "gratisAcima": 0 },
+  "prazoEntrega": "Prazo de entrega a definir",
+
+  "maxPorCamisa": 5,
+  "maxItens": 10
+}

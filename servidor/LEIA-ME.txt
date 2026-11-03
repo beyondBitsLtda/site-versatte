@@ -1,0 +1,67 @@
+================================================================================
+  VERSATTE SPORTS · SERVIDOR DA LOJA (Cloudflare Worker + Mercado Pago)
+================================================================================
+
+O QUE É
+-------
+O site é estático e não pode guardar a chave do Mercado Pago. O worker.js desta
+pasta é um servidor pequeno, gratuito, que roda no Cloudflare: recebe o carrinho,
+confere os preços com o catálogo publicado, cria o pagamento no Mercado Pago e
+recebe o aviso de pagamento aprovado. Nada aqui precisa ser instalado no
+computador: tudo é feito pelo navegador.
+
+Enquanto o Access Token do Mercado Pago não estiver configurado, o servidor fica
+em MODO SIMULAÇÃO: o "pagamento" leva direto à página pedido.html, sem cobrar.
+
+
+PASSO A PASSO
+-------------
+A. Criar o servidor no Cloudflare (dá para fazer antes de ter a conta do Mercado Pago)
+   1. Entre em dash.cloudflare.com (a mesma conta usada no Versatte Cards, se houver).
+   2. Workers & Pages > Create > Create Worker. Nome sugerido: versatte-loja.
+   3. Deploy, depois "Edit code": apague o exemplo, cole o conteúdo de servidor/worker.js
+      e clique em Deploy.
+   4. Settings > Variables and Secrets > Add:
+        SITE_URL = https://versattesports.com.br   (tipo Text)
+   5. Anote o endereço do worker (ex.: https://versatte-loja.SEU-USUARIO.workers.dev).
+      Abrindo esse endereço no navegador deve aparecer {"modo":"simulacao"}.
+   6. No loja.json do site, coloque esse endereço em "api" e publique o site.
+      Teste com o site aberto em ?loja=teste: o pedido passa pelo servidor, ainda simulado.
+
+B. Ligar o Mercado Pago (depois de criar e validar a conta)
+   1. mercadopago.com.br/developers > Suas integrações > Criar aplicação
+      (tipo de pagamento: Checkout Pro).
+   2. Credenciais de TESTE: copie o Access Token. No Cloudflare, Settings > Variables
+      and Secrets > Add, tipo SECRET: MP_ACCESS_TOKEN = (o token). Nunca coloque o
+      token no site, no GitHub nem em mensagem.
+   3. Suas integrações > a aplicação > Webhooks > Configurar notificações:
+        URL: https://SEU-WORKER/webhook   ·  Evento: Pagamentos
+      Copie a "assinatura secreta" e salve como SECRET: MP_WEBHOOK_SECRET.
+   4. Contas de teste (comprador e vendedor) no painel; faça compras de teste pelo
+      site (?loja=teste) com os cartões de teste do Mercado Pago e com Pix.
+   5. Aviso de pedido pago por e-mail: adicione AVISO_EMAIL = e-mail da loja (Text).
+      O envio é pelo FormSubmit, o mesmo do formulário de contato; se não chegar,
+      confira se o e-mail já foi ativado no FormSubmit.
+      Opcional: Storage & Databases > KV > Create (nome: PEDIDOS) e, no worker,
+      Settings > Bindings > KV namespace, variável PEDIDOS. Evita aviso repetido.
+   6. Tudo certo nos testes: troque MP_ACCESS_TOKEN pelo Access Token de PRODUÇÃO
+      (o painel pede os dados do negócio para liberar) e refaça uma compra pequena.
+
+C. Liberar para todo mundo
+   1. Preencha e revise politicas.html (campos destacados); tire o "noindex" dela.
+   2. Defina frete e prazo no loja.json.
+   3. Coloque "ativa": true no loja.json, adicione o link para politicas.html no
+      rodapé das páginas e publique.
+
+
+SEGURANÇA (o que o servidor já faz)
+-----------------------------------
+- Preço e frete são calculados aqui, com o catálogo e o loja.json publicados no
+  site; o valor que vem do navegador é ignorado.
+- Só aceita pedidos vindos do site (CORS). No modo simulação também aceita o
+  computador de quem testa (localhost).
+- Confere tamanho, quantidade e todos os campos de entrega antes de criar o pagamento.
+- O aviso do Mercado Pago tem a assinatura conferida e o pagamento é consultado
+  direto na API do Mercado Pago antes de qualquer coisa.
+- Não grava dados pessoais em log. Os dados do pedido ficam no próprio pagamento
+  do Mercado Pago (painel > Atividade) e no e-mail de aviso.

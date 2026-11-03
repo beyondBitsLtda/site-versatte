@@ -16,59 +16,12 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Figtree:wght@400;500;600;700&family=Mr+Dafoe&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=20261102-1">
-  <script>
-    /* Celular com "Site para computador" ligado: o navegador ignora a tag viewport e desenha a
-       página com ~980px numa tela de ~400px, deixando tudo minúsculo. Este script detecta o caso,
-       amplia a página para o tamanho real da tela e faz as regras @media do CSS responderem à
-       largura real. Roda antes de a página aparecer (depois do CSS carregado). */
-    (function () {
-      var root = document.documentElement;
-      function matches(text, W, H) {
-        return text.split(',').some(function (query) {
-          return query.split(/\band\b/).every(function (part) {
-            var m = part.match(/\(\s*([a-z-]+)\s*:\s*([^)]+)\)/);
-            if (!m) return /^\s*(all|screen|only screen)?\s*$/.test(part);
-            var f = m[1], v = m[2].trim(), n = parseFloat(v);
-            if (f === 'min-width') return W >= n;
-            if (f === 'max-width') return W <= n;
-            if (f === 'min-height') return H >= n;
-            if (f === 'max-height') return H <= n;
-            if (f === 'orientation') return v === (H >= W ? 'portrait' : 'landscape');
-            return window.matchMedia('(' + f + ': ' + v + ')').matches;
-          });
-        });
-      }
-      function fit() {
-        var coarse = window.matchMedia && matchMedia('(pointer: coarse)').matches;
-        var sw = screen.width, iw = window.innerWidth;
-        var z = coarse && sw > 0 && sw < 600 && iw > sw * 1.25 ? iw / sw : 1;
-        root.style.zoom = z === 1 ? '' : z.toFixed(4);
-        if (z === 1) { root.style.removeProperty('--vw'); root.style.removeProperty('--vh'); }
-        else {
-          root.style.setProperty('--vw', 'calc(1vw / ' + z.toFixed(4) + ')');
-          root.style.setProperty('--vh', 'calc(1svh / ' + z.toFixed(4) + ')');
-        }
-        root.classList.toggle('fit-phone', z !== 1);
-        var W = iw / z, H = window.innerHeight / z;
-        [].forEach.call(document.styleSheets, function (sheet) {
-          var rules;
-          try { rules = sheet.cssRules; } catch (e) { return; } // folhas de outro domínio (Google Fonts)
-          [].forEach.call(rules, function (rule) {
-            if (!rule.media || !rule.cssRules) return;
-            if (rule.vsOriginal === undefined) rule.vsOriginal = rule.media.mediaText;
-            rule.media.mediaText = z === 1 ? rule.vsOriginal : (matches(rule.vsOriginal, W, H) ? 'all' : 'not all');
-          });
-        });
-      }
-      fit();
-      window.addEventListener('resize', fit);
-      window.addEventListener('orientationchange', function () { setTimeout(fit, 300); });
-    })();
-  </script>
-  <script src="js/posts.js?v=20261102-1" defer></script>
-  <script src="js/catalogo.js?v=20261102-1" defer></script>
-  <script src="js/main.js?v=20261102-1" defer></script>
+  <link rel="stylesheet" href="css/style.css?v=20261103-1">
+  <!-- ajuste do modo "Site para computador" no celular: precisa rodar aqui, sem defer -->
+  <script src="js/tela.js?v=20261103-1"></script>
+  <script src="js/posts.js?v=20261103-1" defer></script>
+  <script src="js/catalogo.js?v=20261103-1" defer></script>
+  <script src="js/main.js?v=20261103-1" defer></script>
 </head>
 <body>
 
@@ -84,7 +37,7 @@
 
     <nav class="nav__links" id="menu" aria-label="Seções">
       <a href="#novidades">Novidades</a>
-      <a href="#catalogo">Catálogo</a>
+      <a href="catalogo.html">Catálogo</a>
       <a href="#guia">Guia do manto</a>
       <a href="#tamanhos">Tamanhos</a>
       <a href="#como-comprar">Como comprar</a>
@@ -129,7 +82,7 @@
         </h1>
         <p class="lead" data-welcome="lead">Camisas de clubes e seleções nos modelos Torcedor, Jogador e Retrô.</p>
         <div class="actions">
-          <a class="btn btn--solid" href="#catalogo">Ver catálogo</a>
+          <a class="btn btn--solid" href="catalogo.html">Ver catálogo</a>
           <a class="btn btn--glass" href="https://ig.me/m/versatte_sports" target="_blank" rel="noopener" data-dm>
             <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-send"/></svg> Chamar no direct
           </a>
@@ -256,10 +209,12 @@
   </div>
 </section>
 
-<!-- ============ CATÁLOGO ============
-     Cards montados a partir de js/catalogo.js, gerado por tools/catalogo.mjs a partir do catalogo.json
-     (lá ficam o nome e o preço de cada modelo). As abas aparecem do modelo mais barato ao mais caro. -->
-<section class="section catalog" id="catalogo">
+<!-- ============ DESTAQUES DO CATÁLOGO ============
+     Atalhos para cada modelo + algumas camisas em destaque, de js/catalogo.js. O catálogo completo
+     (abas, filtro por time e busca) fica na subpágina catalogo.html.
+     As camisas em destaque são as do campo "destaques" do catalogo.json; se faltar, o site completa
+     com as mais recentes de cada modelo. -->
+<section class="section catalog catalog--home" id="catalogo">
   <div class="wrap">
     <header class="section__head reveal">
       <p class="eyebrow">Catálogo Versatte</p>
@@ -267,31 +222,18 @@
         <span class="display__caps">Escolha o</span>
         <span class="display__script">seu manto</span>
       </h2>
-      <p class="section__lead">Clubes brasileiros e a Seleção nos modelos Torcedor, Jogador e Retrô. Escolha o modelo, filtre pelo seu time e clique em <b>Quero essa</b>: a mensagem já vai pronta.</p>
+      <p class="section__lead">Clubes brasileiros e a Seleção nos modelos Torcedor, Jogador e Retrô. Escolha o modelo ou veja alguns destaques: <b>Quero essa</b> já manda a mensagem pronta.</p>
     </header>
 
-    <div class="catalog__tabs" role="tablist" aria-label="Modelo da camisa" data-cat-tabs></div>
-    <div class="catalog__tools">
-      <label class="catalog__search">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-search"/></svg>
-        <input type="search" placeholder="Buscar time, ano, goleiro..." autocomplete="off" enterkeyhint="search" aria-label="Buscar no catálogo" data-cat-search>
-      </label>
-      <div class="catalog__teams" role="group" aria-label="Filtrar por time" data-cat-teams></div>
-    </div>
-    <p class="catalog__count" role="status" aria-live="polite" data-cat-count></p>
+    <div class="catalog__models" data-cat-models></div>
 
-    <ul class="catalog__grid" role="list" data-cat-grid></ul>
-    <div class="catalog__empty" hidden data-cat-empty>
-      <p><b>Não achamos essa camisa por aqui.</b> Chama a gente no Direct que a gente procura pra você.</p>
-      <div class="catalog__other" data-cat-other></div>
-      <a class="btn btn--solid btn--sm" href="https://ig.me/m/versatte_sports" target="_blank" rel="noopener" data-dm="Procurei no catálogo do site e não achei a camisa que eu quero. Vocês conseguem?">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-send"/></svg> Pedir no Direct
-      </a>
+    <h3 class="catalog__subtitle">Destaques do catálogo</h3>
+    <ul class="catalog__grid" role="list" data-cat-destaques></ul>
+
+    <div class="catalog__more catalog__more--home">
+      <a class="btn btn--solid" href="catalogo.html" data-cat-all>Ver catálogo completo</a>
     </div>
-    <div class="catalog__more" data-cat-more-box>
-      <button class="btn btn--line" type="button" data-cat-more>Ver mais camisas</button>
-    </div>
-    <noscript><p class="section__lead">Para ver o catálogo, ative o JavaScript ou fale com a gente no <a href="https://www.instagram.com/versatte_sports/">@versatte_sports</a>.</p></noscript>
+    <noscript><p class="section__lead"><a href="catalogo.html">Ver o catálogo completo</a> ou fale com a gente no <a href="https://www.instagram.com/versatte_sports/">@versatte_sports</a>.</p></noscript>
   </div>
 </section>
 
@@ -502,7 +444,7 @@
     <div class="footer__col">
       <h3>Navegue</h3>
       <a href="#novidades">Novidades do Insta</a>
-      <a href="#catalogo">Catálogo</a>
+      <a href="catalogo.html">Catálogo</a>
       <a href="#guia">Guia do manto</a>
       <a href="#tamanhos">Tamanhos</a>
       <a href="#como-comprar">Como comprar</a>
@@ -690,6 +632,7 @@
   <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m4 7 8 6 8-6" fill="none" stroke="currentColor" stroke-width="1.8"/></symbol>
   <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m16 16 4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
   <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5Z" fill="currentColor"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-6.5-6-6.5-11a6.5 6.5 0 0 1 13 0c0 5-6.5 11-6.5 11Z" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="10" r="2.3" fill="currentColor"/></symbol>
 </svg>
 

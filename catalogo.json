@@ -1,5 +1,5 @@
 {
-  "_leia-me": "Catálogo do site (seção Catálogo). A ferramenta tools/catalogo.mjs lê os álbuns da(s) fonte(s), classifica cada camisa num modelo, baixa as fotos e gera js/catalogo.js. Campos: fonte (deixe vazio: o link fica no segredo CATALOGO_FONTE do GitHub e, no computador, no arquivo catalogo.local.json, que não vai para o Git; este arquivo é público), fotosPorCamisa (quantas fotos cada camisa mostra), modelos (nome, preço e palavras do título que identificam o modelo; a primeira regra que bater vence, e o modelo sem palavras recebe o resto; no site as abas aparecem do mais barato ao mais caro), excluir (palavras do título que tiram o álbum do catálogo: feminina, infantil, treino etc.), esconder (códigos de camisas que não devem aparecer) e ajustes (correções por código: time, detalhe e/ou modelo). O código de cada camisa aparece na mensagem do pedido. Depois de editar, rode: node tools/catalogo.mjs (ou node tools/catalogo.mjs --local para só aplicar preço/nomes sem baixar nada).",
+  "_leia-me": "Catálogo do site (seção Catálogo). A ferramenta tools/catalogo.mjs lê os álbuns da(s) fonte(s), classifica cada camisa num modelo, baixa as fotos e gera js/catalogo.js. Campos: fonte (deixe vazio: o link fica no segredo CATALOGO_FONTE do GitHub e, no computador, no arquivo catalogo.local.json, que não vai para o Git; este arquivo é público), fotosPorCamisa (quantas fotos cada camisa mostra), modelos (nome, preço e palavras do título que identificam o modelo; a primeira regra que bater vence, e o modelo sem palavras recebe o resto; no site as abas aparecem do mais barato ao mais caro), excluir (palavras do título que tiram o álbum do catálogo: feminina, infantil, treino etc.), esconder (códigos de camisas que não devem aparecer), ajustes (correções por código: time, detalhe e/ou modelo) e destaques (códigos das camisas que aparecem fixas nos destaques da home, na ordem; até 8, e o site completa com as mais recentes de cada modelo). O código de cada camisa aparece na mensagem do pedido. Depois de editar, rode: node tools/catalogo.mjs (ou node tools/catalogo.mjs --local para só aplicar preço/nomes sem baixar nada).",
 
   "fonte": "",
   "fotosPorCamisa": 4,
@@ -24,5 +24,7 @@
 
   "esconder": [],
 
-  "ajustes": {}
+  "ajustes": {},
+
+  "destaques": []
 }

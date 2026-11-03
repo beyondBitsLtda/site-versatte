@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Seu pedido · Versatte Sports</title>
+  <!-- página de volta do pagamento (Mercado Pago): não aparece em buscas -->
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#F7F3EC">
+  <link rel="icon" type="image/png" href="assets/img/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Figtree:wght@400;500;600;700&family=Mr+Dafoe&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css?v=20261103-1">
+  <link rel="stylesheet" href="css/loja.css?v=20261103-1">
+  <script src="js/tela.js?v=20261103-1"></script>
+</head>
+<body>
+
+<!-- ============ PEDIDO · volta do pagamento ============
+     O Mercado Pago manda a pessoa para cá depois do pagamento, com ?status=approved|pending|in_process|rejected
+     e &external_reference=<código do pedido>. No modo de teste chega com ?status=simulado.
+     Pagamento aprovado ou pendente: o carrinho deste navegador é esvaziado. -->
+<header class="nav is-scrolled">
+  <div class="nav__bar">
+    <a class="brand" href="index.html" aria-label="Versatte Sports, início">
+      <img src="assets/img/logo-vs.webp" alt="" width="40" height="48">
+      <span class="brand__name">Versatte <em>Sports</em></span>
+    </a>
+    <a class="nav__dm" href="catalogo.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 6 8.5 12l6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Voltar ao catálogo</span></a>
+  </div>
+</header>
+
+<main class="loja-page">
+  <div class="wrap">
+    <article class="loja-card pedido" data-pedido>
+      <div class="pedido__icone" aria-hidden="true" data-pedido-icone></div>
+      <h1 class="display"><span class="display__caps" data-pedido-caps>Seu pedido</span><span class="display__script" data-pedido-script></span></h1>
+      <p class="pedido__texto" data-pedido-texto>Nenhum pedido encontrado por aqui.</p>
+      <p class="pedido__codigo" hidden data-pedido-codigo>Pedido <b></b></p>
+      <div class="actions" data-pedido-acoes>
+        <a class="btn btn--solid" href="catalogo.html">Ver o catálogo</a>
+      </div>
+    </article>
+  </div>
+</main>
+
+<script>
+  (function () {
+    var q = new URLSearchParams(location.search);
+    var status = q.get('collection_status') || q.get('status') || '';
+    var codigo = (q.get('external_reference') || '').replace(/[^A-Za-z0-9-]/g, '').slice(0, 40);
+    var ICONES = {
+      ok: '<svg viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>',
+      espera: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>',
+      erro: '<svg viewBox="0 0 24 24"><path d="M7 7l10 10M17 7 7 17"/></svg>'
+    };
+    var ESTADOS = {
+      approved: { classe: '', icone: 'ok', caps: 'Pedido', script: 'confirmado!', texto: 'Recebemos o seu pagamento. A gente vai te chamar no WhatsApp para confirmar os detalhes e o envio.', limpa: true },
+      pending: { classe: 'pedido--pendente', icone: 'espera', caps: 'Pagamento', script: 'em análise', texto: 'Seu pedido foi feito e o pagamento está sendo confirmado pelo Mercado Pago. Pix costuma confirmar em minutos; boleto pode levar até 3 dias úteis. A gente te avisa no WhatsApp.', limpa: true },
+      rejected: { classe: 'pedido--erro', icone: 'erro', caps: 'Pagamento', script: 'não concluído', texto: 'Nada foi cobrado. Seu carrinho continua salvo: você pode tentar de novo com outra forma de pagamento ou pedir pelo WhatsApp.', limpa: false, voltar: true },
+      simulado: { classe: '', icone: 'ok', caps: 'Teste', script: 'concluído', texto: 'Simulação da loja: nenhum pagamento foi feito. Na loja de verdade, aqui a pessoa veria a confirmação do pedido.', limpa: true }
+    };
+    ESTADOS.in_process = ESTADOS.pending;
+    ESTADOS.failure = ESTADOS.null = ESTADOS.cancelled = ESTADOS.rejected;
+    var e = ESTADOS[status];
+    if (!e) return;   // sem status: mostra o texto padrão
+
+    var card = document.querySelector('[data-pedido]');
+    if (e.classe) card.classList.add(e.classe);
+    card.querySelector('[data-pedido-icone]').innerHTML = ICONES[e.icone];
+    card.querySelector('[data-pedido-caps]').textContent = e.caps;
+    card.querySelector('[data-pedido-script]').textContent = e.script;
+    card.querySelector('[data-pedido-texto]').textContent = e.texto;
+    if (codigo) {
+      var cod = card.querySelector('[data-pedido-codigo]');
+      cod.querySelector('b').textContent = codigo;
+      cod.hidden = false;
+    }
+    var msg = codigo ? 'Olá! Fiz o pedido ' + codigo + ' no site da Versatte.' : 'Olá! Fiz um pedido no site da Versatte.';
+    card.querySelector('[data-pedido-acoes]').innerHTML =
+      (e.voltar ? '<a class="btn btn--solid" href="catalogo.html#carrinho">Voltar ao carrinho</a>' : '<a class="btn btn--solid" href="catalogo.html">Ver o catálogo</a>') +
+      '<a class="btn btn--wa" target="_blank" rel="noopener" href="https://wa.me/553193168184?text=' + encodeURIComponent(msg) + '">Falar no WhatsApp</a>';
+    if (e.limpa) {
+      try { localStorage.removeItem('vs-carrinho'); localStorage.removeItem('vs-pedido'); } catch (err) {}
+    }
+    document.title = e.caps + ' ' + e.script + ' · Versatte Sports';
+  })();
+</script>
+</body>
+</html>

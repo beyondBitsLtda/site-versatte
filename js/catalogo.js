@@ -1,9 +1,10 @@
 // GERADO por tools/catalogo.mjs a partir de catalogo.json. Não edite aqui:
 // mude catalogo.json e rode "node tools/catalogo.mjs".
 window.VERSATTE_CATALOGO = {
-  "atualizado": "2026-11-02",
+  "atualizado": "2026-11-03",
   "tamanhos": ["P","M","G","GG","2XL","3XL","4XL"],
   "modelos": [{"id":"retro","nome":"Retrô","preco":189.9},{"id":"jogador","nome":"Jogador","preco":169.9},{"id":"torcedor","nome":"Torcedor","preco":144.9}],
+  "destaques": [],
   "camisas": [
     {"id":"135129801","modelo":"retro","time":"Flamengo","detalhe":"2000/01 · Titular","nome":"Flamengo 2000/01 Titular","max":"2XL","titulo":"Retro Flamengo 00/01 Home S-XXL","capa":"assets/catalogo/135129801/capa.webp","fotos":["assets/catalogo/135129801/1.webp","assets/catalogo/135129801/2.webp","assets/catalogo/135129801/3.webp","assets/catalogo/135129801/4.webp"]},
     {"id":"259643688","modelo":"torcedor","time":"Atlético Mineiro","detalhe":"2026/27 · Terceira","nome":"Atlético Mineiro 2026/27 Terceira","max":"4XL","titulo":"2026‑27 Atlético Mineiro Third Jersey S‑XXXXL","capa":"assets/catalogo/259643688/capa.webp","fotos":["assets/catalogo/259643688/1.webp"]},

@@ -487,6 +487,63 @@ button { font: inherit; color: inherit; }
 @media (max-width: 559px) { .cat-card__buy .btn { flex: 1 1 100%; } }
 
 .catalog__more { display: flex; justify-content: center; margin-top: 30px; }
+
+/* home: atalhos para cada modelo (levam ao catálogo completo) + camisas em destaque */
+.catalog__models { display: grid; gap: 12px; }
+@media (min-width: 760px) { .catalog__models { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; } }
+.cat-model { position: relative; overflow: hidden; display: flex; flex-direction: column; gap: 6px; min-height: 150px; padding: 20px 132px 18px 22px; border-radius: var(--r-lg); background: var(--surface); box-shadow: var(--shadow); color: var(--ink); text-decoration: none; transition: transform .4s cubic-bezier(.2,.7,.2,1), box-shadow .4s; }
+.cat-model:hover { transform: translateY(-4px); box-shadow: 0 1px 2px rgba(23,19,15,.05), 0 30px 60px -32px rgba(23,19,15,.5); }
+.cat-model__img { position: absolute; right: -14px; top: 50%; width: 140px; height: 140px; translate: 0 -50%; rotate: 8deg; object-fit: cover; border-radius: 20px; box-shadow: 0 16px 30px -16px rgba(23,19,15,.55); transition: rotate .5s cubic-bezier(.2,.7,.2,1); }
+.cat-model:hover .cat-model__img { rotate: 3deg; }
+.cat-model__name { font: 900 34px/.95 var(--f-caps); text-transform: uppercase; letter-spacing: .005em; }
+.cat-model__desc { font-size: 14px; line-height: 1.4; color: var(--muted); }
+.cat-model__foot { margin-top: auto; padding-top: 8px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; }
+.cat-model__price { font: 900 26px/1 var(--f-caps); }
+.cat-model__price small { font-size: .55em; margin-right: 2px; vertical-align: .55em; color: var(--orange-text); }
+.cat-model__count { display: inline-flex; align-items: center; gap: 6px; font: 600 13.5px/1 var(--f-body); color: var(--orange-text); }
+.cat-model__count svg { width: 16px; height: 16px; transition: translate .3s; }
+.cat-model:hover .cat-model__count svg { translate: 3px 0; }
+@media (min-width: 760px) and (max-width: 1099px) { .cat-model { padding-right: 22px; padding-top: 128px; } .cat-model__img { top: -16px; right: 14px; translate: 0 0; width: 120px; height: 120px; } }
+.catalog__subtitle { margin: clamp(34px, calc(5 * var(--vw)), 52px) 0 16px; font: 900 clamp(28px, calc(6 * var(--vw)), 40px)/1 var(--f-caps); text-transform: uppercase; }
+.cat-card__model { position: absolute; left: 8px; top: 8px; padding: 6px 10px; border-radius: 999px; background: rgba(255,255,255,.92); color: var(--ink); font: 700 11.5px/1 var(--f-body); letter-spacing: .04em; text-transform: uppercase; -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+.catalog__more--home { margin-top: 34px; }
+@media (max-width: 480px) { .catalog__more--home .btn { width: 100%; } }
+
+/* ---------- topo das páginas internas (catalogo.html) ---------- */
+/* faixa escura curta no lugar do slider: o menu de vidro e a borda curva funcionam igual à home */
+.hero--page {
+  overflow: hidden;
+  background:
+    radial-gradient(55% 75% at 82% 38%, rgba(31,92,153,.6), transparent 70%),
+    radial-gradient(35% 50% at 88% 62%, rgba(234,91,12,.32), transparent 70%),
+    linear-gradient(160deg, #0B1626 0%, var(--night) 70%);
+}
+.page-head { position: relative; z-index: 1; display: grid; align-items: center; gap: 28px; padding-top: calc(var(--nav-h) + 34px); padding-bottom: 130px; }
+.page-head__back { display: inline-flex; align-items: center; gap: 6px; margin-bottom: 22px; color: rgba(247,239,227,.78); font: 600 14px/1 var(--f-body); text-decoration: none; transition: color .2s; }
+.page-head__back:hover { color: var(--cream); }
+.page-head__back svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.page-head .eyebrow { margin-bottom: 22px; }   /* folga para o acento de "CATÁLOGO" */
+.page-head .display { font-size: clamp(60px, calc(15 * var(--vw)), 132px); }
+.hero--page + .catalog { padding-top: clamp(64px, calc(8 * var(--vw)), 96px); }   /* sem título de seção, menos espaço */
+.page-head .lead b { color: var(--cream); font-weight: 600; }
+.page-head__models { list-style: none; margin: 26px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.page-head__models a { display: inline-flex; align-items: center; gap: 8px; min-height: 42px; padding: 0 16px; border-radius: 999px; border: 1px solid rgba(255,255,255,.24); background: rgba(255,255,255,.08); color: var(--cream); font: 600 14px/1 var(--f-body); text-decoration: none; -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); transition: background .25s, border-color .25s; }
+.page-head__models a b { color: var(--orange-hi); font-weight: 700; }
+.page-head__models a:hover { background: rgba(255,255,255,.18); }
+.page-head__models a.is-on { background: var(--cream); border-color: var(--cream); color: var(--ink); }
+.page-head__models a.is-on b { color: var(--orange-text); }
+/* colagem com a camisa mais recente de cada modelo (só em telas largas) */
+.page-head__collage { display: none; }
+@media (min-width: 900px) {
+  .page-head { grid-template-columns: minmax(0, 1fr) minmax(0, 430px); gap: 40px; padding-top: calc(var(--nav-h) + 60px); padding-bottom: 160px; }
+  .page-head__collage { display: block; position: relative; height: 380px; }
+  .page-head__collage img { position: absolute; width: 230px; height: 230px; object-fit: cover; border: 6px solid #fff; border-radius: 26px; box-shadow: 0 30px 60px -24px rgba(0,0,0,.7); }
+  .page-head__collage img:nth-child(1) { left: 0; top: 70px; rotate: -9deg; }
+  .page-head__collage img:nth-child(2) { left: 120px; top: 0; rotate: 4deg; z-index: 1; }
+  .page-head__collage img:nth-child(3) { right: 0; top: 130px; rotate: 11deg; }
+}
+.nav__links a[aria-current="page"] { opacity: 1; }
+@media (min-width: 1200px) { .nav__links a[aria-current="page"] { background: rgba(255,255,255,.14); } .nav.is-scrolled .nav__links a[aria-current="page"] { background: rgba(23,19,15,.07); } }
 .catalog__empty { display: grid; justify-items: center; gap: 14px; padding: 34px 22px; border-radius: var(--r-lg); background: var(--bg-2); text-align: center; color: var(--muted); }
 .catalog__empty p { margin: 0; max-width: 40ch; }
 .catalog__empty b { color: var(--ink); }
