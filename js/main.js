@@ -774,11 +774,11 @@
     window.VERSATTE_LOJA = { ...cfg, teste: !cfg.ativa };
     const css = document.createElement('link');
     css.rel = 'stylesheet';
-    css.href = 'css/loja.css?v=20261107-1';
+    css.href = 'css/loja.css?v=20261107-2';
     css.onload = () => dispatchEvent(new Event('resize'));   // js/tela.js reaplica o ajuste nas regras novas
     document.head.appendChild(css);
     const js = document.createElement('script');
-    js.src = 'js/loja.js?v=20261107-1';
+    js.src = 'js/loja.js?v=20261107-2';
     document.head.appendChild(js);
   })();
 

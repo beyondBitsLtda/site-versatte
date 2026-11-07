@@ -152,8 +152,13 @@ button { font: inherit; color: inherit; }
   pointer-events: auto; position: relative; max-width: 1240px; margin: 0 auto; height: 60px;
   display: flex; align-items: center; gap: 10px; padding: 0 8px 0 14px; border-radius: 999px;
   color: var(--cream); background: rgba(12,11,10,.3); border: 1px solid rgba(255,255,255,.14);
-  -webkit-backdrop-filter: blur(16px) saturate(140%); backdrop-filter: blur(16px) saturate(140%);
   transition: background .35s, color .35s, border-color .35s, box-shadow .35s;
+}
+/* o desfoque fica numa camada própria: com backdrop-filter no .nav__bar, o menu em tela cheia
+   (position: fixed, dentro da barra) ficaria preso no tamanho da pílula no Chrome/Android */
+.nav__bar::before {
+  content: ''; position: absolute; inset: -1px; z-index: -1; border-radius: inherit; pointer-events: none;
+  -webkit-backdrop-filter: blur(16px) saturate(140%); backdrop-filter: blur(16px) saturate(140%);
 }
 .nav.is-scrolled .nav__bar, .nav.is-open .nav__bar { background: rgba(247,243,236,.9); color: var(--ink); border-color: var(--line); box-shadow: 0 12px 40px -18px rgba(23,19,15,.4); }
 .brand { display: flex; align-items: center; gap: 9px; text-decoration: none; margin-right: auto; }

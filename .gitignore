@@ -1,2 +1,5 @@
 # link da fonte do catálogo (só no computador; no GitHub fica no segredo CATALOGO_FONTE)
 catalogo.local.json
+
+# prints do site e descrição (material interno; não vai para o site publicado)
+print/
