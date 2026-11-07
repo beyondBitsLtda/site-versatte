@@ -11,9 +11,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Figtree:wght@400;500;600;700&family=Mr+Dafoe&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=20261103-1">
-  <link rel="stylesheet" href="css/loja.css?v=20261103-1">
-  <script src="js/tela.js?v=20261103-1"></script>
+  <link rel="stylesheet" href="css/style.css?v=20261107-1">
+  <link rel="stylesheet" href="css/loja.css?v=20261107-1">
+  <script src="js/tela.js?v=20261107-1"></script>
 </head>
 <body>
 
@@ -23,11 +23,11 @@
      Pagamento aprovado ou pendente: o carrinho deste navegador é esvaziado. -->
 <header class="nav is-scrolled">
   <div class="nav__bar">
-    <a class="brand" href="index.html" aria-label="Versatte Sports, início">
+    <a class="brand" href="/" aria-label="Versatte Sports, início">
       <img src="assets/img/logo-vs.webp" alt="" width="40" height="48">
       <span class="brand__name">Versatte <em>Sports</em></span>
     </a>
-    <a class="nav__dm" href="catalogo.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 6 8.5 12l6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Voltar ao catálogo</span></a>
+    <a class="nav__dm" href="/catalogo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 6 8.5 12l6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Voltar ao catálogo</span></a>
   </div>
 </header>
 
@@ -39,7 +39,7 @@
       <p class="pedido__texto" data-pedido-texto>Nenhum pedido encontrado por aqui.</p>
       <p class="pedido__codigo" hidden data-pedido-codigo>Pedido <b></b></p>
       <div class="actions" data-pedido-acoes>
-        <a class="btn btn--solid" href="catalogo.html">Ver o catálogo</a>
+        <a class="btn btn--solid" href="/catalogo">Ver o catálogo</a>
       </div>
     </article>
   </div>
@@ -79,7 +79,7 @@
     }
     var msg = codigo ? 'Olá! Fiz o pedido ' + codigo + ' no site da Versatte.' : 'Olá! Fiz um pedido no site da Versatte.';
     card.querySelector('[data-pedido-acoes]').innerHTML =
-      (e.voltar ? '<a class="btn btn--solid" href="catalogo.html#carrinho">Voltar ao carrinho</a>' : '<a class="btn btn--solid" href="catalogo.html">Ver o catálogo</a>') +
+      (e.voltar ? '<a class="btn btn--solid" href="/catalogo#carrinho">Voltar ao carrinho</a>' : '<a class="btn btn--solid" href="/catalogo">Ver o catálogo</a>') +
       '<a class="btn btn--wa" target="_blank" rel="noopener" href="https://wa.me/553193168184?text=' + encodeURIComponent(msg) + '">Falar no WhatsApp</a>';
     if (e.limpa) {
       try { localStorage.removeItem('vs-carrinho'); localStorage.removeItem('vs-pedido'); } catch (err) {}

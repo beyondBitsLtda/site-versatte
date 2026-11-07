@@ -5,7 +5,7 @@
       faz o redimensionamento e a compressão, sem instalar nenhuma biblioteca).
 */
 import { spawn } from 'node:child_process';
-import { existsSync, mkdirSync, rmSync } from 'node:fs';
+import { existsSync, mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 
@@ -28,8 +28,8 @@ export function findBrowser() {
 
 export async function openBrowser() {
   const port = 9400 + Math.floor(Math.random() * 400);
-  const profile = path.join(tmpdir(), `vs-ig-${port}`);
-  mkdirSync(profile, { recursive: true });
+  // perfil novo a cada vez (nada de um uso anterior, como dados salvos de um site, passa para o próximo)
+  const profile = mkdtempSync(path.join(tmpdir(), 'vs-navegador-'));
   const flags = ['--headless=new', `--remote-debugging-port=${port}`, `--user-data-dir=${profile}`, '--no-first-run', '--window-size=600,1300'];
   if (process.env.CI) flags.push('--no-sandbox');   // GitHub Actions (Ubuntu 24.04 não libera a sandbox do Chrome)
   const proc = spawn(findBrowser(), flags, { stdio: 'ignore' });
@@ -75,6 +75,11 @@ export async function openBrowser() {
       })()`);
       return Buffer.from(b64, 'base64');
     },
-    close() { try { ws.close(); } catch {} proc.kill(); setTimeout(() => { try { rmSync(profile, { recursive: true, force: true }); } catch {} }, 800); },
+    // apaga o perfil quando o navegador termina de fechar (o Node espera esse momento antes de sair)
+    close() {
+      try { ws.close(); } catch {}
+      proc.once('exit', () => { try { rmSync(profile, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 }); } catch {} });
+      proc.kill();
+    },
   };
 }

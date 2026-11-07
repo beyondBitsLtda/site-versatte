@@ -9,6 +9,10 @@
   const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  // endereço sem ".html": o GitHub Pages abre /catalogo direto, então links antigos
+  // (ex.: /catalogo.html#camisa-123) só trocam o texto na barra do navegador, sem recarregar
+  if (/\.html$/.test(location.pathname)) history.replaceState(null, '', location.pathname.replace(/(index)?\.html$/, '') + location.search + location.hash);
+
   const WA_NUMBER = '553193168184';
   const IG_USER = 'versatte_sports';
   const SITE_URL = 'https://versattesports.com.br/';   // vai na mensagem do pedido do catálogo
@@ -470,7 +474,7 @@
   const TAMANHOS = CAT.tamanhos || ['P', 'M', 'G', 'GG', '2XL', '3XL', '4XL'];
   const modeloDe = c => MODELOS.find(m => m.id === c.modelo) || { nome: c.modelo, preco: 0 };
   const doCatalogo = item => Boolean(item && item.modelo && item.capa);
-  const CATALOGO_URL = `${SITE_URL}catalogo.html`;
+  const CATALOGO_URL = `${SITE_URL}catalogo`;
   const camisaUrl = c => `${CATALOGO_URL}#camisa-${c.id}`;
   const mensagemCatalogo = (c, tamanho = '') => {
     const m = modeloDe(c);
@@ -599,14 +603,16 @@
     $('[data-cat-models]').innerHTML = MODELOS.map(m => {
       const camisas = doModelo(m.id);
       return `
-      <a class="cat-model" href="catalogo.html#${esc(m.id)}">
-        ${camisas[0] ? `<img class="cat-model__img" src="${esc(camisas[0].capa)}" alt="" loading="lazy" decoding="async" width="480" height="480">` : ''}
-        <span class="cat-model__name">${esc(m.nome)}</span>
-        <span class="cat-model__desc">${esc(FRASE_MODELO[m.id] || '')}</span>
-        <span class="cat-model__foot">
-          <span class="cat-model__price">${precoHTML(m)}</span>
-          <span class="cat-model__count">${camisas.length} camisas <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow"/></svg></span>
+      <a class="cat-model" href="/catalogo#${esc(m.id)}">
+        <span class="cat-model__text">
+          <span class="cat-model__name">${esc(m.nome)}</span>
+          <span class="cat-model__desc">${esc(FRASE_MODELO[m.id] || '')}</span>
+          <span class="cat-model__foot">
+            <span class="cat-model__price">${precoHTML(m)}</span>
+            <span class="cat-model__count">${camisas.length} camisas <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow"/></svg></span>
+          </span>
         </span>
+        ${camisas[0] ? `<span class="cat-model__foto"><img src="${esc(camisas[0].capa)}" alt="" loading="lazy" decoding="async" width="480" height="480"></span>` : ''}
       </a>`;
     }).join('');
     // primeiro os escolhidos no catalogo.json ("destaques"); o resto são as mais recentes, alternando os modelos
@@ -661,7 +667,7 @@
     }
   };
 
-  // troca a aba; quando é a pessoa que troca, o endereço guarda a aba (catalogo.html#retro)
+  // troca a aba; quando é a pessoa que troca, o endereço guarda a aba (/catalogo#retro)
   const setModelo = (id, marcar = false) => {
     cat.modelo = id;
     cat.limite = POR_PAGINA;
@@ -709,19 +715,16 @@
       if (tab) setModelo(tab.dataset.catTab, true);
     });
 
-    // topo da página: preço de cada modelo (atalho para a aba) e a camisa mais recente de cada um
+    // topo da página: preço de cada modelo (atalho para a aba)
     const headModels = $('[data-cat-head-models]');
     if (headModels) headModels.innerHTML = MODELOS.map(m => `<li><a href="#${esc(m.id)}">${esc(m.nome)} <b>${esc(brl(m.preco))}</b></a></li>`).join('');
-    const collage = $('[data-cat-collage]');
-    if (collage) collage.innerHTML = MODELOS.map(m => doModelo(m.id)[0]).filter(Boolean)
-      .map(c => `<img src="${esc(c.capa)}" alt="" decoding="async" width="480" height="480">`).join('');
 
     setModelo(MODELOS.find(m => `#${m.id}` === location.hash)?.id || cat.modelo);
   } else if (catGrid) {
     $('#catalogo').hidden = true;   // sem js/catalogo.js, a seção não aparece
   }
 
-  // link direto para uma camisa (vai na mensagem do pedido): versattesports.com.br/catalogo.html#camisa-<código>
+  // link direto para uma camisa (vai na mensagem do pedido): versattesports.com.br/catalogo#camisa-<código>
   // (links antigos, versattesports.com.br/#camisa-<código>, também abrem a camisa, na home)
   const abrirDoLink = mudou => {
     const c = CAT.camisas.find(x => `#camisa-${x.id}` === location.hash);
@@ -771,11 +774,11 @@
     window.VERSATTE_LOJA = { ...cfg, teste: !cfg.ativa };
     const css = document.createElement('link');
     css.rel = 'stylesheet';
-    css.href = 'css/loja.css?v=20261103-1';
+    css.href = 'css/loja.css?v=20261107-1';
     css.onload = () => dispatchEvent(new Event('resize'));   // js/tela.js reaplica o ajuste nas regras novas
     document.head.appendChild(css);
     const js = document.createElement('script');
-    js.src = 'js/loja.js?v=20261103-1';
+    js.src = 'js/loja.js?v=20261107-1';
     document.head.appendChild(js);
   })();
 

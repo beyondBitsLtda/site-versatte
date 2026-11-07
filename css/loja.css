@@ -60,6 +60,19 @@
 .cart__totals .cart__total { margin-top: 4px; padding-top: 10px; border-top: 1px solid var(--line); font-size: 17px; color: var(--ink); }
 .cart__totals .cart__total dd { font: 900 26px/1 var(--f-caps); }
 .cart__prazo { margin: 10px 0 0; font-size: 13.5px; color: var(--muted); }
+
+/* cupom de desconto */
+.cart__cupom { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 10px; margin-top: 16px; }
+.cart__cupom[hidden] { display: none; }
+.cart__cupom input { text-transform: uppercase; letter-spacing: .04em; }
+.cart__cupom input::placeholder { text-transform: none; letter-spacing: 0; }
+.cart__cupom .btn { min-height: 52px; }
+.cart__cupom-info { margin: 8px 0 0; font-size: 13.5px; line-height: 1.45; color: var(--muted); }
+.cart__cupom-info:empty { display: none; }
+.cart__cupom-info.is-ok { margin-top: 16px; padding: 10px 12px; border-radius: var(--r-sm); background: #E7F8EE; color: #0F5C2E; }
+.cart__cupom-info.is-err { color: #B3261E; }
+.cart__cupom-info button { margin-left: 6px; padding: 0; border: 0; background: none; color: inherit; font: 700 13.5px/1 var(--f-body); text-decoration: underline; cursor: pointer; }
+.cart__totals .cart__desconto { color: #0F5C2E; }
 .cart__actions { display: grid; gap: 10px; margin-top: 18px; }
 .cart__actions .btn:disabled { opacity: .45; cursor: not-allowed; transform: none; }
 @media (min-width: 600px) { .cart__actions { grid-template-columns: 1fr 1fr; } }

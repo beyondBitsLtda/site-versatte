@@ -16,11 +16,11 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Figtree:wght@400;500;600;700&family=Mr+Dafoe&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=20261103-1">
+  <link rel="stylesheet" href="css/style.css?v=20261107-1">
   <!-- ajuste do modo "Site para computador" no celular: precisa rodar aqui, sem defer -->
-  <script src="js/tela.js?v=20261103-1"></script>
-  <script src="js/catalogo.js?v=20261103-1" defer></script>
-  <script src="js/main.js?v=20261103-1" defer></script>
+  <script src="js/tela.js?v=20261107-1"></script>
+  <script src="js/catalogo.js?v=20261107-1" defer></script>
+  <script src="js/main.js?v=20261107-1" defer></script>
 </head>
 <body class="page-catalogo">
 
@@ -29,18 +29,18 @@
 <!-- ============ NAV (igual à do index.html, com links de volta para a home) ============ -->
 <header class="nav" data-nav>
   <div class="nav__bar">
-    <a class="brand" href="index.html" aria-label="Versatte Sports, início">
+    <a class="brand" href="/" aria-label="Versatte Sports, início">
       <img src="assets/img/logo-vs.webp" alt="" width="40" height="48">
       <span class="brand__name">Versatte <em>Sports</em></span>
     </a>
 
     <nav class="nav__links" id="menu" aria-label="Seções">
-      <a href="index.html#novidades">Novidades</a>
-      <a href="catalogo.html" aria-current="page">Catálogo</a>
-      <a href="index.html#guia">Guia do manto</a>
-      <a href="index.html#tamanhos">Tamanhos</a>
+      <a href="/#novidades">Novidades</a>
+      <a href="/catalogo" aria-current="page">Catálogo</a>
+      <a href="/#guia">Guia do manto</a>
+      <a href="/#tamanhos">Tamanhos</a>
       <a href="#como-comprar">Como comprar</a>
-      <a href="index.html#contato">Contato</a>
+      <a href="/#contato">Contato</a>
     </nav>
 
     <a class="nav__dm" href="https://ig.me/m/versatte_sports" target="_blank" rel="noopener" data-dm aria-label="Chamar a Versatte no direct do Instagram">
@@ -57,12 +57,18 @@
 <main>
 
 <!-- ============ TOPO DA PÁGINA ============
-     Faixa escura com a mesma borda curva e faixa de tecido da home (desenhada em js/main.js).
-     A colagem de camisas à direita é montada com a camisa mais recente de cada modelo. -->
+     Foto de capa (assets/img/catalogo-capa.webp; no celular, o recorte -m) escurecida do lado do
+     texto, com a mesma borda curva e faixa de tecido da home (desenhada em js/main.js).
+     Original em alta: assets/hero_capa.png. -->
 <section class="hero hero--page" id="inicio">
+  <picture class="page-head__media" aria-hidden="true">
+    <source media="(max-width: 760px)" srcset="assets/img/catalogo-capa-m.webp">
+    <img src="assets/img/catalogo-capa.webp" alt="" width="1672" height="941" fetchpriority="high" decoding="async">
+  </picture>
+  <div class="page-head__shade" aria-hidden="true"></div>
   <div class="wrap page-head">
     <div class="page-head__text">
-      <a class="page-head__back" href="index.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 6 8.5 12l6 6"/></svg> Voltar para o início</a>
+      <a class="page-head__back" href="/"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 6 8.5 12l6 6"/></svg> Voltar para o início</a>
       <p class="eyebrow">Catálogo Versatte</p>
       <h1 class="display">
         <span class="display__caps">Catálogo</span>
@@ -71,7 +77,6 @@
       <p class="lead">Clubes brasileiros e a Seleção nos modelos Torcedor, Jogador e Retrô. Escolha o modelo, filtre pelo seu time e clique em <b>Quero essa</b>: a mensagem já vai pronta.</p>
       <ul class="page-head__models" role="list" data-cat-head-models></ul>
     </div>
-    <div class="page-head__collage" aria-hidden="true" data-cat-collage></div>
   </div>
   <div class="edge" data-edge aria-hidden="true">
     <svg class="edge__svg" viewBox="0 -40 1440 120" preserveAspectRatio="none"><path class="edge__fill" d="M0 80V40C240 6 480 0 720 0s480 6 720 40v40Z"/></svg>
@@ -81,7 +86,7 @@
 <!-- ============ CATÁLOGO COMPLETO ============
      Cards montados a partir de js/catalogo.js, gerado por tools/catalogo.mjs a partir do catalogo.json
      (lá ficam o nome e o preço de cada modelo). As abas aparecem do modelo mais barato ao mais caro.
-     O endereço guarda a aba aberta: catalogo.html#torcedor, #jogador ou #retro. -->
+     O endereço guarda a aba aberta: /catalogo#torcedor, #jogador ou #retro. -->
 <section class="section catalog" id="catalogo">
   <div class="wrap">
     <div class="catalog__tabs" role="tablist" aria-label="Modelo da camisa" data-cat-tabs></div>
@@ -158,11 +163,11 @@
 
     <div class="footer__col">
       <h3>Navegue</h3>
-      <a href="index.html">Início</a>
-      <a href="index.html#novidades">Novidades do Insta</a>
-      <a href="catalogo.html">Catálogo</a>
-      <a href="index.html#guia">Guia do manto</a>
-      <a href="index.html#tamanhos">Tamanhos</a>
+      <a href="/">Início</a>
+      <a href="/#novidades">Novidades do Insta</a>
+      <a href="/catalogo">Catálogo</a>
+      <a href="/#guia">Guia do manto</a>
+      <a href="/#tamanhos">Tamanhos</a>
       <a href="#como-comprar">Como comprar</a>
     </div>
 
@@ -217,7 +222,7 @@
           <div><dt>Tamanhos</dt><dd data-prod-sizes></dd></div>
           <div><dt>Código</dt><dd data-prod-code></dd></div>
         </dl>
-        <p class="prod__note">Escolha o tamanho e mande o pedido pelo Direct ou pelo WhatsApp: a gente confirma tudo com você por lá. <a href="index.html#guia" data-prod-guide>Torcedor ou Jogador? Veja a diferença</a></p>
+        <p class="prod__note">Escolha o tamanho e mande o pedido pelo Direct ou pelo WhatsApp: a gente confirma tudo com você por lá. <a href="/#guia" data-prod-guide>Torcedor ou Jogador? Veja a diferença</a></p>
       </div>
       <div class="ig__foot">
         <div class="ig__buy">
@@ -250,7 +255,7 @@
       <label><input type="radio" name="modelo" value="Feminina"><span>Feminina</span></label>
     </fieldset>
     <fieldset class="chips" data-chips="tamanho">
-      <legend>Tamanho <a href="index.html#tamanhos" class="chips__link" data-to-sizes>Ver tabela de medidas</a></legend>
+      <legend>Tamanho <a href="/#tamanhos" class="chips__link" data-to-sizes>Ver tabela de medidas</a></legend>
       <label><input type="radio" name="tamanho" value="P"><span>P</span></label>
       <label><input type="radio" name="tamanho" value="M"><span>M</span></label>
       <label><input type="radio" name="tamanho" value="G"><span>G</span></label>

@@ -1,0 +1,40 @@
+[
+  {
+    "codigo": "RETRO15",
+    "descricao": "15% de desconto nas camisas Retrô",
+    "tipo": "percentual",
+    "valor": 15,
+    "modelos": ["retro"],
+    "inicio": "2026-11-20",
+    "fim": "2026-11-30"
+  },
+  {
+    "codigo": "FLA10",
+    "descricao": "10% nas camisas do Flamengo, até R$ 50 de desconto",
+    "tipo": "percentual",
+    "valor": 10,
+    "maxDesconto": 50,
+    "times": ["Flamengo"]
+  },
+  {
+    "codigo": "BEMVINDO20",
+    "descricao": "R$ 20 de desconto em pedidos a partir de R$ 150",
+    "tipo": "valor",
+    "valor": 20,
+    "minimo": 150
+  },
+  {
+    "codigo": "FRETEGRATIS",
+    "descricao": "Frete grátis em pedidos a partir de R$ 300",
+    "tipo": "frete",
+    "minimo": 300
+  },
+  {
+    "codigo": "INFLUENCER-JOAO",
+    "descricao": "10% para quem veio pelo perfil parceiro",
+    "tipo": "percentual",
+    "valor": 10,
+    "limite": 50,
+    "ativo": false
+  }
+]

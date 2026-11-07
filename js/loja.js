@@ -4,7 +4,7 @@
    ou no modo de teste (site aberto com ?loja=teste).
    Fluxo: "Quero essa" > tamanho > Adicionar ao carrinho > carrinho >
    entrega e contato > servidor da loja (servidor/worker.js) cria o pagamento >
-   página do Mercado Pago > volta para pedido.html.
+   página do Mercado Pago > volta para a página /pedido (pedido.html).
    Sem "api" no loja.json, o pagamento é só simulado (nada é cobrado).
    Toda a interface da loja é montada aqui: as páginas não têm nada dela no HTML.
    ============================================================ */
@@ -14,7 +14,7 @@
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
   const { esc, brl, toast } = SITE;
-  const CHAVE = 'vs-carrinho', CHAVE_PEDIDO = 'vs-pedido';
+  const CHAVE = 'vs-carrinho', CHAVE_PEDIDO = 'vs-pedido', CHAVE_CUPOM = 'vs-cupom';
   const TAMANHOS = CAT.tamanhos;
   const MAX_PADRAO = { torcedor: '4XL', jogador: '3XL' };   // igual ao SIZE_MAX do main.js
   const MAX_QTD = CFG.maxPorCamisa || 5, MAX_ITENS = CFG.maxItens || 10;
@@ -29,7 +29,7 @@
   let itens = [];
   try { itens = JSON.parse(localStorage.getItem(CHAVE)) || []; } catch {}
   itens = itens.filter(i => camisaDe(i.id) && tamanhoOk(camisaDe(i.id), i.tamanho)).slice(0, MAX_ITENS);
-  const salvar = () => { try { localStorage.setItem(CHAVE, JSON.stringify(itens)); } catch {} atualizar(); };
+  const salvar = () => { try { localStorage.setItem(CHAVE, JSON.stringify(itens)); } catch {} atualizar(); reconferirCupom(); };
 
   // valores em centavos, com as mesmas regras do servidor (servidor/worker.js)
   const centavos = v => Math.round(Number(v) * 100);
@@ -41,6 +41,56 @@
     const gratis = centavos(CFG.frete?.gratisAcima || 0);
     return gratis && sub >= gratis ? 0 : centavos(CFG.frete?.valor || 0);
   };
+
+  /* ---------- cupom de desconto ----------
+     Os cupons ficam só no servidor da loja (variável CUPONS do worker): quem confere e calcula
+     o desconto é sempre ele; aqui só mostramos o que ele devolve. Um cupom por pedido.
+     Link de promoção: qualquer página com ?cupom=CODIGO já deixa o cupom guardado no carrinho. */
+  let cupom = null;   // { codigo, descricao, desconto (centavos), freteGratis }
+  let cupomGuardado = '';
+  try {
+    const doLink = new URLSearchParams(location.search).get('cupom');
+    if (doLink) localStorage.setItem(CHAVE_CUPOM, doLink.trim().toUpperCase().slice(0, 30));
+    cupomGuardado = localStorage.getItem(CHAVE_CUPOM) || '';
+  } catch {}
+  const totais = () => {
+    const sub = subtotal(), desconto = cupom ? Math.min(cupom.desconto, sub) : 0;
+    const frete = cupom?.freteGratis ? 0 : freteDe(sub);
+    return { sub, desconto, frete, total: sub - desconto + frete };
+  };
+  // sem servidor configurado (simulação no navegador), só o cupom de demonstração TESTE10 funciona
+  const simularCupom = codigo => {
+    if (!CFG.teste || codigo !== 'TESTE10') throw new Error('cupom inválido ou expirado');
+    return { codigo, descricao: 'Cupom de demonstração: 10% de desconto', desconto: Math.round(subtotal() * .1), freteGratis: false };
+  };
+  async function validarCupom(codigo) {
+    codigo = String(codigo || '').trim().toUpperCase().replace(/\s+/g, '').slice(0, 30);
+    if (!codigo) throw new Error('digite o código do cupom');
+    if (!CFG.api) return simularCupom(codigo);
+    const r = await fetch(`${CFG.api.replace(/\/$/, '')}/cupom`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ codigo, itens: itens.map(({ id, tamanho, qtd }) => ({ id, tamanho, qtd })) }),
+    });
+    const d = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(d.erro || 'não deu para conferir o cupom agora');
+    return { codigo: d.codigo, descricao: d.descricao, desconto: centavos(d.desconto), freteGratis: Boolean(d.freteGratis) };
+  }
+  const guardarCupom = codigo => { cupomGuardado = codigo; try { codigo ? localStorage.setItem(CHAVE_CUPOM, codigo) : localStorage.removeItem(CHAVE_CUPOM); } catch {} };
+  // aplica (ou confere de novo, quando o carrinho muda); erro tira o cupom e mostra o motivo
+  async function aplicarCupom(codigo, { avisar = true } = {}) {
+    const info = $('[data-cupom-info]', cart);
+    if (!itens.length) { guardarCupom(codigo); return; }
+    try {
+      cupom = await validarCupom(codigo);
+      guardarCupom(cupom.codigo);
+      info.className = 'cart__cupom-info';
+    } catch (e) {
+      cupom = null;
+      guardarCupom('');
+      if (avisar) { info.textContent = `${String(codigo).toUpperCase()}: ${e.message}.`; info.className = 'cart__cupom-info is-err'; }
+    }
+    atualizar();
+  }
 
   const adicionar = (id, tamanho) => {
     const atual = itens.find(i => i.id === id && i.tamanho === tamanho);
@@ -104,7 +154,12 @@
         <h2 class="cart__title" id="cart-title">Carrinho</h2>
         ${CFG.teste ? '<p class="cart__teste">Modo de teste: nenhum pagamento é cobrado.</p>' : ''}
         <ul class="cart__list" role="list" data-cart-list></ul>
-        <p class="cart__empty" data-cart-empty>Seu carrinho está vazio. <a href="catalogo.html">Ver o catálogo</a></p>
+        <p class="cart__empty" data-cart-empty>Seu carrinho está vazio. <a href="/catalogo">Ver o catálogo</a></p>
+        <form class="cart__cupom" data-cupom-form novalidate>
+          <label class="field"><span>Cupom de desconto</span><input name="cupom" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="30" placeholder="Ex.: PROMO10"></label>
+          <button class="btn btn--line btn--sm" type="submit">Aplicar</button>
+        </form>
+        <p class="cart__cupom-info" role="status" aria-live="polite" data-cupom-info></p>
         <dl class="cart__totals" data-cart-totals></dl>
         ${CFG.prazoEntrega ? `<p class="cart__prazo">${esc(CFG.prazoEntrega)}</p>` : ''}
         <div class="cart__actions">
@@ -135,7 +190,7 @@
           <label class="field"><span>Cidade *</span><input name="cidade" autocomplete="address-level2" required maxlength="60"></label>
           <label class="field"><span>UF *</span><select name="uf" autocomplete="address-level1" required><option value=""></option>${UFS.map(u => `<option>${u}</option>`).join('')}</select></label>
         </div>
-        <label class="cart__aceite"><input type="checkbox" name="aceite" required> <span>Li e aceito as <a href="politicas.html" target="_blank" rel="noopener">políticas de entrega, trocas e privacidade</a>.</span></label>
+        <label class="cart__aceite"><input type="checkbox" name="aceite" required> <span>Li e aceito as <a href="/politicas" target="_blank" rel="noopener">políticas de entrega, trocas e privacidade</a>.</span></label>
         <dl class="cart__totals" data-cart-totals></dl>
         <p class="cart__status" role="status" aria-live="polite" data-cart-status></p>
         <button class="btn btn--solid cart__pay" type="submit" data-cart-pay>Ir para o pagamento</button>
@@ -148,12 +203,15 @@
   const formEntrega = $('[data-step="entrega"]', cart);
   const status = $('[data-cart-status]', cart);
 
+  const formCupom = $('[data-cupom-form]', cart), infoCupom = $('[data-cupom-info]', cart);
+
   const totaisHTML = () => {
-    const sub = subtotal(), frete = freteDe(sub);
+    const t = totais();
     return `
-      <div><dt>Subtotal</dt><dd>${reais(sub)}</dd></div>
-      <div><dt>Frete</dt><dd>${frete ? reais(frete) : 'Grátis'}</dd></div>
-      <div class="cart__total"><dt>Total</dt><dd>${reais(sub + frete)}</dd></div>`;
+      <div><dt>Subtotal</dt><dd>${reais(t.sub)}</dd></div>
+      ${t.desconto ? `<div class="cart__desconto"><dt>Desconto · ${esc(cupom.codigo)}</dt><dd>− ${reais(t.desconto)}</dd></div>` : ''}
+      <div><dt>Frete</dt><dd>${t.frete ? reais(t.frete) : cupom?.freteGratis ? 'Grátis (cupom)' : 'Grátis'}</dd></div>
+      <div class="cart__total"><dt>Total</dt><dd>${reais(t.total)}</dd></div>`;
   };
 
   function atualizar() {
@@ -181,9 +239,33 @@
         </li>`;
     }).join('');
     $('[data-cart-empty]', cart).hidden = itens.length > 0;
+    // cupom: aplicado mostra o nome e "Remover"; senão, o campo para digitar (com o do link, se houver)
+    formCupom.hidden = !itens.length || Boolean(cupom);
+    if (!cupom && !formCupom.cupom.value && cupomGuardado) formCupom.cupom.value = cupomGuardado;
+    if (cupom) {
+      infoCupom.className = 'cart__cupom-info is-ok';
+      infoCupom.innerHTML = `<b>${esc(cupom.codigo)}</b> aplicado${cupom.descricao ? `: ${esc(cupom.descricao)}` : ''} <button type="button" data-cupom-remover>Remover</button>`;
+    } else if (infoCupom.classList.contains('is-ok') || !itens.length) {
+      infoCupom.textContent = '';
+      infoCupom.className = 'cart__cupom-info';
+    }
     $$('[data-cart-totals]', cart).forEach(dl => { dl.innerHTML = itens.length ? totaisHTML() : ''; });
     $('[data-cart-next]', cart).disabled = !itens.length;
   }
+
+  formCupom.addEventListener('submit', e => { e.preventDefault(); aplicarCupom(formCupom.cupom.value); });
+  infoCupom.addEventListener('click', e => {
+    if (!e.target.closest('[data-cupom-remover]')) return;
+    cupom = null;
+    guardarCupom('');
+    formCupom.cupom.value = '';
+    infoCupom.textContent = '';
+    infoCupom.className = 'cart__cupom-info';
+    atualizar();
+  });
+  // carrinho mudou: o servidor confere o cupom de novo (o desconto depende das camisas)
+  let esperaCupom;
+  const reconferirCupom = () => { clearTimeout(esperaCupom); if (cupom) esperaCupom = setTimeout(() => aplicarCupom(cupom.codigo), 300); };
 
   const passo = nome => {
     $$('.cart__step', cart).forEach(s => { s.hidden = s.dataset.step !== nome; });
@@ -195,6 +277,7 @@
     passo(itens.length ? qual : 'itens');
     status.textContent = '';
     if (!cart.open) SITE.abrirModal(cart);
+    if (!cupom && cupomGuardado && itens.length) aplicarCupom(cupomGuardado);   // cupom que veio no link
   }
 
   $('[data-cart-open]')?.addEventListener('click', () => abrir());
@@ -266,8 +349,10 @@
       itens: itens.map(({ id, tamanho, qtd }) => ({ id, tamanho, qtd })),
       cliente: { nome: dados.nome, email: dados.email, whatsapp: dados.whatsapp.replace(/\D/g, '') },
       entrega: { cep: dados.cep.replace(/\D/g, ''), rua: dados.rua, numero: dados.numero, complemento: f.complemento.value.trim(), bairro: dados.bairro, cidade: dados.cidade, uf: dados.uf },
+      ...(cupom ? { cupom: cupom.codigo } : {}),
     };
     const pagar = $('[data-cart-pay]', cart);
+    const liberar = () => { pagar.disabled = false; pagar.textContent = 'Ir para o pagamento'; };
     pagar.disabled = true;
     pagar.textContent = 'Abrindo o pagamento…';
     status.textContent = ''; status.className = 'cart__status';
@@ -276,22 +361,32 @@
       if (CFG.api) {
         const r = await fetch(`${CFG.api.replace(/\/$/, '')}/checkout`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(pedido) });
         resposta = await r.json().catch(() => ({}));
-        if (!r.ok || !resposta.url) throw new Error(resposta.erro || `HTTP ${r.status}`);
+        if (!r.ok || !resposta.url) throw Object.assign(new Error(resposta.erro || `HTTP ${r.status}`), { campo: resposta.campo });
       } else {
         // sem servidor configurado: simulação no próprio navegador (nada é cobrado)
         const codigo = gerarCodigo();
-        resposta = { pedido: codigo, url: `pedido.html?status=simulado&external_reference=${codigo}` };
+        resposta = { pedido: codigo, url: `/pedido?status=simulado&external_reference=${codigo}` };
       }
-      const sub = subtotal();
-      try { localStorage.setItem(CHAVE_PEDIDO, JSON.stringify({ pedido: resposta.pedido, total: sub + freteDe(sub), itens: pedido.itens.length })); } catch {}
+      try { localStorage.setItem(CHAVE_PEDIDO, JSON.stringify({ pedido: resposta.pedido, total: totais().total, itens: pedido.itens.length })); } catch {}
+      guardarCupom('');   // cupom usado neste pedido
       location.href = resposta.url;
     } catch (erro) {
       console.warn('Loja:', erro.message);
+      if (erro.campo === 'cupom') {
+        // o cupom deixou de valer (expirou, esgotou...): tira e mostra o total novo
+        cupom = null;
+        guardarCupom('');
+        atualizar();
+        status.textContent = `O cupom não pôde ser usado: ${erro.message}. Confira o novo total e toque em "Ir para o pagamento" de novo.`;
+        status.className = 'cart__status is-err';
+        liberar();
+        return;
+      }
       const resumo = itens.map(i => `${camisaDe(i.id).nome} (${modeloDe(camisaDe(i.id)).nome}, tamanho ${i.tamanho}) x${i.qtd}`).join('; ');
-      status.innerHTML = `Não deu para abrir o pagamento agora (${esc(erro.message)}). Tente de novo ou <a href="https://wa.me/553193168184?text=${encodeURIComponent(`Olá! Quero comprar pelo site: ${resumo}.`)}" target="_blank" rel="noopener">peça pelo WhatsApp</a>.`;
+      const texto = `Olá! Quero comprar pelo site: ${resumo}.${cupom ? ` Cupom: ${cupom.codigo}.` : ''}`;
+      status.innerHTML = `Não deu para abrir o pagamento agora (${esc(erro.message)}). Tente de novo ou <a href="https://wa.me/553193168184?text=${encodeURIComponent(texto)}" target="_blank" rel="noopener">peça pelo WhatsApp</a>.`;
       status.className = 'cart__status is-err';
-      pagar.disabled = false;
-      pagar.textContent = 'Ir para o pagamento';
+      liberar();
     }
   });
 

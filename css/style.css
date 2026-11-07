@@ -491,34 +491,49 @@ button { font: inherit; color: inherit; }
 /* home: atalhos para cada modelo (levam ao catálogo completo) + camisas em destaque */
 .catalog__models { display: grid; gap: 12px; }
 @media (min-width: 760px) { .catalog__models { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; } }
-.cat-model { position: relative; overflow: hidden; display: flex; flex-direction: column; gap: 6px; min-height: 150px; padding: 20px 132px 18px 22px; border-radius: var(--r-lg); background: var(--surface); box-shadow: var(--shadow); color: var(--ink); text-decoration: none; transition: transform .4s cubic-bezier(.2,.7,.2,1), box-shadow .4s; }
+/* card com o texto à esquerda e a foto reta encaixada à direita (mesma moldura dos cards de camisa) */
+.cat-model { display: grid; grid-template-columns: minmax(0, 1fr) 40%; gap: 6px; min-height: 172px; padding: 6px; border-radius: var(--r-lg); background: var(--surface); box-shadow: var(--shadow); color: var(--ink); text-decoration: none; transition: transform .4s cubic-bezier(.2,.7,.2,1), box-shadow .4s; }
 .cat-model:hover { transform: translateY(-4px); box-shadow: 0 1px 2px rgba(23,19,15,.05), 0 30px 60px -32px rgba(23,19,15,.5); }
-.cat-model__img { position: absolute; right: -14px; top: 50%; width: 140px; height: 140px; translate: 0 -50%; rotate: 8deg; object-fit: cover; border-radius: 20px; box-shadow: 0 16px 30px -16px rgba(23,19,15,.55); transition: rotate .5s cubic-bezier(.2,.7,.2,1); }
-.cat-model:hover .cat-model__img { rotate: 3deg; }
+.cat-model__text { display: flex; flex-direction: column; gap: 6px; min-width: 0; padding: 14px 6px 12px 16px; }
+.cat-model__foto { position: relative; overflow: hidden; border-radius: calc(var(--r-lg) - 6px); background: var(--bg-2); }
+.cat-model__foto img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .8s cubic-bezier(.2,.7,.2,1); }
+.cat-model:hover .cat-model__foto img { transform: scale(1.05); }
 .cat-model__name { font: 900 34px/.95 var(--f-caps); text-transform: uppercase; letter-spacing: .005em; }
 .cat-model__desc { font-size: 14px; line-height: 1.4; color: var(--muted); }
-.cat-model__foot { margin-top: auto; padding-top: 8px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; }
+.cat-model__foot { margin-top: auto; padding-top: 8px; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
 .cat-model__price { font: 900 26px/1 var(--f-caps); }
 .cat-model__price small { font-size: .55em; margin-right: 2px; vertical-align: .55em; color: var(--orange-text); }
 .cat-model__count { display: inline-flex; align-items: center; gap: 6px; font: 600 13.5px/1 var(--f-body); color: var(--orange-text); }
 .cat-model__count svg { width: 16px; height: 16px; transition: translate .3s; }
 .cat-model:hover .cat-model__count svg { translate: 3px 0; }
-@media (min-width: 760px) and (max-width: 1099px) { .cat-model { padding-right: 22px; padding-top: 128px; } .cat-model__img { top: -16px; right: 14px; translate: 0 0; width: 120px; height: 120px; } }
+/* tablet: três cards estreitos lado a lado, então a foto vai para cima do texto */
+@media (min-width: 760px) and (max-width: 1099px) {
+  .cat-model { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }   /* a foto não estica: o texto fica alinhado nos três */
+  .cat-model__foto { order: -1; aspect-ratio: 16 / 10; }
+  .cat-model__text { padding: 12px 10px 10px; }
+}
 .catalog__subtitle { margin: clamp(34px, calc(5 * var(--vw)), 52px) 0 16px; font: 900 clamp(28px, calc(6 * var(--vw)), 40px)/1 var(--f-caps); text-transform: uppercase; }
 .cat-card__model { position: absolute; left: 8px; top: 8px; padding: 6px 10px; border-radius: 999px; background: rgba(255,255,255,.92); color: var(--ink); font: 700 11.5px/1 var(--f-body); letter-spacing: .04em; text-transform: uppercase; -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
 .catalog__more--home { margin-top: 34px; }
 @media (max-width: 480px) { .catalog__more--home .btn { width: 100%; } }
 
 /* ---------- topo das páginas internas (catalogo.html) ---------- */
-/* faixa escura curta no lugar do slider: o menu de vidro e a borda curva funcionam igual à home */
-.hero--page {
-  overflow: hidden;
-  background:
-    radial-gradient(55% 75% at 82% 38%, rgba(31,92,153,.6), transparent 70%),
-    radial-gradient(35% 50% at 88% 62%, rgba(234,91,12,.32), transparent 70%),
-    linear-gradient(160deg, #0B1626 0%, var(--night) 70%);
+/* foto de capa escurecida no lugar do slider: o menu de vidro e a borda curva funcionam igual à home.
+   No celular a foto fica toda escurecida (o texto ocupa a altura); no computador, escura só do lado do texto. */
+.hero--page { overflow: hidden; }
+.page-head__media, .page-head__media img { position: absolute; inset: 0; width: 100%; height: 100%; }
+.page-head__media img { object-fit: cover; object-position: 50% 45%; }
+.page-head__shade { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(to bottom, rgba(12,11,10,.74) 0%, rgba(12,11,10,.8) 55%, rgba(12,11,10,.93) 100%); }
+@media (min-width: 900px) {
+  .page-head__shade {
+    background:
+      linear-gradient(to bottom, rgba(12,11,10,.55) 0%, rgba(12,11,10,0) 22%),
+      linear-gradient(to top, rgba(12,11,10,.6) 0%, rgba(12,11,10,0) 30%),
+      linear-gradient(90deg, rgba(12,11,10,.95) 0%, rgba(12,11,10,.86) 34%, rgba(12,11,10,.42) 62%, rgba(12,11,10,.12) 100%);
+  }
 }
-.page-head { position: relative; z-index: 1; display: grid; align-items: center; gap: 28px; padding-top: calc(var(--nav-h) + 34px); padding-bottom: 130px; }
+.page-head { position: relative; z-index: 1; padding-top: calc(var(--nav-h) + 34px); padding-bottom: 130px; }
+.page-head__text { max-width: 640px; }
 .page-head__back { display: inline-flex; align-items: center; gap: 6px; margin-bottom: 22px; color: rgba(247,239,227,.78); font: 600 14px/1 var(--f-body); text-decoration: none; transition: color .2s; }
 .page-head__back:hover { color: var(--cream); }
 .page-head__back svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
@@ -532,16 +547,7 @@ button { font: inherit; color: inherit; }
 .page-head__models a:hover { background: rgba(255,255,255,.18); }
 .page-head__models a.is-on { background: var(--cream); border-color: var(--cream); color: var(--ink); }
 .page-head__models a.is-on b { color: var(--orange-text); }
-/* colagem com a camisa mais recente de cada modelo (só em telas largas) */
-.page-head__collage { display: none; }
-@media (min-width: 900px) {
-  .page-head { grid-template-columns: minmax(0, 1fr) minmax(0, 430px); gap: 40px; padding-top: calc(var(--nav-h) + 60px); padding-bottom: 160px; }
-  .page-head__collage { display: block; position: relative; height: 380px; }
-  .page-head__collage img { position: absolute; width: 230px; height: 230px; object-fit: cover; border: 6px solid #fff; border-radius: 26px; box-shadow: 0 30px 60px -24px rgba(0,0,0,.7); }
-  .page-head__collage img:nth-child(1) { left: 0; top: 70px; rotate: -9deg; }
-  .page-head__collage img:nth-child(2) { left: 120px; top: 0; rotate: 4deg; z-index: 1; }
-  .page-head__collage img:nth-child(3) { right: 0; top: 130px; rotate: 11deg; }
-}
+@media (min-width: 900px) { .page-head { padding-top: calc(var(--nav-h) + 70px); padding-bottom: 170px; } }
 .nav__links a[aria-current="page"] { opacity: 1; }
 @media (min-width: 1200px) { .nav__links a[aria-current="page"] { background: rgba(255,255,255,.14); } .nav.is-scrolled .nav__links a[aria-current="page"] { background: rgba(23,19,15,.07); } }
 .catalog__empty { display: grid; justify-items: center; gap: 14px; padding: 34px 22px; border-radius: var(--r-lg); background: var(--bg-2); text-align: center; color: var(--muted); }

@@ -11,7 +11,7 @@ recebe o aviso de pagamento aprovado. Nada aqui precisa ser instalado no
 computador: tudo é feito pelo navegador.
 
 Enquanto o Access Token do Mercado Pago não estiver configurado, o servidor fica
-em MODO SIMULAÇÃO: o "pagamento" leva direto à página pedido.html, sem cobrar.
+em MODO SIMULAÇÃO: o "pagamento" leva direto à página /pedido (pedido.html), sem cobrar.
 
 
 PASSO A PASSO
@@ -47,7 +47,42 @@ B. Ligar o Mercado Pago (depois de criar e validar a conta)
    6. Tudo certo nos testes: troque MP_ACCESS_TOKEN pelo Access Token de PRODUÇÃO
       (o painel pede os dados do negócio para liberar) e refaça uma compra pequena.
 
-C. Liberar para todo mundo
+C. Cupons de desconto (promoções)
+   Os cupons ficam SÓ no servidor, na variável CUPONS (o site e o repositório são
+   públicos: se os códigos ficassem lá, qualquer um veria todos). O desconto é
+   sempre calculado pelo servidor; o carrinho só mostra o resultado.
+   1. Cloudflare > o worker > Settings > Variables and Secrets > Add, tipo Text:
+        CUPONS = a lista em JSON (copie servidor/cupons-exemplo.json e ajuste).
+      Para mudar uma promoção, edite essa variável e salve (vale na hora).
+   2. Campos de cada cupom:
+        codigo       o que a pessoa digita (maiúsculas e minúsculas tanto faz)
+        descricao    texto mostrado no carrinho quando o cupom é aplicado
+        tipo         "percentual" (valor = % de desconto), "valor" (valor = reais
+                     de desconto) ou "frete" (frete grátis)
+        valor        número do desconto (15 = 15% ou R$ 15, conforme o tipo)
+        maxDesconto  opcional: teto em reais para o desconto percentual
+        minimo       opcional: pedido mínimo em reais (soma das camisas, sem frete)
+        modelos      opcional: só vale para esses modelos (ids do catalogo.json:
+                     "torcedor", "jogador", "retro")
+        times        opcional: só vale para esses times (como aparecem no site,
+                     ex.: "Flamengo", "Atlético Mineiro")
+        camisas      opcional: só vale para esses códigos de camisa
+        inicio, fim  opcional: datas AAAA-MM-DD (horário de Brasília, incluindo
+                     o dia do fim)
+        limite       opcional: quantos pedidos pagos podem usar o cupom. Precisa
+                     do KV PEDIDOS ligado (passo B.5); sem ele, o cupom com limite
+                     fica indisponível, para não passar do limite.
+        ativo        false desliga o cupom sem apagar
+      Com modelos/times/camisas, o desconto vale só sobre essas camisas.
+      Um cupom por pedido. O uso é contado quando o pagamento é aprovado.
+   3. Link de promoção: qualquer página do site com ?cupom=CODIGO no final
+      (ex.: versattesports.com.br/catalogo?cupom=RETRO15) já deixa o cupom
+      guardado; ele é aplicado quando a pessoa abre o carrinho.
+   4. Dica: para cupom exclusivo (parceiros), use códigos difíceis de adivinhar.
+   5. Antes de existir o servidor, no modo de teste do site o cupom TESTE10
+      (10% de desconto) funciona só para vocês verem como fica.
+
+D. Liberar para todo mundo
    1. Preencha e revise politicas.html (campos destacados); tire o "noindex" dela.
    2. Defina frete e prazo no loja.json.
    3. Coloque "ativa": true no loja.json, adicione o link para politicas.html no
@@ -56,8 +91,9 @@ C. Liberar para todo mundo
 
 SEGURANÇA (o que o servidor já faz)
 -----------------------------------
-- Preço e frete são calculados aqui, com o catálogo e o loja.json publicados no
-  site; o valor que vem do navegador é ignorado.
+- Preço, frete e desconto do cupom são calculados aqui, com o catálogo e o
+  loja.json publicados no site e a variável CUPONS; o valor que vem do navegador
+  é ignorado. O cupom é conferido de novo na hora de criar o pagamento.
 - Só aceita pedidos vindos do site (CORS). No modo simulação também aceita o
   computador de quem testa (localhost).
 - Confere tamanho, quantidade e todos os campos de entrega antes de criar o pagamento.

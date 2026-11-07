@@ -66,7 +66,7 @@ PÁGINA INICIAL (index.html):
    na foto abre a prévia no formato do Instagram (carrossel, legenda, curtidas).
    No celular os cards correm para o lado; em telas largas ficam numa linha só.
 3) Destaques do catálogo: um atalho para cada modelo (preço, quantidade de
-   camisas e a capa da mais recente; leva a catalogo.html#modelo) e 8 camisas em
+   camisas e a capa da mais recente; leva a /catalogo#modelo) e 8 camisas em
    destaque (as do campo "destaques" do catalogo.json; o que faltar o site
    completa com as mais recentes, alternando os modelos). Botão "Ver as N camisas
    do catálogo" leva à subpágina. Tocar na foto abre a camisa; "Quero essa" abre
@@ -81,13 +81,15 @@ PÁGINA INICIAL (index.html):
 8) Fale com a gente (formulário) e rodapé: contatos e crédito Beyond Bits.
 Fixo na tela: botão flutuante do WhatsApp.
 
-CATÁLOGO (catalogo.html):
-1) Topo escuro curto, com a mesma borda curva e faixa de tecido da home, o
-   preço de cada modelo (atalho para a aba) e, em telas largas, uma colagem com
-   a camisa mais recente de cada modelo.
+CATÁLOGO (catalogo.html, aberto no endereço versattesports.com.br/catalogo):
+1) Topo com a foto de capa (assets/img/catalogo-capa.webp no computador e
+   catalogo-capa-m.webp no celular; original em alta: assets/hero_capa.png),
+   escurecida do lado do texto, a mesma borda curva e faixa de tecido da home e
+   o preço de cada modelo (atalho para a aba). Para trocar a foto, gere as duas
+   versões em WebP com esses nomes (a do celular é um recorte em pé, 3:4).
 2) Catálogo completo (js/catalogo.js): abas por modelo (Torcedor, Jogador, Retrô,
    do mais barato ao mais caro), filtro por time, busca e "Ver mais camisas"
-   (24 por vez). O endereço guarda a aba: catalogo.html#torcedor, #jogador,
+   (24 por vez). O endereço guarda a aba: /catalogo#torcedor, #jogador,
    #retro. Tocar na foto abre a camisa (fotos, preço, tamanhos e código).
 3) Como comprar e rodapé (iguais aos da home).
 Menu, rodapé e as janelas da camisa, do pedido e do Direct estão escritos nas
@@ -186,9 +188,10 @@ volta às seções da home (index.html#guia etc.).
     título (capas de seção, "....") ficam de fora.
     O código da camisa (número do álbum) aparece na janela da camisa e vai na
     mensagem do pedido, junto com o link
-    versattesports.com.br/catalogo.html#camisa-<código>, que abre a camisa no
+    versattesports.com.br/catalogo#camisa-<código>, que abre a camisa no
     site: é assim que a equipe sabe qual camisa o cliente quer e onde pedir.
-    (Links antigos, versattesports.com.br/#camisa-<código>, continuam abrindo.)
+    (Links antigos, versattesports.com.br/#camisa-<código> e
+    /catalogo.html#camisa-<código>, continuam abrindo.)
 
 4.1c Loja: carrinho e pagamento pelo Mercado Pago (DESLIGADA)
     Está pronta, mas desligada até a conta do Mercado Pago ficar configurada.
@@ -196,7 +199,7 @@ volta às seções da home (index.html#guia etc.).
     js/loja.js e o css/loja.css, e pedido.html e politicas.html não estão em
     nenhum link e não aparecem no Google (noindex).
     Para testar antes de liberar: abra o site com ?loja=teste
-      (ex.: versattesports.com.br/catalogo.html?loja=teste). Fica ligado só neste
+      (ex.: versattesports.com.br/catalogo?loja=teste). Fica ligado só neste
       navegador, com um aviso "modo de teste" no canto; desliga com ?loja=off.
       Sem "api" no loja.json, o pagamento é simulado no próprio navegador.
     Como funciona: na janela "Quero essa camisa" de uma camisa do catálogo
@@ -207,6 +210,13 @@ volta às seções da home (index.html#guia etc.).
     ou não concluído.
     Preço e frete são sempre recalculados pelo servidor (servidor/worker.js),
     com o catálogo e o loja.json publicados no site.
+    Cupons de promoção: campo "Cupom de desconto" no carrinho (um por pedido).
+    Os cupons ficam só no servidor, na variável CUPONS do Cloudflare (nunca no
+    site, que é público): % de desconto, valor em reais ou frete grátis, com
+    validade, pedido mínimo, limite de usos e restrição por modelo, time ou
+    camisa. Formato e exemplos em servidor/cupons-exemplo.json e passo a passo
+    em servidor/LEIA-ME.txt (parte C). Link de promoção: ?cupom=CODIGO em
+    qualquer página. No modo de teste sem servidor, o cupom TESTE10 dá 10%.
     Para liberar: siga servidor/LEIA-ME.txt (Cloudflare, Mercado Pago, testes),
     preencha politicas.html, defina frete e prazo no loja.json, coloque o link
     "Políticas da loja" no rodapé das páginas e mude "ativa" para true.
@@ -270,7 +280,7 @@ No catálogo o modelo já vem da camisa (a janela pede só o tamanho, limitado �
 faixa da camisa) e a mensagem leva preço, código e link:
   "Olá! Vi no catálogo do site da Versatte e quero a camisa Flamengo 2000/01
    Titular (modelo Retrô, tamanho G, R$ 189,90). Cód. 135129801
-   https://versattesports.com.br/catalogo.html#camisa-135129801"
+   https://versattesports.com.br/catalogo#camisa-135129801"
 
   - WhatsApp: a mensagem já chega escrita (o link wa.me aceita texto pronto).
   - Direct do Instagram: o Instagram NÃO permite que sites preencham o campo
@@ -362,3 +372,9 @@ Se a hospedagem tiver limite de espaço, eles podem ficar fora da publicação.
 - Os arquivos CSS/JS são chamados com ?v=AAAAMMDD-N no index.html e no
   catalogo.html. Ao publicar mudanças, aumente esse número nas duas páginas para
   o celular não usar uma versão antiga em cache.
+- Endereços sem ".html": o GitHub Pages abre /catalogo, /pedido e /politicas
+  direto (os arquivos continuam com .html). Por isso os links do site usam "/"
+  (home), "/catalogo", "/#guia" etc. Quem abrir um link antigo com .html vê o
+  endereço limpo na barra (o js/main.js troca sem recarregar). Testes no
+  computador precisam de um servidor que faça o mesmo (o "python -m http.server"
+  não faz: nele, abra os arquivos com .html).
