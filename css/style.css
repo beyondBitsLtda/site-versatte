@@ -184,13 +184,13 @@ button { font: inherit; color: inherit; }
 /* o menu completo só cabe a partir de 1200px; abaixo disso, menu em tela cheia */
 @media (max-width: 1199px) {
   .nav__links {
-    pointer-events: auto; position: fixed; inset: 0; z-index: -1; display: flex; flex-direction: column; justify-content: center; gap: 4px;
+    pointer-events: auto; position: fixed; inset: 0; z-index: -1; display: flex; flex-direction: column; justify-content: center; gap: 14px;
     padding: 100px calc(var(--gutter) + 6px) 40px; background: var(--bg); color: var(--ink);
     opacity: 0; visibility: hidden; transition: opacity .3s, visibility 0s .3s;
   }
   .nav.is-open .nav__links { opacity: 1; visibility: visible; transition: opacity .3s; }
-  .nav__links a { font: 900 clamp(50px, calc(15 * var(--vw)), 80px)/1 var(--f-caps); text-transform: uppercase; }
-  .nav__links a:nth-child(even) { font: 400 clamp(52px, calc(15 * var(--vw)), 84px)/1.1 var(--f-script); text-transform: none; color: var(--orange-script); }
+  .nav__links a { font: 900 clamp(30px, calc(8.5 * var(--vw)), 44px)/1 var(--f-caps); text-transform: uppercase; }
+  .nav__links a:nth-child(even of :not([hidden])) { font: 400 clamp(32px, calc(9 * var(--vw)), 48px)/1 var(--f-script); text-transform: none; color: var(--orange-script); }
   body.menu-open { overflow: hidden; }
 }
 @media (min-width: 1200px) {
