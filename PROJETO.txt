@@ -97,7 +97,11 @@ CATÁLOGO (catalogo.html, aberto no endereço versattesports.com.br/catalogo):
    - abas por modelo (Torcedor, Jogador, Retrô, do mais barato ao mais caro),
      fileira de ligas (a mesma escolha dos cards, para trocar sem subir a
      página), filtro por time (só os times da liga escolhida), busca (acha
-     também pela liga) e "Ver mais camisas" (24 por vez). O endereço guarda a
+     também pela liga) e "Ver mais camisas" (24 por vez). No computador e no
+     tablet, ligas e times são faixas que correm para o lado, com uma barra
+     de rolagem visível embaixo para arrastar; no celular (até 699px) viram
+     dois menus suspensos, "Liga" e "Time", com a quantidade de camisas de
+     cada opção. Faixas, menus e cards ficam sempre com a mesma escolha. O endereço guarda a
      aba: /catalogo#torcedor, #jogador, #retro. Tocar na foto abre a camisa
      (fotos, preço e tamanhos).
    Ligas de hoje: Brasileirão, Seleções, Premier League, La Liga, Serie A,

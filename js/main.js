@@ -650,13 +650,18 @@
     if (cat.liga && !contagem.has(cat.liga)) cat.liga = '';
     const ligas = LIGAS.filter(l => contagem.has(l.id)).map(l => [l.id, l.nome, contagem.get(l.id)]);
     const total = [...contagem.values()].reduce((n, q) => n + q, 0);
-    box.hidden = LIGAS.length < 2;
-    box.innerHTML = [['', 'Todas as ligas', total], ...ligas].map(([id, nome, q]) =>
+    const linhas = [['', 'Todas as ligas', total], ...ligas];
+    box.hidden = $('[data-cat-liga-box]').hidden = LIGAS.length < 2;
+    box.innerHTML = linhas.map(([id, nome, q]) =>
       `<button class="catalog__league" type="button" data-cat-liga="${esc(id)}" aria-pressed="${id === cat.liga}">${esc(nome)} <small>${q}</small></button>`).join('');
+    $('[data-cat-liga-select]').innerHTML = linhas.map(([id, nome, q]) => `<option value="${esc(id)}">${esc(nome)} (${q})</option>`).join('');
     marcarLiga();
   };
-  // a liga escolhida fica marcada nos dois lugares: cards com emblema e fileira de ligas
-  const marcarLiga = () => $$('[data-cat-liga]').forEach(x => x.setAttribute('aria-pressed', String(x.dataset.catLiga === cat.liga)));
+  // a liga escolhida fica marcada em todos os lugares: cards com emblema, fileira de ligas e menu do celular
+  const marcarLiga = () => {
+    $$('[data-cat-liga]').forEach(x => x.setAttribute('aria-pressed', String(x.dataset.catLiga === cat.liga)));
+    $('[data-cat-liga-select]').value = cat.liga;
+  };
 
   // times da liga escolhida (ou de todas), do que tem mais camisas ao que tem menos
   const renderTimes = () => {
@@ -665,8 +670,12 @@
     if (cat.time && !contagem.has(cat.time)) cat.time = '';
     const times = [...contagem].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], 'pt-BR'));
     const total = times.reduce((n, [, q]) => n + q, 0);
-    $('[data-cat-teams]').innerHTML = [['', total], ...times].map(([time, q]) =>
+    const linhas = [['', total], ...times];
+    $('[data-cat-teams]').innerHTML = linhas.map(([time, q]) =>
       `<button class="catalog__team" type="button" data-cat-time="${esc(time)}" aria-pressed="${time === cat.time}">${time ? esc(time) : 'Todos os times'} <small>${q}</small></button>`).join('');
+    const menu = $('[data-cat-time-select]');
+    menu.innerHTML = linhas.map(([time, q]) => `<option value="${esc(time)}">${time ? esc(time) : 'Todos os times'} (${q})</option>`).join('');
+    menu.value = cat.time;
   };
 
   const renderGrid = (soMais = false) => {
@@ -747,6 +756,7 @@
       const b = e.target.closest('[data-cat-liga]');
       if (b) escolherLiga(b.dataset.catLiga, false);
     });
+    $('[data-cat-liga-select]').addEventListener('change', e => escolherLiga(e.target.value, false));
 
     // cards das ligas com os emblemas (topo do catálogo); o número é o total da liga, em todos os modelos
     const cards = $('[data-cat-league-cards]');
@@ -764,14 +774,19 @@
         if (b) escolherLiga(b.dataset.catLiga, true);
       });
     }
+    // time (fileira no computador, menu no celular): os dois ficam marcados iguais
+    const escolherTime = time => {
+      cat.time = time;
+      cat.limite = POR_PAGINA;
+      $$('[data-cat-time]').forEach(x => x.setAttribute('aria-pressed', String(x.dataset.catTime === time)));
+      $('[data-cat-time-select]').value = time;
+      renderGrid();
+    };
     $('[data-cat-teams]').addEventListener('click', e => {
       const b = e.target.closest('[data-cat-time]');
-      if (!b) return;
-      cat.time = b.dataset.catTime;
-      cat.limite = POR_PAGINA;
-      $$('[data-cat-time]').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
-      renderGrid();
+      if (b) escolherTime(b.dataset.catTime);
     });
+    $('[data-cat-time-select]').addEventListener('change', e => escolherTime(e.target.value));
     $('[data-cat-more]').addEventListener('click', () => { cat.limite += POR_PAGINA; renderGrid(true); });
     $('#catalogo').addEventListener('click', e => {
       const tab = e.target.closest('[data-cat-tab]');
