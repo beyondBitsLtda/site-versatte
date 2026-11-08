@@ -17,7 +17,16 @@
     { "id": "espanha", "nome": "La Liga", "categoria": "4072497", "emblema": "assets/ligas/espanha.svg" },
     { "id": "italia", "nome": "Serie A", "categoria": "4070676", "emblema": "assets/ligas/italia.svg" },
     { "id": "alemanha", "nome": "Bundesliga", "categoria": "4070673", "emblema": "assets/ligas/alemanha.svg" },
-    { "id": "franca", "nome": "Ligue 1", "categoria": "4070633", "emblema": "assets/ligas/franca.svg" }
+    { "id": "franca", "nome": "Ligue 1", "categoria": "4070633", "emblema": "assets/ligas/franca.svg" },
+    { "id": "portugal", "nome": "Liga Portugal", "categoria": "4070672", "emblema": "assets/ligas/portugal.svg" },
+    { "id": "holanda", "nome": "Eredivisie", "categoria": "4070649", "emblema": "assets/ligas/holanda.svg" },
+    { "id": "argentina", "nome": "Liga Argentina", "categoria": "4070651", "emblema": "assets/ligas/argentina.svg" },
+    { "id": "mexico", "nome": "Liga MX", "categoria": "4070650", "emblema": "assets/ligas/mexico.svg" },
+    { "id": "eua", "nome": "MLS", "categoria": "4511986", "emblema": "assets/ligas/eua.svg" },
+    { "id": "chile", "nome": "Liga Chilena", "categoria": "4511985", "emblema": "assets/ligas/chile.svg" },
+    { "id": "escocia", "nome": "Escócia", "categoria": "4072431", "emblema": "assets/ligas/escocia.svg" },
+    { "id": "arabia", "nome": "Liga Saudita", "categoria": "4512009", "emblema": "assets/ligas/arabia.svg" },
+    { "id": "outras", "nome": "Outros times", "categoria": ["4511987", "4072624"], "emblema": "assets/ligas/outras.svg" }
   ],
 
   "excluir": [

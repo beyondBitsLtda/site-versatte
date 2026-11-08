@@ -104,8 +104,10 @@ CATÁLOGO (catalogo.html, aberto no endereço versattesports.com.br/catalogo):
      cada opção. Faixas, menus e cards ficam sempre com a mesma escolha. O endereço guarda a
      aba: /catalogo#torcedor, #jogador, #retro. Tocar na foto abre a camisa
      (fotos, preço e tamanhos).
-   Ligas de hoje: Brasileirão, Seleções, Premier League, La Liga, Serie A,
-   Bundesliga e Ligue 1 (campo "ligas" do catalogo.json).
+   Ligas de hoje (16, campo "ligas" do catalogo.json): Brasileirão, Seleções,
+   Premier League, La Liga, Serie A, Bundesliga, Ligue 1, Liga Portugal,
+   Eredivisie, Liga Argentina, Liga MX, MLS, Liga Chilena, Escócia, Liga
+   Saudita e Outros times (clubes de ligas que não têm card próprio).
 3) Como comprar e rodapé (iguais aos da home).
 Menu, rodapé e as janelas da camisa, do pedido e do Direct estão escritos nas
 duas páginas: ao mudar um deles (ex.: número do WhatsApp, links do menu), mude
@@ -211,16 +213,22 @@ volta às seções da home (index.html#guia etc.).
                      Camisa de time de uma liga que NÃO está na lista (PSV,
                      Galatasaray, Sporting...) fica de fora do catálogo (ou vai
                      para a liga "outras", se ela existir na lista).
-                     Para incluir outra liga: veja o número da categoria na
-                     fonte (o link termina em /categories/<número>), acrescente
-                     { id, nome, categoria, emblema } e rode node
-                     tools/catalogo.mjs. Os ids que a ferramenta já conhece:
-                     portugal, holanda, argentina, mexico, eua, chile,
-                     escocia, arabia e outras (times de qualquer outra liga).
-                     Emblemas: os SVGs em assets/ligas/ vieram da Wikipédia
-                     (são marcas das ligas); os da Serie A e da Ligue 1 foram
-                     recortados para tirar a faixa do patrocinador.
-                     selecoes.svg é um desenho próprio (globo e estrela).
+                     Hoje TODAS as ligas que a ferramenta conhece estão na
+                     lista ("outras" junta duas categorias da fonte: times de
+                     outros países). Para incluir uma liga nova: veja o número
+                     da categoria na fonte (o link termina em
+                     /categories/<número>), acrescente { id, nome, categoria,
+                     emblema }, a lista de times dela em CLUBES no
+                     tools/catalogo.mjs, e rode node tools/catalogo.mjs.
+                     Emblemas: os de assets/ligas/ vieram da Wikipédia (são
+                     marcas das ligas). Recortes feitos para tirar
+                     patrocinadores e caber no card: Serie A (enilive), Ligue 1
+                     (McDonald's), Liga Portugal (faixa Betclic e moldura),
+                     Escócia (só o leão, sem William Hill e SPFL), Liga
+                     Argentina (só o escudo LPF, sem o texto) e Liga Chilena
+                     (escudo da ANFP sem a faixa Petrobras; é um PNG dentro de
+                     um SVG). selecoes.svg e outras.svg são desenhos próprios
+                     (globo com estrela; escudo com três pontos).
                      Para reconhecer um time novo, acrescente o nome e o
                      apelido do título na lista da liga em CLUBES (ou SELECOES)
                      no tools/catalogo.mjs. A fonte usa apelidos: M-U

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <!-- Emblema da Versatte para "Outros times" (não é marca de nenhuma entidade): escudo de clube -->
+  <circle cx="60" cy="66" r="44" fill="#17130F"/>
+  <path d="M60 39l23 7.5v16.5c0 15.5-9.6 26-23 32-13.4-6-23-16.5-23-32V46.5z" fill="none" stroke="#F7EFE3" stroke-width="3.4" stroke-linejoin="round"/>
+  <path d="M44 74.5 76 50.5" stroke="#EA5B0C" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="48" cy="12" r="5" fill="#EA5B0C"/><circle cx="60" cy="12" r="5" fill="#EA5B0C"/><circle cx="72" cy="12" r="5" fill="#EA5B0C"/>
+</svg>

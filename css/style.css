@@ -476,6 +476,13 @@ button { font: inherit; color: inherit; }
 }
 @media (min-width: 1000px) { .leagues__grid { grid-template-columns: repeat(8, minmax(0, 1fr)); } }
 @media (prefers-reduced-motion: reduce) { .league-card:hover { transform: none; } }
+/* "Todas as ligas" (1º card) vira uma faixa de ponta a ponta: as 16 ligas fecham 4 x 4 no celular e 8 x 2 no computador */
+.leagues__grid li:first-child { grid-column: 1 / -1; }
+.leagues__grid li:first-child .league-card { flex-direction: row; justify-content: center; gap: 10px; padding: 10px 16px; }
+.leagues__grid li:first-child .league-card__logo { width: auto; height: 30px; flex: none; }
+.leagues__grid li:first-child .league-card__logo img { width: auto; height: 100%; }
+.leagues__grid li:first-child .league-card__name { flex: none; }
+@media (min-width: 700px) { .leagues__grid li:first-child .league-card__logo { height: 36px; } .leagues__grid li:first-child .league-card { padding: 12px 20px; } }
 .catalog__tabs { scroll-margin-top: calc(var(--nav-h) + 18px); }   /* tocar num card de liga rola até aqui */
 
 .catalog__tools { display: grid; gap: 12px; margin-top: 14px; }
