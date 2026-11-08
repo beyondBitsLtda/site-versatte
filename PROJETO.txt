@@ -46,6 +46,7 @@ servidor/               servidor da loja no Cloudflare (worker.js) e o passo a p
 assets/img/             imagens otimizadas que o site usa (WebP)
 assets/posts/<código>/  fotos de cada post, baixadas do Instagram
 assets/catalogo/<cód>/  fotos de cada camisa do catálogo (capa.webp + 1..N.webp)
+assets/ligas/           emblemas das ligas (cards "Escolha a liga" do catálogo)
 assets/*.png            artes originais em alta (fonte das imagens otimizadas;
                         o site NÃO carrega esses arquivos)
 assets/exemplos/        referências de design usadas no início do projeto
@@ -87,12 +88,20 @@ CATÁLOGO (catalogo.html, aberto no endereço versattesports.com.br/catalogo):
    escurecida do lado do texto, a mesma borda curva e faixa de tecido da home e
    o preço de cada modelo (atalho para a aba). Para trocar a foto, gere as duas
    versões em WebP com esses nomes (a do celular é um recorte em pé, 3:4).
-2) Catálogo completo (js/catalogo.js): abas por modelo (Torcedor, Jogador, Retrô,
-   do mais barato ao mais caro), filtro por liga (Brasileirão, Seleções,
-   Premier League, La Liga... na ordem do catalogo.json), filtro por time (só
-   os times da liga escolhida), busca (acha também pela liga) e "Ver mais
-   camisas" (24 por vez). O endereço guarda a aba: /catalogo#torcedor,
-   #jogador, #retro. Tocar na foto abre a camisa (fotos, preço e tamanhos).
+2) Catálogo completo (js/catalogo.js):
+   - "Escolha a liga": um card por liga com o emblema, o nome e quantas
+     camisas tem (4 por linha no celular, 8 numa linha no computador), mais o
+     card "Todas as ligas" (logo da Versatte). Tocar num card filtra a lista
+     pela liga e rola até as abas; se a aba aberta não tem camisas da liga,
+     abre a aba que tem mais.
+   - abas por modelo (Torcedor, Jogador, Retrô, do mais barato ao mais caro),
+     fileira de ligas (a mesma escolha dos cards, para trocar sem subir a
+     página), filtro por time (só os times da liga escolhida), busca (acha
+     também pela liga) e "Ver mais camisas" (24 por vez). O endereço guarda a
+     aba: /catalogo#torcedor, #jogador, #retro. Tocar na foto abre a camisa
+     (fotos, preço e tamanhos).
+   Ligas de hoje: Brasileirão, Seleções, Premier League, La Liga, Serie A,
+   Bundesliga e Ligue 1 (campo "ligas" do catalogo.json).
 3) Como comprar e rodapé (iguais aos da home).
 Menu, rodapé e as janelas da camisa, do pedido e do Direct estão escritos nas
 duas páginas: ao mudar um deles (ex.: número do WhatsApp, links do menu), mude
@@ -189,11 +198,25 @@ volta às seções da home (index.html#guia etc.).
                        categoria  número da página de categoria da fonte de
                                   onde vêm as camisas da liga (um número ou
                                   uma lista). "selecoes" não tem categoria.
+                       emblema    imagem do card da liga (assets/ligas/<id>.svg)
                      A liga de cada camisa vem do TIME, não da categoria: a
                      fonte às vezes põe camisas na categoria errada (ex.: um
-                     Bayern na categoria do Chile). Seleções vão para
+                     PSV na categoria da Bundesliga). Seleções vão para
                      "Seleções" (inclusive a Seleção Brasileira). Time
                      desconhecido fica na liga da categoria, como "Outros".
+                     Camisa de time de uma liga que NÃO está na lista (PSV,
+                     Galatasaray, Sporting...) fica de fora do catálogo (ou vai
+                     para a liga "outras", se ela existir na lista).
+                     Para incluir outra liga: veja o número da categoria na
+                     fonte (o link termina em /categories/<número>), acrescente
+                     { id, nome, categoria, emblema } e rode node
+                     tools/catalogo.mjs. Os ids que a ferramenta já conhece:
+                     portugal, holanda, argentina, mexico, eua, chile,
+                     escocia, arabia e outras (times de qualquer outra liga).
+                     Emblemas: os SVGs em assets/ligas/ vieram da Wikipédia
+                     (são marcas das ligas); os da Serie A e da Ligue 1 foram
+                     recortados para tirar a faixa do patrocinador.
+                     selecoes.svg é um desenho próprio (globo e estrela).
                      Para reconhecer um time novo, acrescente o nome e o
                      apelido do título na lista da liga em CLUBES (ou SELECOES)
                      no tools/catalogo.mjs. A fonte usa apelidos: M-U

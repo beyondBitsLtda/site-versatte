@@ -62,7 +62,7 @@ function readConfig() {
   if (!fontes.length && !local) throw new Error('informe a fonte do catálogo: variável CATALOGO_FONTE ou arquivo catalogo.local.json com { "fonte": "link" }');
   if (!Array.isArray(cfg.modelos) || !cfg.modelos.length) throw new Error('catalogo.json: a lista "modelos" está vazia');
   // ligas: { id, nome, categoria } (categoria = número da página de categoria da fonte; pode ser uma lista)
-  const ligas = (cfg.ligas || []).map(l => ({ id: String(l.id || ''), nome: String(l.nome || l.id || ''), categorias: [l.categoria].flat().filter(Boolean).map(String) }));
+  const ligas = (cfg.ligas || []).map(l => ({ id: String(l.id || ''), nome: String(l.nome || l.id || ''), emblema: String(l.emblema || ''), categorias: [l.categoria].flat().filter(Boolean).map(String) }));
   if (ligas.some(l => !l.id)) throw new Error('catalogo.json: toda liga precisa de "id"');
   return {
     fontes, ligas,
@@ -596,7 +596,7 @@ if (local) {
 
 // 2. classifica, traduz e tira repetidos (mesmo título, mesmo em ligas diferentes) e escondidos
 const idsLigas = new Set(cfg.ligas.map(l => l.id));
-const vistos = new Set(), fora = [], semTime = [];
+const vistos = new Set(), fora = [], semTime = [], foraDaLiga = [];
 const camisas = [];
 for (const a of lista) {
   const chave = normal(a.titulo);
@@ -610,9 +610,12 @@ for (const a of lista) {
   // álbum sem time e sem temporada no título não é camisa (ex.: "......", capa de seção)
   if (!ajuste.modelo && !lido.time && !lido.temporada) { fora.push(a.titulo); continue; }
   const time = ajuste.time || lido.time;
-  // liga: a do ajuste, a do time (pelo nome) ou a da categoria; liga fora do catalogo.json vai para "outras"
-  const ligaLida = ajuste.liga || (ajuste.time ? LIGA_DO_TIME.get(ajuste.time) : lido.liga);
-  const liga = [ligaLida, a.ligaFonte, 'outras'].find(id => idsLigas.has(id)) || '';
+  // liga: a do ajuste, a do time (pelo nome) ou, se o time é desconhecido, a da categoria.
+  // Time de uma liga que não está no catalogo.json (ex.: um PSV na categoria da Bundesliga) vai
+  // para "outras", se ela existir; senão a camisa fica de fora.
+  const ligaLida = ajuste.liga || (ajuste.time && LIGA_DO_TIME.get(ajuste.time)) || lido.liga || a.ligaFonte;
+  const liga = !idsLigas.size ? '' : idsLigas.has(ligaLida) ? ligaLida : idsLigas.has('outras') ? 'outras' : null;
+  if (liga === null) { foraDaLiga.push(`${a.titulo}  (${ligaLida})`); continue; }
   if (!time) semTime.push(`${a.id}  ${a.titulo}`);
   camisas.push({
     ...a, modelo, liga,
@@ -623,7 +626,7 @@ for (const a of lista) {
 }
 
 const porModelo = id => camisas.filter(c => c.modelo === id).length;
-console.log(`Camisas no catálogo: ${camisas.length} (${cfg.modelos.map(m => `${m.nome} ${porModelo(m.id)}`).join(', ')}) · fora do catálogo: ${fora.length}`);
+console.log(`Camisas no catálogo: ${camisas.length} (${cfg.modelos.map(m => `${m.nome} ${porModelo(m.id)}`).join(', ')}) · fora do catálogo: ${fora.length}${foraDaLiga.length ? ` · de ligas fora da lista: ${foraDaLiga.length}` : ''}`);
 
 if (simular) {
   const nomeLiga = id => cfg.ligas.find(l => l.id === id)?.nome || '';
@@ -633,6 +636,7 @@ if (simular) {
   }
   console.log(`\n== Fora do catálogo (palavras de "excluir")\n  ${fora.join('\n  ')}`);
   if (semTime.length) console.log(`\n== Sem time reconhecido (aparecem como "Outros"; corrija em "ajustes")\n  ${semTime.join('\n  ')}`);
+  if (foraDaLiga.length) console.log(`\n== Times de ligas que não estão em "ligas" (ficam de fora)\n  ${foraDaLiga.join('\n  ')}`);
   if (cfg.ligas.length) {
     console.log('\n== Times por liga');
     for (const l of cfg.ligas) {
@@ -697,7 +701,7 @@ const saida = camisas.filter(c => fotosOk(cache.get(c.id))).map(c => {
 const hoje = new Date().toLocaleDateString('sv-SE', { timeZone: 'America/Sao_Paulo' });
 const modelos = cfg.modelos.map(({ id, nome, preco }) => ({ id, nome, preco }));
 // ligas com camisas, na ordem do catalogo.json (o site mostra o filtro nessa ordem)
-const ligas = cfg.ligas.filter(l => saida.some(c => c.liga === l.id)).map(({ id, nome }) => ({ id, nome }));
+const ligas = cfg.ligas.filter(l => saida.some(c => c.liga === l.id)).map(({ id, nome, emblema }) => ({ id, nome, ...(emblema && { emblema }) }));
 // camisas fixas nos destaques da home (o site completa com as mais recentes de cada modelo)
 const noCatalogo = new Set(saida.map(c => c.id));
 const destaques = cfg.destaques.filter(id => noCatalogo.has(id));

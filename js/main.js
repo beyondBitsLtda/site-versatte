@@ -653,7 +653,10 @@
     box.hidden = LIGAS.length < 2;
     box.innerHTML = [['', 'Todas as ligas', total], ...ligas].map(([id, nome, q]) =>
       `<button class="catalog__league" type="button" data-cat-liga="${esc(id)}" aria-pressed="${id === cat.liga}">${esc(nome)} <small>${q}</small></button>`).join('');
+    marcarLiga();
   };
+  // a liga escolhida fica marcada nos dois lugares: cards com emblema e fileira de ligas
+  const marcarLiga = () => $$('[data-cat-liga]').forEach(x => x.setAttribute('aria-pressed', String(x.dataset.catLiga === cat.liga)));
 
   // times da liga escolhida (ou de todas), do que tem mais camisas ao que tem menos
   const renderTimes = () => {
@@ -722,17 +725,45 @@
       clearTimeout(espera);
       espera = setTimeout(() => { cat.busca = e.target.value; cat.limite = POR_PAGINA; renderLigas(); renderTimes(); renderGrid(); }, 160);
     });
-    // liga: a fileira de times passa a mostrar só os times dela (e volta para o começo)
-    $('[data-cat-leagues]')?.addEventListener('click', e => {
-      const b = e.target.closest('[data-cat-liga]');
-      if (!b) return;
-      cat.liga = b.dataset.catLiga;
+    // liga (card com emblema ou fileira de ligas): a fileira de times passa a mostrar só os times
+    // dela. Se a aba aberta não tem camisas da liga, abre a aba que tem mais.
+    const escolherLiga = (id, rolar) => {
+      cat.liga = id;
       cat.limite = POR_PAGINA;
-      $$('[data-cat-liga]').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+      const quantas = m => doModelo(m).filter(c => (!id || c.liga === id) && confere(c)).length;
+      if (!quantas(cat.modelo)) {
+        const melhor = [...MODELOS].sort((a, b) => quantas(b.id) - quantas(a.id))[0];
+        if (melhor && quantas(melhor.id)) setModelo(melhor.id, true);
+      }
+      renderLigas();
       renderTimes();
       $('[data-cat-teams]').scrollLeft = 0;
       renderGrid();
+      const chips = $('[data-cat-leagues]'), chip = chips && $('[aria-pressed="true"]', chips);
+      if (chip) chips.scrollLeft = Math.max(0, chip.offsetLeft - chips.offsetLeft - 24);
+      if (rolar) tabs.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+    };
+    $('[data-cat-leagues]')?.addEventListener('click', e => {
+      const b = e.target.closest('[data-cat-liga]');
+      if (b) escolherLiga(b.dataset.catLiga, false);
     });
+
+    // cards das ligas com os emblemas (topo do catálogo); o número é o total da liga, em todos os modelos
+    const cards = $('[data-cat-league-cards]');
+    if (cards && LIGAS.length > 1) {
+      const card = (id, nome, emblema) => `
+        <li><button class="league-card" type="button" data-cat-liga="${esc(id)}" aria-pressed="false">
+          <span class="league-card__logo">${emblema ? `<img src="${esc(emblema)}" alt="" loading="lazy" decoding="async">` : ''}</span>
+          <span class="league-card__name">${esc(nome)}</span>
+          <span class="league-card__count">${CAT.camisas.filter(c => !id || c.liga === id).length} camisas</span>
+        </button></li>`;
+      cards.innerHTML = card('', 'Todas as ligas', 'assets/img/logo-vs.webp') + LIGAS.map(l => card(l.id, l.nome, l.emblema)).join('');
+      $('[data-cat-leagues-box]').hidden = false;
+      cards.addEventListener('click', e => {
+        const b = e.target.closest('[data-cat-liga]');
+        if (b) escolherLiga(b.dataset.catLiga, true);
+      });
+    }
     $('[data-cat-teams]').addEventListener('click', e => {
       const b = e.target.closest('[data-cat-time]');
       if (!b) return;

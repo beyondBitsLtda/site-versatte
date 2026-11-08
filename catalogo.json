@@ -1,5 +1,5 @@
 {
-  "_leia-me": "Catálogo do site (seção Catálogo). A ferramenta tools/catalogo.mjs lê os álbuns da(s) fonte(s), classifica cada camisa num modelo, baixa as fotos e gera js/catalogo.js. Campos: fonte (deixe vazio: o link fica no segredo CATALOGO_FONTE do GitHub e, no computador, no arquivo catalogo.local.json, que não vai para o Git; este arquivo é público), fotosPorCamisa (quantas fotos cada camisa mostra), modelos (nome, preço e palavras do título que identificam o modelo; a primeira regra que bater vence, e o modelo sem palavras recebe o resto; no site as abas aparecem do mais barato ao mais caro), ligas (filtro de ligas do site, nesta ordem: id fixo, nome que aparece no site e categoria = número da página de categoria da fonte de onde vêm as camisas dessa liga, um número ou uma lista; a liga de cada camisa vem do time, as seleções vão para 'selecoes' e time desconhecido fica na liga da categoria; não mude os ids, a ferramenta usa para achar os times de cada liga), excluir (palavras do título que tiram o álbum do catálogo: feminina, infantil, treino etc.), esconder (códigos de camisas que não devem aparecer), ajustes (correções por código: time, detalhe, modelo, liga e/ou max) e destaques (códigos das camisas que aparecem fixas nos destaques da home, na ordem; até 8, e o site completa com as mais recentes de cada modelo). O código de cada camisa aparece na mensagem do pedido. Depois de editar, rode: node tools/catalogo.mjs (ou node tools/catalogo.mjs --local para só aplicar preço/nomes sem baixar nada).",
+  "_leia-me": "Catálogo do site (seção Catálogo). A ferramenta tools/catalogo.mjs lê os álbuns da(s) fonte(s), classifica cada camisa num modelo, baixa as fotos e gera js/catalogo.js. Campos: fonte (deixe vazio: o link fica no segredo CATALOGO_FONTE do GitHub e, no computador, no arquivo catalogo.local.json, que não vai para o Git; este arquivo é público), fotosPorCamisa (quantas fotos cada camisa mostra), modelos (nome, preço e palavras do título que identificam o modelo; a primeira regra que bater vence, e o modelo sem palavras recebe o resto; no site as abas aparecem do mais barato ao mais caro), ligas (cards e filtro de ligas do site, nesta ordem: id fixo, nome que aparece no site, categoria = número da página de categoria da fonte de onde vêm as camisas dessa liga, um número ou uma lista, e emblema = imagem do card; a liga de cada camisa vem do time, as seleções vão para 'selecoes', time desconhecido fica na liga da categoria e time de liga fora da lista fica de fora; não mude os ids, a ferramenta usa para achar os times de cada liga), excluir (palavras do título que tiram o álbum do catálogo: feminina, infantil, treino etc.), esconder (códigos de camisas que não devem aparecer), ajustes (correções por código: time, detalhe, modelo, liga e/ou max) e destaques (códigos das camisas que aparecem fixas nos destaques da home, na ordem; até 8, e o site completa com as mais recentes de cada modelo). O código de cada camisa aparece na mensagem do pedido. Depois de editar, rode: node tools/catalogo.mjs (ou node tools/catalogo.mjs --local para só aplicar preço/nomes sem baixar nada).",
 
   "fonte": "",
   "fotosPorCamisa": 4,
@@ -11,22 +11,13 @@
   ],
 
   "ligas": [
-    { "id": "brasil", "nome": "Brasileirão", "categoria": "4072544" },
-    { "id": "selecoes", "nome": "Seleções" },
-    { "id": "inglaterra", "nome": "Premier League", "categoria": "4070681" },
-    { "id": "espanha", "nome": "La Liga", "categoria": "4072497" },
-    { "id": "italia", "nome": "Serie A", "categoria": "4070676" },
-    { "id": "alemanha", "nome": "Bundesliga", "categoria": "4070673" },
-    { "id": "franca", "nome": "Ligue 1", "categoria": "4070633" },
-    { "id": "portugal", "nome": "Liga Portugal", "categoria": "4070672" },
-    { "id": "holanda", "nome": "Eredivisie", "categoria": "4070649" },
-    { "id": "argentina", "nome": "Liga Argentina", "categoria": "4070651" },
-    { "id": "mexico", "nome": "Liga MX", "categoria": "4070650" },
-    { "id": "eua", "nome": "MLS", "categoria": "4511986" },
-    { "id": "chile", "nome": "Liga Chilena", "categoria": "4511985" },
-    { "id": "escocia", "nome": "Liga Escocesa", "categoria": "4072431" },
-    { "id": "arabia", "nome": "Liga Saudita", "categoria": "4512009" },
-    { "id": "outras", "nome": "Outras ligas", "categoria": ["4511987", "4072624"] }
+    { "id": "brasil", "nome": "Brasileirão", "categoria": "4072544", "emblema": "assets/ligas/brasil.svg" },
+    { "id": "selecoes", "nome": "Seleções", "emblema": "assets/ligas/selecoes.svg" },
+    { "id": "inglaterra", "nome": "Premier League", "categoria": "4070681", "emblema": "assets/ligas/inglaterra.svg" },
+    { "id": "espanha", "nome": "La Liga", "categoria": "4072497", "emblema": "assets/ligas/espanha.svg" },
+    { "id": "italia", "nome": "Serie A", "categoria": "4070676", "emblema": "assets/ligas/italia.svg" },
+    { "id": "alemanha", "nome": "Bundesliga", "categoria": "4070673", "emblema": "assets/ligas/alemanha.svg" },
+    { "id": "franca", "nome": "Ligue 1", "categoria": "4070633", "emblema": "assets/ligas/franca.svg" }
   ],
 
   "excluir": [

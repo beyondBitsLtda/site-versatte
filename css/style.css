@@ -452,6 +452,32 @@ button { font: inherit; color: inherit; }
 .catalog__tab[aria-selected="true"] span { color: var(--orange-hi); }
 @media (min-width: 700px) { .catalog__tab { flex-direction: row; gap: 12px; min-height: 66px; } .catalog__tab span { font-size: 14.5px; } }
 
+/* cards das ligas com os emblemas (topo do catálogo): 4 por linha no celular, 8 numa linha no computador */
+.leagues { margin-bottom: clamp(30px, calc(4.5 * var(--vw)), 48px); }
+.leagues__head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 16px; margin-bottom: 16px; }
+.leagues__title { margin: 0; font: 900 clamp(28px, calc(6 * var(--vw)), 40px)/1 var(--f-caps); text-transform: uppercase; }
+.leagues__hint { margin: 0; font-size: 14px; color: var(--muted); }
+.leagues__grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.leagues__grid li { display: flex; }
+.league-card { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 0; padding: 12px 4px 10px; border: 0; border-radius: var(--r-sm); background: var(--surface); box-shadow: var(--shadow); color: var(--ink); text-align: center; cursor: pointer; transition: transform .2s, box-shadow .2s; }
+.league-card__logo { display: flex; align-items: center; justify-content: center; width: 100%; height: 44px; }
+.league-card__logo img { display: block; width: 84%; height: 100%; object-fit: contain; }   /* emblemas de formatos diferentes cabem na mesma área */
+.league-card__name { flex: 1; display: flex; align-items: center; font: 800 12.5px/1.05 var(--f-caps); text-transform: uppercase; letter-spacing: .02em; }
+.league-card__count { font-size: 11px; color: var(--muted); white-space: nowrap; }
+.league-card:hover { transform: translateY(-3px); }
+.league-card[aria-pressed="true"] { box-shadow: inset 0 0 0 2px var(--ink), var(--shadow); }
+.league-card[aria-pressed="true"] .league-card__count { color: var(--orange-text); font-weight: 600; }
+@media (min-width: 700px) {
+  .leagues__grid { gap: 14px; }
+  .league-card { gap: 9px; padding: 18px 10px 14px; }
+  .league-card__logo { height: 70px; }
+  .league-card__name { font-size: 17px; }
+  .league-card__count { font-size: 12.5px; }
+}
+@media (min-width: 1000px) { .leagues__grid { grid-template-columns: repeat(8, minmax(0, 1fr)); } }
+@media (prefers-reduced-motion: reduce) { .league-card:hover { transform: none; } }
+.catalog__tabs { scroll-margin-top: calc(var(--nav-h) + 18px); }   /* tocar num card de liga rola até aqui */
+
 .catalog__tools { display: grid; gap: 12px; margin-top: 14px; }
 .catalog__search { position: relative; display: block; }
 .catalog__search svg { position: absolute; left: 17px; top: 50%; translate: 0 -50%; width: 20px; height: 20px; color: var(--muted); pointer-events: none; }
