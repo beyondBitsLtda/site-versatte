@@ -36,8 +36,9 @@ jobs:
             echo "::warning::Configure o segredo CATALOGO_FONTE para o catálogo se sincronizar sozinho."
             exit 0
           fi
-          # se algumas camisas falharem, publica as que deram certo (as outras entram na próxima vez)
-          node tools/catalogo.mjs || echo "::warning::Algumas camisas não foram baixadas; elas entram na próxima sincronização."
+          # se algumas camisas falharem, publica as que deram certo (as outras entram na próxima vez);
+          # --minutos: para de baixar antes do limite do job (120 min) e publica o que já baixou
+          node tools/catalogo.mjs --minutos=95 || echo "::warning::Algumas camisas não foram baixadas; elas entram na próxima sincronização."
 
       - name: Publica se mudou
         run: |

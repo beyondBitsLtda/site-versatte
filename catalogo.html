@@ -4,10 +4,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Catálogo · Versatte Sports</title>
-  <meta name="description" content="Catálogo completo da Versatte Sports: camisas de clubes brasileiros e da Seleção nos modelos Torcedor, Jogador e Retrô. Escolha a sua e chame no direct ou no WhatsApp.">
+  <meta name="description" content="Catálogo completo da Versatte Sports: camisas do Brasileirão, das seleções e das principais ligas do mundo nos modelos Torcedor, Jogador e Retrô. Escolha a sua e chame no direct ou no WhatsApp.">
   <meta name="theme-color" content="#0C0B0A">
   <meta property="og:title" content="Catálogo · Versatte Sports">
-  <meta property="og:description" content="Camisas de clubes brasileiros e da Seleção nos modelos Torcedor, Jogador e Retrô.">
+  <meta property="og:description" content="Camisas do Brasileirão, das seleções e das principais ligas do mundo nos modelos Torcedor, Jogador e Retrô.">
   <meta property="og:type" content="website">
   <meta property="og:image" content="assets/img/boas-vindas-1.webp">
   <link rel="icon" type="image/png" href="assets/img/favicon.png">
@@ -16,11 +16,11 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Figtree:wght@400;500;600;700&family=Mr+Dafoe&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=20261107-3">
+  <link rel="stylesheet" href="css/style.css?v=20261108-1">
   <!-- ajuste do modo "Site para computador" no celular: precisa rodar aqui, sem defer -->
-  <script src="js/tela.js?v=20261107-3"></script>
-  <script src="js/catalogo.js?v=20261107-3" defer></script>
-  <script src="js/main.js?v=20261107-3" defer></script>
+  <script src="js/tela.js?v=20261108-1"></script>
+  <script src="js/catalogo.js?v=20261108-1" defer></script>
+  <script src="js/main.js?v=20261108-1" defer></script>
 </head>
 <body class="page-catalogo">
 
@@ -74,7 +74,7 @@
         <span class="display__caps">Catálogo</span>
         <span class="display__script">completo</span>
       </h1>
-      <p class="lead">Clubes brasileiros e a Seleção nos modelos Torcedor, Jogador e Retrô. Escolha o modelo, filtre pelo seu time e clique em <b>Quero essa</b>: a mensagem já vai pronta.</p>
+      <p class="lead">Brasileirão, seleções e as principais ligas do mundo nos modelos Torcedor, Jogador e Retrô. Escolha o modelo, filtre pela liga ou pelo seu time e clique em <b>Quero essa</b>: a mensagem já vai pronta.</p>
       <ul class="page-head__models" role="list" data-cat-head-models></ul>
     </div>
   </div>
@@ -85,7 +85,8 @@
 
 <!-- ============ CATÁLOGO COMPLETO ============
      Cards montados a partir de js/catalogo.js, gerado por tools/catalogo.mjs a partir do catalogo.json
-     (lá ficam o nome e o preço de cada modelo). As abas aparecem do modelo mais barato ao mais caro.
+     (lá ficam o nome e o preço de cada modelo e o nome de cada liga). As abas aparecem do modelo mais
+     barato ao mais caro. Filtros: liga (na ordem do catalogo.json) e time (só os da liga escolhida).
      O endereço guarda a aba aberta: /catalogo#torcedor, #jogador ou #retro. -->
 <section class="section catalog" id="catalogo">
   <div class="wrap">
@@ -95,6 +96,7 @@
         <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-search"/></svg>
         <input type="search" placeholder="Buscar time, ano, goleiro..." autocomplete="off" enterkeyhint="search" aria-label="Buscar no catálogo" data-cat-search>
       </label>
+      <div class="catalog__leagues" role="group" aria-label="Filtrar por liga" data-cat-leagues hidden></div>
       <div class="catalog__teams" role="group" aria-label="Filtrar por time" data-cat-teams></div>
     </div>
     <p class="catalog__count" role="status" aria-live="polite" data-cat-count></p>
@@ -220,7 +222,6 @@
         <p class="prod__price" data-prod-price></p>
         <dl class="prod__facts">
           <div><dt>Tamanhos</dt><dd data-prod-sizes></dd></div>
-          <div><dt>Código</dt><dd data-prod-code></dd></div>
         </dl>
         <p class="prod__note">Escolha o tamanho e mande o pedido pelo Direct ou pelo WhatsApp: a gente confirma tudo com você por lá. <a href="/#guia" data-prod-guide>Torcedor ou Jogador? Veja a diferença</a></p>
       </div>

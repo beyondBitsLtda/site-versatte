@@ -2,24 +2,29 @@
 /*
   Monta o catálogo do site (seção Catálogo) a partir dos álbuns da fonte definida em catalogo.json.
 
-  Para cada álbum da página de categoria: lê o título, decide o modelo (Retrô, Jogador ou
-  Torcedor, pelas palavras do título), traduz o nome (time, temporada, titular/reserva...),
-  baixa a capa e algumas fotos, converte para WebP e gera js/catalogo.js, que o site carrega.
-  Preço e nome de cada modelo vêm do catalogo.json.
+  Lê uma página de categoria da fonte para cada liga do catalogo.json ("ligas"). Para cada álbum:
+  lê o título, decide o modelo (Retrô, Jogador ou Torcedor, pelas palavras do título), traduz o
+  nome (time, temporada, titular/reserva...), decide a liga (pelo time; seleções vão para
+  "Seleções"; time desconhecido fica na liga da categoria), baixa a capa e algumas fotos,
+  converte para WebP e gera js/catalogo.js, que o site carrega.
+  Preço e nome de cada modelo e o nome de cada liga vêm do catalogo.json.
 
   Uso (na pasta do site, precisa de Node 22+ e Edge ou Chrome instalados):
     node tools/catalogo.mjs            sincroniza: baixa só as camisas novas e tira as que saíram
-    node tools/catalogo.mjs --local    só regenera js/catalogo.js (preço, nomes, ajustes), sem baixar
+    node tools/catalogo.mjs --local    só regenera js/catalogo.js (preço, nomes, ligas, ajustes), sem baixar
     node tools/catalogo.mjs --simular  mostra como cada álbum seria classificado, sem gravar nada
     node tools/catalogo.mjs --tudo     baixa de novo as fotos de todas as camisas
     node tools/catalogo.mjs --limite=10  baixa no máximo 10 camisas novas (para testar)
+    node tools/catalogo.mjs --minutos=90 para de baixar depois de 90 minutos e grava o que já
+                                         baixou (o resto entra na próxima vez)
 
   Fotos de camisas que saíram da fonte são apagadas de assets/catalogo/.
 
   O link da fonte NÃO fica no catalogo.json (o repositório e os arquivos do site são públicos).
   A ferramenta procura, nesta ordem: variável CATALOGO_FONTE (segredo no GitHub Actions),
   arquivo catalogo.local.json (só no computador, fora do Git: { "fonte": "link" }) e, por
-  último, "fonte" no catalogo.json. O modo --local não precisa da fonte.
+  último, "fonte" no catalogo.json. Com "ligas" no catalogo.json, a fonte só informa o endereço
+  da loja; as categorias lidas são as de cada liga. O modo --local não precisa da fonte.
 */
 import { existsSync, mkdirSync, readFileSync, writeFileSync, rmSync, readdirSync } from 'node:fs';
 import path from 'node:path';
@@ -56,8 +61,11 @@ function readConfig() {
   const fontes = (process.env.CATALOGO_FONTE ? process.env.CATALOGO_FONTE.split(/\s*,\s*/) : [doLocal.fonte || cfg.fonte].flat()).filter(Boolean);
   if (!fontes.length && !local) throw new Error('informe a fonte do catálogo: variável CATALOGO_FONTE ou arquivo catalogo.local.json com { "fonte": "link" }');
   if (!Array.isArray(cfg.modelos) || !cfg.modelos.length) throw new Error('catalogo.json: a lista "modelos" está vazia');
+  // ligas: { id, nome, categoria } (categoria = número da página de categoria da fonte; pode ser uma lista)
+  const ligas = (cfg.ligas || []).map(l => ({ id: String(l.id || ''), nome: String(l.nome || l.id || ''), categorias: [l.categoria].flat().filter(Boolean).map(String) }));
+  if (ligas.some(l => !l.id)) throw new Error('catalogo.json: toda liga precisa de "id"');
   return {
-    fontes,
+    fontes, ligas,
     fotos: Math.max(1, cfg.fotosPorCamisa || 4),
     modelos: cfg.modelos.map(m => ({ ...m, palavras: (m.palavras || []).map(normal) })),
     excluir: (cfg.excluir || []).map(normal).filter(Boolean),
@@ -87,41 +95,374 @@ const normal = s => String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g,
 const palavras = s => ` ${normal(s).replace(/[^a-z0-9]+/g, ' ').trim()} `;
 const tem = (p, termo) => p.includes(` ${termo} `);
 
-const TIMES = [
-  ['Athletico Paranaense', /\bathletico\b|\batletico[- ]paranaense\b|\bparanaense\b/],
-  ['Atlético Mineiro', /\batletico\b|\bgalo\b|\bmineiro athletic\b/],
-  ['Flamengo', /\bflamengo\b|\bflamenco\b/],
-  ['Palmeiras', /\bpalmeiras\b/],
-  ['Corinthians', /\bcorinthians\b|\bcorintians\b/],
-  ['São Paulo', /\bsao paulo\b|\bspfc\b/],
-  ['Santos', /\bsantos\b/],
-  ['Vasco', /\bvasco\b|\bda gama\b/],
-  ['Fluminense', /\bfluminense\b/],
-  ['Botafogo', /\bbotafogo\b/],
-  ['Cruzeiro', /\bcruzeiro\b/],
-  ['Grêmio', /\bgremio\b/],
-  ['Internacional', /\binternacional\b|\binternational\b|\binter\b/],
-  ['Bahia', /\bbahia\b/],
-  ['Vitória', /\bvitoria\b|\bvictoria\b/],
-  ['Santa Cruz', /\bsanta cruz\b/],
-  ['Náutico', /\bnautico\b/],
-  ['Sport', /\bsport\b|\brecife\b/],
-  ['Fortaleza', /\bfortaleza\b/],
-  ['Ceará', /\bceara\b/],
-  ['Remo', /\bremo\b/],
-  ['Paysandu', /\bpaysandu?\b|\bpaisandu\b/],
-  ['Chapecoense', /\bchapecoense\b/],
-  ['Bragantino', /\bbragantino\b/],
-  ['Juventude', /\bjuventude\b/],
-  ['Goiás', /\bgoias\b/],
-  ['Coritiba', /\bcoritiba\b/],
-  ['América Mineiro', /\bamerica mineiro\b/],
-  ['Cuiabá', /\bcuiaba\b/],
-  ['Mirassol', /\bmirassol\b/],
-  ['Figueirense', /\bfigueirense\b/],
-  ["Newell's Old Boys", /\bnewell'?s\b/],
-  ['Brasil', /\bbrazil(ian)?\b|\bbrasil\b/],   // por último: "Copa do Brasil" aparece em camisas de clube
+/* Times de cada liga (a chave é o "id" da liga no catalogo.json). Na lista de uma liga, o primeiro
+   que bater vence. Ordem da busca: times da liga da categoria do álbum, seleções, times das outras
+   ligas (Brasil por último: nomes curtos como "inter", "atletico" e "sport" pegariam times de fora).
+   A fonte usa apelidos nos títulos: M-U (Manchester United), LWP (Liverpool), YW (Juventus),
+   Celtics (Celtic), riverbed (River Plate), Leyard Victory (Al-Nassr) etc. */
+const CLUBES = {
+  inglaterra: [
+    ['Manchester United', /\bm-?u\b|\bman(chester)? (united|utd)\b|\bmufc\b/],
+    ['Manchester City', /\bman(chester)? city\b|\bmcfc\b/],
+    ['Liverpool', /\bliverpool\b|\blfc\b|\blwp\b|\bwlp\b/],
+    ['Arsenal', /\barsenal\b/],
+    ['Chelsea', /\bchelsea\b/],
+    ['Tottenham', /\btottenham\b|\bspurs\b|\bhotspurs?\b/],
+    ['Newcastle', /\bnewcastle\b/],
+    ['Aston Villa', /\baston villa\b/],
+    ['Everton', /\beverton\b/],
+    ['Leeds United', /\bleeds\b/],
+    ['Leicester', /\bleicester\b/],
+    ['Nottingham Forest', /\bnottingham\b/],
+    ['Brighton', /\bbrighton\b/],
+    ['West Ham', /\bwest ham\b/],
+    ['Crystal Palace', /\bcrystal palace\b/],
+    ['Fulham', /\bfulham\b/],
+    ['Brentford', /\bbrentford\b/],
+    ['Bournemouth', /\bbournemouth\b/],
+    ['Wolverhampton', /\bwolves\b|\bwolverhampton\b/],
+    ['Southampton', /\bsouthampton\b/],
+    ['Sunderland', /\bsunderland\b/],
+    ['Burnley', /\bburnley\b/],
+    ['Ipswich', /\bipswich\b/],
+    ['Norwich', /\bnorwich\b/],
+    ['West Bromwich', /\bwest brom(wich)?\b/],
+    ['Stoke City', /\bstoke\b/],
+    ['Watford', /\bwatford\b/],
+    ['Middlesbrough', /\bmiddlesbrough\b/],
+    ['Sheffield Wednesday', /\bsheffield wednesday\b/],
+    ['Sheffield United', /\bsheffield (united|utd)\b/],
+    ['QPR', /\bqpr\b|\bqueens park rangers\b/],
+    ['Derby County', /\bderby county\b/],
+    ['Hull City', /\bhull\b/],
+    ['Coventry', /\bcoventry\b/],
+    ['Wycombe', /\bwycombe\b/],
+    ['Wrexham', /\bwrexham\b/],
+    ['Blackburn Rovers', /\bblackburn\b/],
+    ['AFC Richmond', /\brichmond\b/],
+  ],
+  espanha: [
+    ['Real Madrid', /\breal madrid\b/],
+    ['Atlético de Madrid', /\batletico (de )?madrid\b|\batleti\b/],
+    ['Barcelona', /\bbarcelona\b|\bbarca\b/],
+    ['Real Betis', /\bbetis\b/],
+    ['Valencia', /\bvalencia\b/],
+    ['Sevilla', /\bsevilla\b|\bseville\b/],
+    ['Athletic Bilbao', /\bathletic (club|bilbao)\b|\bbilbao\b/],
+    ['Real Sociedad', /\breal sociedad\b/],
+    ['Villarreal', /\bvillarreal\b/],
+    ['Deportivo La Coruña', /\bcoruna\b|\bdeportivo deportivo\b/],
+    ['Real Zaragoza', /\bzaragoza\b/],
+    ['Rayo Vallecano', /\brayo\b|\bvallecano\b/],
+    ['Málaga', /\bmalaga\b/],
+    ['Celta de Vigo', /\bcelta\b/],
+    ['Córdoba', /\bcordoba\b/],
+    ['Tenerife', /\btenerife\b/],
+    ['Las Palmas', /\blas palmas\b/],
+    ['Osasuna', /\bosasuna\b/],
+    ['Espanyol', /\bespanyol\b/],
+    ['Real Valladolid', /\bvalladolid\b/],
+    ['Granada', /\bgranada\b/],
+    ['Real Oviedo', /\boviedo\b/],
+    ['Sporting Gijón', /\bgijon\b/],
+    ['Girona', /\bgirona\b/],
+    ['Cádiz', /\bcadiz\b/],
+    ['Mallorca', /\bmallorca\b/],
+    ['Albacete', /\balbacete\b/],
+    ['Racing Santander', /\bsantander\b/],
+    ['Almería', /\balmeria\b/],
+    ['Leganés', /\bleganes\b/],
+    ['Getafe', /\bgetafe\b/],
+    ['Murcia', /\bmurcia\b/],
+    ['Recreativo Huelva', /\brecreativo\b|\bhuelva\b/],
+    ['Alavés', /\balaves\b/],
+    ['Levante', /\blevante\b/],
+    ['Elche', /\belche\b/],
+    ['Eibar', /\beibar\b/],
+    ['Algeciras', /\balgeciras\b/],
+  ],
+  italia: [
+    ['Inter de Milão', /\binter(nazionale)?\b(?! miami)/],   // antes do Milan ("inter milan")
+    ['Milan', /\bmilan\b|\bac (?=\d|centenary)/],   // "Retro AC 06/07"
+    ['Juventus', /\bjuventus\b|\bjuve\b|\byw\b/],
+    ['Roma', /\broma\b|\brome\b|\broman\b/],
+    ['Napoli', /\bnapoli\b|\bnaples\b/],
+    ['Lazio', /\blazio\b/],
+    ['Fiorentina', /\bfiorentina\b|\bflorence\b/],
+    ['Atalanta', /\batalanta\b|\batlanta\b(?! united)/],
+    ['Parma', /\bparma\b|\bpamma\b/],
+    ['Venezia', /\bvenezia\b|\bvenice(fc)?\b/],
+    ['Bologna', /\bbologna\b/],
+    ['Palermo', /\bpalermo\b/],
+    ['Lecce', /\blecce\b/],
+    ['Como', /\bcomo\b/],
+    ['Bari', /\bbari\b/],
+    ['Genoa', /\bgenoa\b/],
+    ['Sampdoria', /\bsampdoria\b/],
+    ['Torino', /\btorino\b/],
+    ['Udinese', /\budinese\b/],
+    ['Cagliari', /\bcagliari\b/],
+    ['Sassuolo', /\bsassuolo\b/],
+  ],
+  alemanha: [
+    ['Bayern de Munique', /\bbayern\b/],
+    ['Borussia Dortmund', /\bdortmund\b|\bbvb\b/],
+    ['Bayer Leverkusen', /\bleverkusen\b/],
+    ['Borussia Mönchengladbach', /\bmoe?nchengladbach\b|\bgladbach\b/],
+    ['RB Leipzig', /\bleipzig\b/],
+    ['Schalke 04', /\bschalke\b/],
+    ['Werder Bremen', /\bbremen\b/],
+    ['Colônia', /\bkoe?ln\b|\bcologne\b/],
+    ['St. Pauli', /\b(st|sankt)\.? ?pauli\b/],
+    ['Eintracht Frankfurt', /\bfrankfurt\b/],
+    ['Freiburg', /\bfreiburg\b/],
+    ['Hamburgo', /\bhamburg(er)?\b/],
+    ['Wolfsburg', /\bwolfsburg\b/],
+    ['Stuttgart', /\bstuttgart\b/],
+    ['Union Berlin', /\bunion berlin\b/],
+    ['Hertha Berlim', /\bhertha\b/],
+  ],
+  franca: [
+    ['PSG', /\bpsg\b|\bparis saint[- ]?germain\b|\bparis sg\b/],
+    ['Olympique de Marseille', /\bmarseille\b/],
+    ['Lyon', /\blyon(nais)?\b/],
+    ['Lille', /\blille\b/],
+    ['Monaco', /\bmonaco\b/],
+    ['Strasbourg', /\bstrasbourg\b/],
+    ['Lens', /\blens\b/],
+    ['Metz', /\bmetz\b/],
+    ['Nantes', /\bnantes\b/],
+    ['Rennes', /\brennes\b/],
+    ['Bordeaux', /\bbordeaux\b/],
+    ['Saint-Étienne', /\b(saint|st)[- ]?etienne\b/],
+    ['Nice', /\bogc nice\b/],
+  ],
+  portugal: [
+    ['Benfica', /\bbenfica\b/],
+    ['Porto', /\bporto\b/],
+    ['Sporting', /\bsporting\b(?!.*\bgijon\b)/],
+    ['Braga', /\bbraga\b/],
+    ['Vitória de Guimarães', /\bguimaraes\b|\bvitoria sc\b/],
+    ['Famalicão', /\bfamalicao\b/],
+    ['Estoril', /\bestoril\b/],
+    ['Boavista', /\bboavista\b/],
+    ['Marítimo', /\bmaritimo\b/],
+  ],
+  holanda: [
+    ['Ajax', /\bajax\b/],
+    ['Feyenoord', /\bfeyenoord\b/],
+    ['PSV', /\bpsv\b|\beindhoven\b/],
+    ['AZ Alkmaar', /\balkmaar\b/],
+    ['Twente', /\btwente\b/],
+  ],
+  argentina: [
+    ['Boca Juniors', /\bboca\b/],
+    ['River Plate', /\briver ?(plate|bed)\b/],
+    ['Racing', /\bracing\b(?!.*\bsantander\b)/],
+    ['Independiente', /\bindependiente\b(?! del valle)/],
+    ["Newell's Old Boys", /\bnewell'?s?\b/],
+    ['San Lorenzo', /\bsan lorenzo\b/],
+    ['Estudiantes', /\bestudiantes\b/],
+    ['Vélez Sarsfield', /\bvelez\b/],
+    ['Rosario Central', /\brosario central\b/],
+    ['Talleres', /\btalleres\b/],
+    ['Argentinos Juniors', /\bargentinos juniors\b/],
+    ['Lanús', /\blanus\b/],
+  ],
+  mexico: [
+    ['Chivas', /\bchivas\b|\bguadalajara\b/],
+    ['América', /(?<!copa )\bamericas?\b(?! mineiro)/],
+    ['Tigres', /\btigres\b|\btigers\b/],
+    ['Monterrey', /\bmonterr?ey\b/],
+    ['Cruz Azul', /\bcruz azul\b|\bcross\b/],
+    ['Pumas', /\bpumas\b|\bunam\b/],
+    ['Atlas', /\batlas\b/],
+    ['Toluca', /\btoluca\b/],
+    ['Santos Laguna', /\bsantos laguna\b/],
+    ['Pachuca', /\bpachuca\b/],
+  ],
+  eua: [
+    ['Inter Miami', /\bmiami\b/],
+    ['LA Galaxy', /\bgalaxy\b/],
+    ['LAFC', /\blafc\b|\blos angeles fc\b/],
+    ['New York City', /\bnew york city\b|\bnycfc\b|\byork city\b/],
+    ['New York Red Bulls', /\bred bulls\b/],
+    ['Atlanta United', /\batlanta united\b/],
+    ['Charlotte FC', /\bcharlotte\b/],
+    ['St. Louis City', /\bst\.? louis\b/],
+    ['Cincinnati', /\bcincinnati\b/],
+    ['CF Montréal', /\bmontreal\b/],
+    ['Seattle Sounders', /\bseattle\b/],
+    ['Orlando City', /\borlando\b/],
+    ['Toronto FC', /\btoronto\b/],
+    ['Columbus Crew', /\bcolumbus\b/],
+    ['Portland Timbers', /\bportland\b/],
+    ['Austin FC', /\baustin\b/],
+    ['Chicago Fire', /\bchicago\b/],
+  ],
+  chile: [
+    ['Colo-Colo', /\bcolo[- ]?colo\b/],
+    ['Universidad de Chile', /\b(universi(ty|dad)|univ) (of|de) chile\b|\bu de chile\b/],
+    ['Universidad Católica', /\bcatholic\b|\bcatolica\b/],
+  ],
+  escocia: [
+    ['Celtic', /\bceltics?\b/],
+    ['Rangers', /\brangers\b/],
+    ['Hibernian', /\bhibernian\b/],
+    ['Hearts', /\bhearts\b/],
+    ['Aberdeen', /\baberdeen\b/],
+  ],
+  arabia: [
+    ['Al-Nassr', /\bal[- ]?nassr\b|\b(riyadh|leyard) victory\b/],
+    ['Al-Hilal', /\bal[- ]?hilal\b|\b(riyadh|leyard) crescent\b/],
+    ['Al-Ittihad', /\bal[- ]?ittihad\b/],
+    ['Al-Ahli', /\bal[- ]?ahli\b/],
+  ],
+  outras: [
+    ['Galatasaray', /\bgalata(saray)?\b/],
+    ['Fenerbahçe', /\bfenerbahce\b/],
+    ['Besiktas', /\bbesiktas\b/],
+    ['Trabzonspor', /\btrabzonspor\b/],
+    ['Olympiacos', /\bolympiak?c?os\b/],
+    ['Panathinaikos', /\bpanathinaikos\b/],
+    ['Estrela Vermelha', /\bcrvena zvezda\b|\bred star belgrade\b/],
+    ['Legia Varsóvia', /\blegia\b/],
+    ['AIK', /\baik\b/],
+    ['Red Bull Salzburg', /\bsalzburg\b/],
+    ['Peñarol', /\bpenarol\b/],
+    ['Atlético Nacional', /\batletico nacional\b/],
+    ['Al Ahly', /\bal[- ]?ahly\b|\bcairo na[ct]ional\b/],
+    ['Nacional', /\bnacional\b|\buruguay(an)? national\b/],   // Club Nacional (Uruguai), depois dos outros "nacional"
+    ['Millonarios', /\bmillonarios\b|\bmillionaires?\b/],
+    ['Olimpia', /\bolimpia\b|\bolympia\b/],
+    ['Urawa Reds', /\burawa\b/],
+  ],
+  brasil: [
+    ['Athletico Paranaense', /\bathletico\b|\batletico[- ]paranaense\b|\bparanaense\b/],
+    ['Atlético Mineiro', /\batletico\b|\bgalo\b|\bmineiro athletic\b/],
+    ['Flamengo', /\bflamengo\b|\bflamenco\b/],
+    ['Palmeiras', /\bpalmeiras\b/],
+    ['Corinthians', /\bcorinthians\b|\bcorintians\b/],
+    ['São Paulo', /\bsao paulo\b|\bspfc\b/],
+    ['Santos', /\bsantos\b/],
+    ['Vasco', /\bvasco\b|\bda gama\b/],
+    ['Fluminense', /\bfluminense\b/],
+    ['Botafogo', /\bbotafogo\b/],
+    ['Cruzeiro', /\bcruzeiro\b/],
+    ['Grêmio', /\bgremio\b/],
+    ['Internacional', /\binternacional\b|\binternational\b|\binter\b/],
+    ['Bahia', /\bbahia\b/],
+    ['Vitória', /\bvitoria\b|\bvictoria\b/],
+    ['Santa Cruz', /\bsanta cruz\b/],
+    ['Náutico', /\bnautico\b/],
+    ['Sport', /\bsport\b|\brecife\b/],
+    ['Fortaleza', /\bfortaleza\b/],
+    ['Ceará', /\bceara\b/],
+    ['Remo', /\bremo\b/],
+    ['Paysandu', /\bpaysandu?\b|\bpaisandu\b/],
+    ['Chapecoense', /\bchapecoense\b/],
+    ['Bragantino', /\bbragantino\b/],
+    ['Juventude', /\bjuventude\b/],
+    ['Goiás', /\bgoias\b/],
+    ['Coritiba', /\bcoritiba\b/],
+    ['América Mineiro', /\bamerica mineiro\b/],
+    ['Cuiabá', /\bcuiaba\b/],
+    ['Mirassol', /\bmirassol\b/],
+    ['Figueirense', /\bfigueirense\b/],
+  ],
+};
+// seleções (liga "selecoes"); a Seleção Brasileira vem depois dos clubes porque "Copa do Brasil"
+// aparece em camisas de clube
+const SELECOES = [
+  ['Brasil', /\bbrazil(ian)?\b|\bbrasil\b/],
+  ['Argentina', /\bargentin(a|e)\b/],
+  ['Alemanha', /\bgerman(y)?\b|\bdeutschland\b/],
+  ['Espanha', /\bspain\b|\bspanish\b|\bespana\b/],
+  ['França', /\bfrance\b|\bfrench\b/],
+  ['Itália', /\bital(y|ia|ian)\b/],
+  ['Inglaterra', /\bengland\b/],
+  ['Portugal', /\bportugal\b|\bportuguese\b/],
+  ['Holanda', /\bnetherlands?\b|\bholland\b|\bdutch\b/],
+  ['Bélgica', /\bbelgi(um|an)\b/],
+  ['Croácia', /\bcroatia\b/],
+  ['Uruguai', /(?<!\bnacional )\burugua(y|yan)\b(?! (nacional|national))/],
+  ['Colômbia', /\bcolomb(ia|ian)\b|\bcolumbia\b/],
+  ['México', /\bmexic(o|an)\b/],
+  ['Estados Unidos', /\busa\b|\busmnt\b|\bunited states\b/],
+  ['Japão', /\bjapan(ese)?\b/],
+  ['Coreia do Sul', /\b(south )?korea(n)?\b/],
+  ['Chile', /(?<!\b(of|de) )\bchile\b/],
+  ['Escócia', /\bscotland\b|\bscottish\b/],
+  ['Irlanda do Norte', /\bnorthern ireland\b/],
+  ['Irlanda', /\bireland\b|\birish\b/],
+  ['País de Gales', /\bwales\b|\bwelsh\b/],
+  ['Nigéria', /\bnigeria\b/],
+  ['Senegal', /\bsenegal\b/],
+  ['Equador', /\becuador\b/],
+  ['Mali', /\bmali\b/],
+  ['Noruega', /\bnorway\b/],
+  ['Guatemala', /\bguatemala\b/],
+  ['Turquia', /\bturk(iye|ey)\b/],
+  ['Gana', /\bghana\b/],
+  ['África do Sul', /\bsouth africa\b/],
+  ['Austrália', /\baustralia\b/],
+  ['Suécia', /\bswed(en|ish)\b/],
+  ['Suíça', /\bswitzerland\b|\bswiss\b/],
+  ['Nova Zelândia', /\bzealand\b/],
+  ['Canadá', /\bcanada\b/],
+  ['Áustria', /\baustria\b/],
+  ['Panamá', /\bpanama\b/],
+  ['Haiti', /\bhaiti\b/],
+  ['Jamaica', /\bjamaica\b/],
+  ['Camarões', /\bcameroon\b/],
+  ['Romênia', /\bromania\b/],
+  ['Egito', /\begypt(ian)?\b/],
+  ['Arábia Saudita', /\bsaudi\b/],
+  ['Venezuela', /\bvenezuela(n)?\b/],
+  ['Peru', /\bperu\b/],
+  ['Polônia', /\bpoland\b|\bpolish\b/],
+  ['Paraguai', /\bparaguay\b/],
+  ['Grécia', /\bgree(ce|k)\b/],
+  ['Congo', /\bcongo\b/],
+  ['Marrocos', /\bmorocco\b/],
+  ['Hungria', /\bhungary\b/],
+  ['Ucrânia', /\bukraine\b/],
+  ['Palestina', /\bpalestin(e|ian)?\b/],
+  ['União Soviética', /\bsoviet\b|\bussr\b|\bcccp\b/],
+  ['Uzbequistão', /\buzbekistan\b/],
+  ['Costa do Marfim', /\bcote d'? ?ivoire\b|\bivory coast\b/],
+  ['Cabo Verde', /\bcape verde\b|\bcabo verde\b/],
+  ['Curaçao', /\bcuracao\b/],
+  ['Catar', /\bqatar\b/],
+  ['Emirados Árabes', /\buae\b/],
+  ['Argélia', /\balgeria\b/],
+  ['Islândia', /\biceland\b/],
+  ['República Tcheca', /\bczech\b/],
+  ['Filipinas', /\bphilippines\b/],
+  ['Malásia', /\bmalaysia\b/],
+  ['Albânia', /\balbania\b/],
+  ['Dinamarca', /\bdenmark\b|\bdanish\b/],
+  ['China', /\bchina\b|\bchinese\b/],
+  ['Sérvia', /\bserbia\b/],
+  ['Rússia', /\brussia\b/],
+  ['Bolívia', /\bbolivia\b/],
+  ['Costa Rica', /\bcosta rica\b/],
+  ['Honduras', /\bhonduras\b/],
+  ['Irã', /\biran\b/],
+  ['Tunísia', /\btunisia\b/],
 ];
+// busca: liga da categoria, seleções, depois as outras ligas (Brasil por último)
+const ORDEM_LIGAS = [...Object.keys(CLUBES).filter(id => id !== 'brasil'), 'brasil'];
+function acharTime(texto, ligaFonte) {
+  const ordem = [ligaFonte, 'selecoes', ...ORDEM_LIGAS.filter(id => id !== ligaFonte)];
+  for (const liga of ordem) {
+    const achou = (liga === 'selecoes' ? SELECOES : CLUBES[liga] || []).find(([, re]) => re.test(texto));
+    if (achou) return { time: achou[0], liga };
+  }
+  return { time: '', liga: ligaFonte };
+}
+// liga de um time pelo nome (para "ajustes" que mudam só o time)
+const LIGA_DO_TIME = new Map([...SELECOES.map(([n]) => [n, 'selecoes']), ...Object.entries(CLUBES).flatMap(([liga, l]) => l.map(([n]) => [n, liga]))]);
 const TIPOS = [   // a primeira que bater vence ("third away" é a terceira camisa)
   ['Goleiro', /\bgoalkeeper\b|\bgk\b/],
   ['Quarta', /\bfourth\b|\b4th\b|\biiii\b|\b4 away\b/],
@@ -157,11 +498,11 @@ function temporada(t) {
   return '';
 }
 
-// "Retro Flamengo 00/01 Home S-XXL" -> { time: "Flamengo", detalhe: "2000/01 · Titular", max: "2XL" }
-function lerTitulo(titulo) {
+// "Retro Flamengo 00/01 Home S-XXL" -> { time: "Flamengo", liga: "brasil", detalhe: "2000/01 · Titular", max: "2XL" }
+function lerTitulo(titulo, ligaFonte = '') {
   const t = normal(titulo);
-  const separado = t.replace(/([a-z])(\d)/g, '$1 $2');   // "Bahia13/14" -> "bahia 13/14"
-  const time = (TIMES.find(([, re]) => re.test(separado)) || [])[0] || '';
+  const separado = t.replace(/([a-z])(\d)/g, '$1 $2').replace(/(\d)([a-z])/g, '$1 $2');   // "Bahia13/14", "80/81Celtics", "26YW"
+  const { time, liga } = acharTime(separado, ligaFonte);
   const tipo = (TIPOS.find(([, re]) => re.test(t)) || [])[0] || '';
   const edicoes = EDICOES.filter(([, re]) => re.test(t)).map(([n]) => n);
   if (time === 'Brasil') { const i = edicoes.indexOf('Copa do Brasil'); if (i >= 0) edicoes.splice(i, 1); }
@@ -173,7 +514,7 @@ function lerTitulo(titulo) {
     : /\bsponsors?\b/.test(t) ? 'com patrocínios' : '';
   const detalhe = [temporada(t), tipo, ...edicoes, apelido, ...cores.slice(0, 2), patrocinio].filter(Boolean).join(' · ');
   const tam = [...t.matchAll(/(?<![a-z])(x{1,5}l|[2-6]xl)(?![a-z])/g)].map(m => TAMANHO_DO_TITULO[m[1]]).filter(Boolean).pop();
-  return { time, detalhe, max: tam || '', temporada: temporada(t) };
+  return { time, liga, detalhe, max: tam || '', temporada: temporada(t) };
 }
 
 function classificar(album, cfg) {
@@ -201,7 +542,7 @@ async function pegar(url, referer, tipo = 'text') {
   }
 }
 
-async function lerCategoria(fonte) {
+async function lerCategoria(fonte, rotulo = 'a fonte') {
   const base = new URL(fonte);
   const albuns = [];
   for (let pagina = 1, total = 1; pagina <= total; pagina++) {
@@ -211,7 +552,7 @@ async function lerCategoria(fonte) {
     const re = /class="album__main"\s+title="([^"]*)"\s+href="\/albums\/(\d+)[^"]*"[\s\S]*?data-src="([^"]+)"[\s\S]*?album__photonumber">(\d+)</g;
     let n = 0;
     for (const m of html.matchAll(re)) { albuns.push({ id: m[2], titulo: decode(m[1]).trim(), capa: m[3], qtd: +m[4] }); n++; }
-    process.stdout.write(`\r  lendo a fonte: página ${pagina} de ${total} (${albuns.length} álbuns)`);
+    process.stdout.write(`\r  lendo ${rotulo}: página ${pagina} de ${total} (${albuns.length} álbuns)`);
     if (!n) break;
     await sleep(300);
   }
@@ -232,19 +573,29 @@ const cfg = readConfig();
 const cache = readCache();
 
 // 1. lista de álbuns da fonte (ou, no modo --local, o que já foi baixado)
+const ligaPadrao = cfg.ligas[0]?.id || '';   // camisas baixadas antes das ligas vieram da 1ª categoria
 let lista;
 if (local) {
-  lista = [...cache.values()].map(c => ({ id: c.id, titulo: c.titulo }));
+  lista = [...cache.values()].map(c => ({ id: c.id, titulo: c.titulo, ligaFonte: c.ligaFonte || ligaPadrao }));
   console.log(`Modo local: ${lista.length} camisas já baixadas, sem consultar a fonte.`);
+} else if (cfg.ligas.some(l => l.categorias.length)) {
+  // uma página de categoria por liga, na ordem do catalogo.json; a fonte só dá o endereço da loja
+  const origem = new URL(cfg.fontes[0]).origin;
+  lista = [];
+  for (const liga of cfg.ligas) for (const categoria of liga.categorias) {
+    const { albuns } = await lerCategoria(`${origem}/categories/${categoria}`, liga.nome);
+    lista.push(...albuns.map(a => ({ ...a, origem, ligaFonte: liga.id })));
+  }
 } else {
   lista = [];
   for (const fonte of cfg.fontes) {
     const { origem, albuns } = await lerCategoria(fonte);
-    lista.push(...albuns.map(a => ({ ...a, origem })));
+    lista.push(...albuns.map(a => ({ ...a, origem, ligaFonte: ligaPadrao })));
   }
 }
 
-// 2. classifica, traduz e tira repetidos (mesmo título) e escondidos
+// 2. classifica, traduz e tira repetidos (mesmo título, mesmo em ligas diferentes) e escondidos
+const idsLigas = new Set(cfg.ligas.map(l => l.id));
 const vistos = new Set(), fora = [], semTime = [];
 const camisas = [];
 for (const a of lista) {
@@ -255,13 +606,16 @@ for (const a of lista) {
   const modelo = ajuste.modelo || classificar(a, cfg);
   if (!modelo) { fora.push(a.titulo); continue; }
   if (cfg.esconder.has(a.id)) continue;
-  const lido = lerTitulo(a.titulo);
+  const lido = lerTitulo(a.titulo, a.ligaFonte);
   // álbum sem time e sem temporada no título não é camisa (ex.: "......", capa de seção)
   if (!ajuste.modelo && !lido.time && !lido.temporada) { fora.push(a.titulo); continue; }
   const time = ajuste.time || lido.time;
+  // liga: a do ajuste, a do time (pelo nome) ou a da categoria; liga fora do catalogo.json vai para "outras"
+  const ligaLida = ajuste.liga || (ajuste.time ? LIGA_DO_TIME.get(ajuste.time) : lido.liga);
+  const liga = [ligaLida, a.ligaFonte, 'outras'].find(id => idsLigas.has(id)) || '';
   if (!time) semTime.push(`${a.id}  ${a.titulo}`);
   camisas.push({
-    ...a, modelo,
+    ...a, modelo, liga,
     time: time || 'Outros',
     detalhe: ajuste.detalhe ?? (lido.time ? lido.detalhe : a.titulo.replace(/\bS ?[-\u2010-\u2015] ?\S*XL\S*/i, '').trim()),
     max: ajuste.max || lido.max,
@@ -272,18 +626,30 @@ const porModelo = id => camisas.filter(c => c.modelo === id).length;
 console.log(`Camisas no catálogo: ${camisas.length} (${cfg.modelos.map(m => `${m.nome} ${porModelo(m.id)}`).join(', ')}) · fora do catálogo: ${fora.length}`);
 
 if (simular) {
+  const nomeLiga = id => cfg.ligas.find(l => l.id === id)?.nome || '';
   for (const m of cfg.modelos) {
     console.log(`\n== ${m.nome} (R$ ${m.preco.toFixed(2).replace('.', ',')})`);
-    for (const c of camisas.filter(c => c.modelo === m.id)) console.log(`  ${c.id}  ${c.time.padEnd(20)} ${c.detalhe.padEnd(48)} ${c.max.padEnd(4)} ← ${c.titulo}`);
+    for (const c of camisas.filter(c => c.modelo === m.id)) console.log(`  ${c.id}  ${nomeLiga(c.liga).padEnd(15)} ${c.time.padEnd(22)} ${c.detalhe.padEnd(44)} ${c.max.padEnd(4)} ← ${c.titulo}`);
   }
   console.log(`\n== Fora do catálogo (palavras de "excluir")\n  ${fora.join('\n  ')}`);
   if (semTime.length) console.log(`\n== Sem time reconhecido (aparecem como "Outros"; corrija em "ajustes")\n  ${semTime.join('\n  ')}`);
+  if (cfg.ligas.length) {
+    console.log('\n== Times por liga');
+    for (const l of cfg.ligas) {
+      const daLiga = camisas.filter(c => c.liga === l.id);
+      const times = new Map();
+      daLiga.forEach(c => times.set(c.time, (times.get(c.time) || 0) + 1));
+      console.log(`  ${l.nome} (${daLiga.length}): ${[...times].sort((x, y) => y[1] - x[1]).map(([t, q]) => `${t} ${q}`).join(', ')}`);
+    }
+  }
   process.exit(0);
 }
 
 // 3. baixa as fotos das camisas novas
 const fotosOk = c => c?.capa && [c.capa, ...(c.fotos || [])].every(f => existsSync(path.join(ROOT, f)));
 const limite = +(args.find(a => a.startsWith('--limite=')) || '').split('=')[1] || Infinity;   // para testes
+const minutos = +(args.find(a => a.startsWith('--minutos=')) || '').split('=')[1] || Infinity;
+const prazo = Date.now() + minutos * 60e3;   // depois disso não começa camisa nova (o resto fica para a próxima vez)
 const baixar = local ? [] : camisas.filter(c => tudo || !fotosOk(cache.get(c.id))).slice(0, limite);
 let falhas = 0;
 if (baixar.length) {
@@ -292,7 +658,7 @@ if (baixar.length) {
   let feitas = 0;
   const fila = [...baixar];
   const trabalhador = async () => {
-    for (let c; (c = fila.shift());) {
+    for (let c; Date.now() < prazo && (c = fila.shift());) {
       try {
         const doAlbum = c.qtd ? await fotosDoAlbum(c.origem, c.id) : [];
         const capaUrl = medio(c.capa);
@@ -319,22 +685,25 @@ if (baixar.length) {
   try { await Promise.all(Array.from({ length: PARALELO }, trabalhador)); }
   finally { browser.close(); }
   process.stdout.write('\n');
+  if (fila.length) console.log(`Tempo esgotado (--minutos=${minutos}): ${fila.length} camisa(s) ficaram para a próxima vez.`);
 }
 
-// 4. gera js/catalogo.js (na ordem da fonte: as mais recentes primeiro)
+// 4. gera js/catalogo.js (na ordem da fonte: liga por liga, as mais recentes primeiro)
 const saida = camisas.filter(c => fotosOk(cache.get(c.id))).map(c => {
   const { capa, fotos } = cache.get(c.id);
   const nome = [c.time === 'Outros' ? '' : c.time, c.detalhe.replaceAll(' · ', ' ')].filter(Boolean).join(' ');
-  return { id: c.id, modelo: c.modelo, time: c.time, detalhe: c.detalhe, nome, max: c.max, titulo: c.titulo, capa, fotos };
+  return { id: c.id, modelo: c.modelo, liga: c.liga, ligaFonte: c.ligaFonte, time: c.time, detalhe: c.detalhe, nome, max: c.max, titulo: c.titulo, capa, fotos };
 });
 const hoje = new Date().toLocaleDateString('sv-SE', { timeZone: 'America/Sao_Paulo' });
 const modelos = cfg.modelos.map(({ id, nome, preco }) => ({ id, nome, preco }));
+// ligas com camisas, na ordem do catalogo.json (o site mostra o filtro nessa ordem)
+const ligas = cfg.ligas.filter(l => saida.some(c => c.liga === l.id)).map(({ id, nome }) => ({ id, nome }));
 // camisas fixas nos destaques da home (o site completa com as mais recentes de cada modelo)
 const noCatalogo = new Set(saida.map(c => c.id));
 const destaques = cfg.destaques.filter(id => noCatalogo.has(id));
 const semDestaque = cfg.destaques.filter(id => !noCatalogo.has(id));
 if (semDestaque.length) console.log(`Destaques que não estão no catálogo (ignorados): ${semDestaque.join(', ')}`);
-writeFileSync(DATA_FILE, `${HEADER}{\n  "atualizado": "${hoje}",\n  "tamanhos": ${JSON.stringify(TAMANHOS)},\n  "modelos": ${JSON.stringify(modelos)},\n  "destaques": ${JSON.stringify(destaques)},\n  "camisas": [\n${saida.map(c => `    ${JSON.stringify(c)}`).join(',\n')}\n  ]\n};\n`);
+writeFileSync(DATA_FILE, `${HEADER}{\n  "atualizado": "${hoje}",\n  "tamanhos": ${JSON.stringify(TAMANHOS)},\n  "modelos": ${JSON.stringify(modelos)},\n  "ligas": ${JSON.stringify(ligas)},\n  "destaques": ${JSON.stringify(destaques)},\n  "camisas": [\n${saida.map(c => `    ${JSON.stringify(c)}`).join(',\n')}\n  ]\n};\n`);
 
 // 5. apaga fotos de camisas que saíram da fonte (ou foram escondidas)
 if (!local && existsSync(FOTOS_DIR)) {

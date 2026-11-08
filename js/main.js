@@ -554,7 +554,6 @@
     $('[data-prod-detail]', product).textContent = c.detalhe;
     $('[data-prod-price]', product).innerHTML = `<small>R$</small>${esc(brl(m.preco).replace(/^R\$\s*/, ''))}`;
     $('[data-prod-sizes]', product).textContent = faixa(c);
-    $('[data-prod-code]', product).textContent = c.id;
     $('[data-prod-wa]', product).href = waLink(mensagemCatalogo(c));
     $('.ig__box', product).scrollTop = 0;
     openModal(product);
@@ -576,7 +575,11 @@
   // frase de cada modelo nos atalhos da home (o id é o do catalogo.json)
   const FRASE_MODELO = { torcedor: 'Escudo bordado e conforto pro dia a dia', jogador: 'A mesma tecnologia usada em campo', retro: 'Os clássicos que marcaram época' };
   const semAcento = s => String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
-  CAT.camisas.forEach(c => { c.busca = semAcento(`${c.nome} ${c.detalhe}`); });
+  // ligas (catalogo.json > "ligas"), na ordem em que aparecem no filtro
+  const LIGAS = CAT.ligas || [];
+  const nomeLiga = id => LIGAS.find(l => l.id === id)?.nome || '';
+  // a busca também acha pela liga ("premier", "seleção")
+  CAT.camisas.forEach(c => { c.busca = semAcento(`${c.nome} ${c.detalhe} ${nomeLiga(c.liga)}${c.liga === 'selecoes' ? ' selecao' : ''}`); });
   const precoHTML = m => `<small>R$</small>${esc(brl(m.preco).replace(/^R\$\s*/, ''))}`;
   const doModelo = id => CAT.camisas.filter(c => c.modelo === id);
 
@@ -628,17 +631,34 @@
     $('#catalogo').hidden = true;   // sem js/catalogo.js, a seção não aparece
   }
 
-  /* ---------- catálogo completo (catalogo.html): abas por modelo, filtro por time, busca e "ver mais" ---------- */
+  /* ---------- catálogo completo (catalogo.html): abas por modelo, filtros por liga e time, busca e "ver mais" ---------- */
   const catGrid = $('[data-cat-grid]');
-  const cat = { modelo: MODELOS[0]?.id, time: '', busca: '', limite: POR_PAGINA };
+  const cat = { modelo: MODELOS[0]?.id, liga: '', time: '', busca: '', limite: POR_PAGINA };
   const daAba = (modelo = cat.modelo) => doModelo(modelo);
   const termos = () => semAcento(cat.busca).split(/\s+/).filter(Boolean);
   const confere = c => termos().every(t => c.busca.includes(t));
-  const filtradas = () => daAba().filter(c => (!cat.time || c.time === cat.time) && confere(c));
+  const naLiga = c => !cat.liga || c.liga === cat.liga;
+  const passa = c => naLiga(c) && (!cat.time || c.time === cat.time) && confere(c);
+  const filtradas = () => daAba().filter(passa);
 
+  // ligas da aba (com a busca aplicada); some se o catálogo não tiver ligas
+  const renderLigas = () => {
+    const box = $('[data-cat-leagues]');
+    if (!box) return;
+    const contagem = new Map();
+    daAba().filter(confere).forEach(c => contagem.set(c.liga, (contagem.get(c.liga) || 0) + 1));
+    if (cat.liga && !contagem.has(cat.liga)) cat.liga = '';
+    const ligas = LIGAS.filter(l => contagem.has(l.id)).map(l => [l.id, l.nome, contagem.get(l.id)]);
+    const total = [...contagem.values()].reduce((n, q) => n + q, 0);
+    box.hidden = LIGAS.length < 2;
+    box.innerHTML = [['', 'Todas as ligas', total], ...ligas].map(([id, nome, q]) =>
+      `<button class="catalog__league" type="button" data-cat-liga="${esc(id)}" aria-pressed="${id === cat.liga}">${esc(nome)} <small>${q}</small></button>`).join('');
+  };
+
+  // times da liga escolhida (ou de todas), do que tem mais camisas ao que tem menos
   const renderTimes = () => {
     const contagem = new Map();
-    daAba().filter(confere).forEach(c => contagem.set(c.time, (contagem.get(c.time) || 0) + 1));
+    daAba().filter(c => naLiga(c) && confere(c)).forEach(c => contagem.set(c.time, (contagem.get(c.time) || 0) + 1));
     if (cat.time && !contagem.has(cat.time)) cat.time = '';
     const times = [...contagem].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], 'pt-BR'));
     const total = times.reduce((n, [, q]) => n + q, 0);
@@ -653,7 +673,7 @@
     if (soMais) catGrid.insertAdjacentHTML('beforeend', visiveis.slice(catGrid.children.length).map(c => catCard(c)).join(''));
     else catGrid.innerHTML = visiveis.map(c => catCard(c)).join('');
     $('[data-cat-count]').textContent = lista.length
-      ? `${lista.length} camisa${lista.length > 1 ? 's' : ''} ${m ? `${m.nome} · ${brl(m.preco)} cada` : ''}${cat.time ? ` · ${cat.time}` : ''}`
+      ? `${lista.length} camisa${lista.length > 1 ? 's' : ''} ${m ? `${m.nome} · ${brl(m.preco)} cada` : ''}${cat.liga ? ` · ${nomeLiga(cat.liga)}` : ''}${cat.time ? ` · ${cat.time}` : ''}`
       : '';
     $('[data-cat-more-box]').hidden = visiveis.length >= lista.length;
     // sem resultado: mostra se a busca acha camisas nos outros modelos
@@ -661,7 +681,7 @@
     $('[data-cat-empty]').hidden = !vazio;
     if (vazio) {
       $('[data-cat-other]').innerHTML = MODELOS.filter(x => x.id !== cat.modelo).map(x => {
-        const q = daAba(x.id).filter(c => (!cat.time || c.time === cat.time) && confere(c)).length;
+        const q = daAba(x.id).filter(passa).length;
         return q ? `<button class="btn btn--line btn--sm" type="button" data-cat-tab="${esc(x.id)}">Ver ${q} no modelo ${esc(x.nome)}</button>` : '';
       }).join('');
     }
@@ -678,6 +698,7 @@
     });
     $$('[data-cat-head-models] a').forEach(a => a.classList.toggle('is-on', a.hash === `#${id}`));
     if (marcar) history.replaceState(null, '', `#${id}`);
+    renderLigas();
     renderTimes();
     renderGrid();
   };
@@ -699,7 +720,18 @@
     let espera;
     $('[data-cat-search]').addEventListener('input', e => {
       clearTimeout(espera);
-      espera = setTimeout(() => { cat.busca = e.target.value; cat.limite = POR_PAGINA; renderTimes(); renderGrid(); }, 160);
+      espera = setTimeout(() => { cat.busca = e.target.value; cat.limite = POR_PAGINA; renderLigas(); renderTimes(); renderGrid(); }, 160);
+    });
+    // liga: a fileira de times passa a mostrar só os times dela (e volta para o começo)
+    $('[data-cat-leagues]')?.addEventListener('click', e => {
+      const b = e.target.closest('[data-cat-liga]');
+      if (!b) return;
+      cat.liga = b.dataset.catLiga;
+      cat.limite = POR_PAGINA;
+      $$('[data-cat-liga]').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+      renderTimes();
+      $('[data-cat-teams]').scrollLeft = 0;
+      renderGrid();
     });
     $('[data-cat-teams]').addEventListener('click', e => {
       const b = e.target.closest('[data-cat-time]');

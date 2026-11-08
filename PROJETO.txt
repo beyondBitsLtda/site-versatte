@@ -88,9 +88,11 @@ CATÁLOGO (catalogo.html, aberto no endereço versattesports.com.br/catalogo):
    o preço de cada modelo (atalho para a aba). Para trocar a foto, gere as duas
    versões em WebP com esses nomes (a do celular é um recorte em pé, 3:4).
 2) Catálogo completo (js/catalogo.js): abas por modelo (Torcedor, Jogador, Retrô,
-   do mais barato ao mais caro), filtro por time, busca e "Ver mais camisas"
-   (24 por vez). O endereço guarda a aba: /catalogo#torcedor, #jogador,
-   #retro. Tocar na foto abre a camisa (fotos, preço, tamanhos e código).
+   do mais barato ao mais caro), filtro por liga (Brasileirão, Seleções,
+   Premier League, La Liga... na ordem do catalogo.json), filtro por time (só
+   os times da liga escolhida), busca (acha também pela liga) e "Ver mais
+   camisas" (24 por vez). O endereço guarda a aba: /catalogo#torcedor,
+   #jogador, #retro. Tocar na foto abre a camisa (fotos, preço e tamanhos).
 3) Como comprar e rodapé (iguais aos da home).
 Menu, rodapé e as janelas da camisa, do pedido e do Direct estão escritos nas
 duas páginas: ao mudar um deles (ex.: número do WhatsApp, links do menu), mude
@@ -143,17 +145,23 @@ volta às seções da home (index.html#guia etc.).
 
 4.1a Catálogo (catalogo.json)
     A ferramenta tools/catalogo.mjs lê todos os álbuns da página de categoria
-    em "fonte", decide o modelo de cada camisa pelas palavras do título e
-    traduz o nome (ex.: "Retro Flamengo 00/01 Home S-XXL" vira "Flamengo ·
-    2000/01 · Titular", tamanhos P ao 2XL). Baixa a capa e até "fotosPorCamisa"
-    fotos de cada álbum, converte para WebP e gera js/catalogo.js.
+    de cada liga (campo "ligas"), decide o modelo de cada camisa pelas palavras
+    do título e traduz o nome (ex.: "Retro Flamengo 00/01 Home S-XXL" vira
+    "Flamengo · 2000/01 · Titular", tamanhos P ao 2XL). Baixa a capa e até
+    "fotosPorCamisa" fotos de cada álbum, converte para WebP e gera js/catalogo.js.
       node tools/catalogo.mjs            sincroniza: baixa só as camisas novas
                                          e apaga as que saíram da fonte
-      node tools/catalogo.mjs --local    só aplica preços/nomes/ajustes, sem baixar
+      node tools/catalogo.mjs --local    só aplica preços/nomes/ligas/ajustes, sem baixar
       node tools/catalogo.mjs --simular  lista como cada álbum seria classificado
+                                         (no fim: os times de cada liga e as
+                                         camisas sem time reconhecido)
       node tools/catalogo.mjs --tudo     baixa de novo as fotos de todas
+      node tools/catalogo.mjs --minutos=90  para de baixar depois de 90 min e
+                                         grava o que já baixou (o resto entra
+                                         na próxima vez)
     O GitHub Actions (.github/workflows/catalogo.yml) faz a sincronização toda
-    segunda-feira às 6h e publica sozinho; também dá para rodar na hora pela aba
+    segunda-feira às 6h e publica sozinho (com --minutos=95, para caber no
+    limite de 2 horas do GitHub); também dá para rodar na hora pela aba
     Actions > Catálogo > Run workflow.
     Campos do catalogo.json:
       fonte          fica VAZIO de propósito: o repositório é público e os
@@ -165,29 +173,54 @@ volta às seções da home (index.html#guia etc.).
                          ({ "fonte": "link" }), que está no .gitignore e nunca
                          vai para o GitHub. Num computador novo, crie esse arquivo.
                      O modo --local (preços, nomes, ajustes) não precisa do link.
+                     Com "ligas", o link só informa o endereço da loja: as
+                     páginas lidas são as categorias de cada liga.
       fotosPorCamisa quantas fotos cada camisa mostra (hoje 4)
       modelos        id, nome, preço e palavras do título que identificam o
                      modelo; a primeira regra que bater vence (Retrô: retro,
                      vintage, reissue; Jogador: player); o modelo sem palavras
                      (Torcedor) fica com o resto. PREÇOS: mude aqui e rode
                      node tools/catalogo.mjs --local
-      excluir        palavras que tiram o álbum do catálogo (feminina, infantil,
+      ligas          filtro de ligas do site, nesta ordem. Cada liga tem:
+                       id         fixo (não mude: a ferramenta usa para achar
+                                  os times de cada liga, na lista CLUBES do
+                                  tools/catalogo.mjs)
+                       nome       como aparece no site (pode mudar à vontade)
+                       categoria  número da página de categoria da fonte de
+                                  onde vêm as camisas da liga (um número ou
+                                  uma lista). "selecoes" não tem categoria.
+                     A liga de cada camisa vem do TIME, não da categoria: a
+                     fonte às vezes põe camisas na categoria errada (ex.: um
+                     Bayern na categoria do Chile). Seleções vão para
+                     "Seleções" (inclusive a Seleção Brasileira). Time
+                     desconhecido fica na liga da categoria, como "Outros".
+                     Para reconhecer um time novo, acrescente o nome e o
+                     apelido do título na lista da liga em CLUBES (ou SELECOES)
+                     no tools/catalogo.mjs. A fonte usa apelidos: M-U
+                     (Manchester United), LWP (Liverpool), YW (Juventus),
+                     Celtics (Celtic), riverbed (River Plate) etc.
+                     Os números das categorias podem ficar aqui (público):
+                     sem o link da fonte, eles não identificam a loja.
+      excluir       palavras que tiram o álbum do catálogo (feminina, infantil,
                      treino, manga longa, regata, pré-jogo, jaqueta etc.). Para
                      vender um desses tipos, crie um modelo com preço e palavras
                      próprias (ex.: Feminina com "women") e tire a palavra daqui
       esconder       códigos de camisas que não devem aparecer
       ajustes        correções por código, ex.:
                      "200037351": { "time": "Santos", "detalhe": "2025/26 · Neymar Jr" }
-                     (aceita time, detalhe, modelo e max = maior tamanho)
+                     (aceita time, detalhe, modelo, liga = id da liga e
+                     max = maior tamanho; com time e sem liga, a liga vem do
+                     time, se ele estiver nas listas da ferramenta)
       destaques      códigos das camisas fixas nos destaques da home, na ordem
                      (até 8), ex.: ["135129801", "259643688"]. Vazio: o site
                      mostra as mais recentes de cada modelo. Depois de mudar,
                      rode node tools/catalogo.mjs --local
     Camisas sem time reconhecido aparecem como "Outros" (veja com --simular).
-    Títulos repetidos aparecem uma vez só. Álbuns sem time e sem temporada no
-    título (capas de seção, "....") ficam de fora.
-    O código da camisa (número do álbum) aparece na janela da camisa e vai na
-    mensagem do pedido, junto com o link
+    Títulos repetidos aparecem uma vez só (mesmo em ligas diferentes: fica o da
+    liga que vem antes). Álbuns sem time e sem temporada no título (capas de
+    seção, "....") ficam de fora.
+    O código da camisa (número do álbum) NÃO aparece na janela da camisa; ele
+    vai só na mensagem do pedido, junto com o link
     versattesports.com.br/catalogo#camisa-<código>, que abre a camisa no
     site: é assim que a equipe sabe qual camisa o cliente quer e onde pedir.
     (Links antigos, versattesports.com.br/#camisa-<código> e

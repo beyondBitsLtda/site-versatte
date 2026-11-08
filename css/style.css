@@ -459,15 +459,28 @@ button { font: inherit; color: inherit; }
 .catalog__search input::placeholder { color: var(--muted); }
 .catalog__search input:focus { outline: none; border-color: var(--orange); box-shadow: 0 0 0 4px rgba(234,91,12,.14); }
 /* times numa linha que corre para o lado (a própria faixa rola, nada passa da tela) */
-.catalog__teams { display: flex; gap: 8px; min-width: 0; padding: 2px 0 8px; overflow-x: auto; scrollbar-width: none; -webkit-mask: linear-gradient(90deg, #000 calc(100% - 36px), transparent); mask: linear-gradient(90deg, #000 calc(100% - 36px), transparent); }
-.catalog__teams::-webkit-scrollbar { display: none; }
+.catalog__teams, .catalog__leagues { display: flex; gap: 8px; min-width: 0; padding: 2px 0 8px; overflow-x: auto; scrollbar-width: none; -webkit-mask: linear-gradient(90deg, #000 calc(100% - 36px), transparent); mask: linear-gradient(90deg, #000 calc(100% - 36px), transparent); }
+.catalog__teams::-webkit-scrollbar, .catalog__leagues::-webkit-scrollbar { display: none; }
+/* ligas: mesma fonte das abas, para ficar claro que é um nível acima dos times */
+.catalog__leagues { padding-bottom: 2px; }
+.catalog__league { flex: none; display: inline-flex; align-items: center; gap: 8px; height: 42px; padding: 0 17px; border: 0; border-radius: 999px; background: var(--bg-2); color: var(--ink); font: 800 17px/1 var(--f-caps); text-transform: uppercase; letter-spacing: .02em; white-space: nowrap; cursor: pointer; transition: background .2s, color .2s, box-shadow .2s; }
+.catalog__league small { font: 600 12px/1 var(--f-body); letter-spacing: 0; color: var(--orange-text); }
+.catalog__league:hover { box-shadow: inset 0 0 0 1.5px rgba(23,19,15,.22); }
+.catalog__league[aria-pressed="true"] { background: var(--ink); color: var(--cream); box-shadow: 0 10px 24px -16px rgba(23,19,15,.8); }
+.catalog__league[aria-pressed="true"] small { color: var(--orange-hi); }
+.catalog__league:last-child { margin-right: 30px; }
 .catalog__team { flex: none; display: inline-flex; align-items: center; gap: 7px; height: 40px; padding: 0 15px; border-radius: 999px; border: 1.5px solid var(--line); background: var(--surface); color: var(--ink-2); font: 600 14px/1 var(--f-body); white-space: nowrap; cursor: pointer; transition: background .2s, color .2s, border-color .2s; }
 .catalog__team small { font-size: 12px; font-weight: 500; color: var(--muted); }
 .catalog__team:hover { border-color: rgba(23,19,15,.4); }
 .catalog__team[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--cream); }
 .catalog__team[aria-pressed="true"] small { color: rgba(247,239,227,.72); }
 .catalog__team:last-child { margin-right: 30px; }
-@media (min-width: 1000px) { .catalog__tools { grid-template-columns: minmax(260px, 340px) minmax(0, 1fr); align-items: center; gap: 16px; } .catalog__teams { padding-bottom: 2px; } }
+@media (min-width: 1000px) {
+  .catalog__tools { grid-template-columns: minmax(260px, 340px) minmax(0, 1fr); align-items: center; gap: 16px; }
+  .catalog__teams { padding-bottom: 2px; }
+  /* com ligas: busca + ligas na 1ª linha, times na linha de baixo, de ponta a ponta */
+  .catalog__leagues:not([hidden]) ~ .catalog__teams { grid-column: 1 / -1; }
+}
 
 .catalog__count { margin: 14px 2px 16px; min-height: 1.4em; font-size: 14px; color: var(--muted); }
 .catalog__grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
