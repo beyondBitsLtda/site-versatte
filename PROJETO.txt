@@ -190,10 +190,20 @@ volta às seções da home (index.html#guia etc.).
                      O modo --local (preços, nomes, ajustes) não precisa do link.
                      Com "ligas", o link só informa o endereço da loja: as
                      páginas lidas são as categorias de cada liga.
-      fotosPorCamisa quantas fotos cada camisa mostra (hoje 4)
+                     DOIS FORNECEDORES (desde 13/11/2026): um link por loja, na
+                     ordem. No segredo CATALOGO_FONTE, separados por vírgula
+                     ("link do 1º,link do 2º"); no catalogo.local.json,
+                     { "fonte": ["link do 1º", "link do 2º"] }. Se o catalogo.json
+                     tiver categorias de um fornecedor sem link, a ferramenta
+                     para sem mudar nada (para não apagar as camisas dele).
+      fotosPorCamisa quantas fotos cada camisa mostra na janela, a primeira é a
+                     da capa (hoje 3: com 4, as ~5.400 camisas passariam de
+                     1 GB, o limite do GitHub Pages). Se diminuir, a ferramenta
+                     apaga as fotos que sobram sem baixar nada
       modelos        id, nome, preço e palavras do título que identificam o
                      modelo; a primeira regra que bater vence (Retrô: retro,
-                     vintage, reissue; Jogador: player); o modelo sem palavras
+                     rerro (erro de digitação comum na fonte), vintage,
+                     reissue; Jogador: player); o modelo sem palavras
                      (Torcedor) fica com o resto. PREÇOS: mude aqui e rode
                      node tools/catalogo.mjs --local
       ligas          filtro de ligas do site, nesta ordem. Cada liga tem:
@@ -201,9 +211,17 @@ volta às seções da home (index.html#guia etc.).
                                   os times de cada liga, na lista CLUBES do
                                   tools/catalogo.mjs)
                        nome       como aparece no site (pode mudar à vontade)
-                       categoria  número da página de categoria da fonte de
-                                  onde vêm as camisas da liga (um número ou
-                                  uma lista). "selecoes" não tem categoria.
+                       categoria  número da página de categoria do 1º
+                                  fornecedor de onde vêm as camisas da liga
+                                  (um número ou uma lista). "selecoes" não tem
+                                  categoria no 1º fornecedor.
+                       categoria2 o mesmo, no 2º fornecedor (Seleções: seleções,
+                                  Copa 2026 e "Brazil team column"; Outros
+                                  times: J-League e outras ligas do mundo).
+                                  A Liga Saudita não tem categoria no 2º.
+                                  A mesma camisa nos dois fornecedores (mesmo
+                                  modelo, time e detalhe) aparece uma vez só, a
+                                  do 1º (o --simular lista as repetidas).
                        emblema    imagem do card da liga (assets/ligas/<id>.svg)
                      A liga de cada camisa vem do TIME, não da categoria: a
                      fonte às vezes põe camisas na categoria errada (ex.: um
@@ -396,8 +414,10 @@ Tamanhos de referência para novas imagens:
 As imagens fora da primeira tela carregam só quando a pessoa chega até elas.
 Catálogo: tools/catalogo.mjs converte as fotos no próprio Edge/Chrome (canvas),
 sem instalar nada: capa de 480 px (cards, ~15 KB) e fotos de 720 px (janela da
-camisa, ~20 a 60 KB). O catálogo inteiro (769 camisas, ~3.300 imagens) ocupa
-perto de 130 MB; para diminuir, reduza "fotosPorCamisa" e rode com --tudo.
+camisa, ~20 a 60 KB), ~165 KB por camisa com 3 fotos. O GitHub Pages aceita
+sites de até 1 GB: com os dois fornecedores (~5.400 camisas) as fotos ficam
+perto de 900 MB. Se passar disso, reduza "fotosPorCamisa" (apaga as fotos que
+sobram) ou leve as fotos para um armazenamento à parte.
 Arquivos que estão na pasta mas não são usados pelo site:
   assets/*.png (originais), assets/img/retrato-time.webp,
   assets/hero-promoção-02.png e a pasta uploads/.

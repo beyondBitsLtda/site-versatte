@@ -1,7 +1,8 @@
 # Catálogo: toda segunda-feira sincroniza o catálogo com a fonte
 # (baixa as camisas novas, tira as que saíram) e publica no site.
-# Precisa do segredo CATALOGO_FONTE (link da página de categoria da fonte) em
-# Settings > Secrets and variables > Actions > New repository secret. Sem ele, não faz nada.
+# Precisa do segredo CATALOGO_FONTE em Settings > Secrets and variables > Actions: os links
+# das lojas dos fornecedores, separados por vírgula, na ordem do catalogo.json (1º = "categoria",
+# 2º = "categoria2"). Sem ele, não faz nada; faltando um link, a sincronização para sem mudar nada.
 # Para rodar na hora: aba Actions > Catálogo > Run workflow.
 name: Catálogo
 
