@@ -96,7 +96,8 @@ PÁGINA INICIAL (index.html):
      2) Pacotes: cena presa na tela em que a rolagem abre um pacote premium (ele
         treme, rasga, as cartas sobem, se espalham e viram, de Comum a Especial);
      3) Raridades: as cartas viram ao entrar na tela e brilham com o mouse;
-     4) Álbum: as coleções (clubes, jogadores, estádios, mascotes, Juízo Final);
+     4) Álbum: as coleções (clubes, jogadores, estádios, mascotes e coleções
+        promocionais);
      5) Modo Clube: as cartas entram em campo e mudam de formação com a rolagem
         (2-1-1, 1-2-1, 1-1-2); depois os 3 campeonatos e seus troféus;
      6) Online: duas cartas trocando de lugar (troca, amistoso e torneios);

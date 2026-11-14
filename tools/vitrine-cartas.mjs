@@ -28,13 +28,13 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const JOGO = path.resolve(process.argv[2] || '');
 const HOME = 'clube-cru-u2';   // carta 3D da home (#card-game)
 // animação de abertura do teaser (no celular entram só as 12 primeiras)
-const INTRO = ['clube-cru-u2', 'jog-pele-prime', 'clube-fla-camp', 'jog-zico-prime', 'clube-pal-camp', 'jog-garrincha-prime', 'clube-bot-hist', 'jog-ronaldo-prime',
+const INTRO = ['clube-cru-u2', 'jog-pele-prime', 'clube-fla-camp', 'jog-zico-prime', 'clube-cam-u2', 'jog-garrincha-prime', 'clube-bot-hist', 'jog-ronaldo-prime',
   'clube-flu-hist', 'jog-cafu', 'clube-san-hist', 'jog-rivellino', 'clube-gre-u2', 'jog-falcao', 'clube-int-u2', 'jog-ceni', 'clube-sao-u2'];
 // cartas de cada seção do teaser (a ordem importa: pacote e raridades vão de Comum a Especial; no clube, a 1ª é o goleiro)
 const SECOES = {
   pacote: ['clube-gre', 'jog-fred', 'clube-san-hist', 'jog-zico-prime'],
   raridades: ['clube-cam', 'jog-alex', 'jog-garrincha', 'jog-pele-prime'],
-  colecoes: ['clube-fla-camp', 'clube-pal-camp', 'jog-ronaldo-prime', 'jog-nilton-santos'],
+  colecoes: ['clube-fla-camp', 'clube-bot-hist', 'jog-ronaldo-prime', 'jog-nilton-santos'],
   clube: ['jog-castilho', 'jog-luis-pereira', 'jog-falcao', 'jog-rivellino', 'jog-pele'],
   escudo: ['clube-bot-hist'],
   troca: ['jog-renato', 'jog-dinamite'],

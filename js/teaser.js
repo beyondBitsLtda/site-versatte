@@ -87,7 +87,7 @@
   const T = ({ x = 0, y = 0, z = 0, rz = 0, ry = 0, tz = 0, rx = 0, s = 1 }) =>
     `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, ${z.toFixed(1)}px) rotateZ(${rz.toFixed(2)}deg) rotateY(${ry.toFixed(2)}deg) translateZ(${tz.toFixed(1)}px) rotateX(${rx.toFixed(2)}deg) scale(${s.toFixed(3)})`;
   const rnd = (a, b) => a + Math.random() * (b - a);
-  let cartas = [], anims = [], fim = false;
+  let cartas = [], anims = [], fim = false, rodada = 0;
 
   const montar = () => {
     ring.textContent = '';
@@ -177,6 +177,14 @@
     sobe(R('cue'), 8900, 900, -8);
     depois(8300, () => orbitar(false));
     depois(9400, () => { fim = true; tz.classList.add('is-done'); });
+    // espera as imagens das cartas (escudos e fotos) antes de soltar a animação
+    const vez = ++rodada;
+    anims.forEach(a => a.pause());
+    const imgs = [...ring.querySelectorAll('img')];
+    Promise.race([
+      Promise.all(imgs.map(i => (i.decode ? i.decode() : Promise.resolve()).catch(() => {}))),
+      new Promise(r => setTimeout(r, 2500)),
+    ]).then(() => { if (vez === rodada && !fim) anims.forEach(a => a.play()); });
   }
 
   /* ---------- final: cartas pequenas girando devagar em volta das logos ---------- */
@@ -211,6 +219,7 @@
     fim = true; tz.classList.add('is-done');
   }
   function repetir() {
+    rodada++;
     eventos = [];
     anims.forEach(a => a.cancel()); anims = [];
     orbita.forEach(a => a.cancel()); orbita = [];

@@ -12,7 +12,6 @@ ESCUDOS (domínio público)
   clube-flu.webp  Fluminense     https://commons.wikimedia.org/wiki/File:Fluminense_Football_Club.svg
   clube-gre.webp  Grêmio         https://commons.wikimedia.org/wiki/File:Gremio_logo.svg
   clube-int.webp  Internacional  https://commons.wikimedia.org/wiki/File:Escudo_do_Sport_Club_Internacional.svg
-  clube-pal.webp  Palmeiras      https://commons.wikimedia.org/wiki/File:Palmeiras_logo.svg
   clube-san.webp  Santos         https://commons.wikimedia.org/wiki/File:Santos_Futebol_Clube_logo_(with_stars_and_crown).png
   clube-sao.webp  São Paulo      https://commons.wikimedia.org/wiki/File:S%C3%A3o_Paulo_Futebol_Clube_logo_(2022).svg
 
