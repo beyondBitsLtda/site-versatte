@@ -41,7 +41,7 @@
 .vcard .f-gem { color: var(--rc); width: 6cqw; height: 6cqw; filter: drop-shadow(0 0 1.5cqw var(--rc)); }
 .vcard .f-gem svg { width: 100%; height: 100%; display: block; }
 .vcard .f-foot { position: absolute; left: 0; right: 0; bottom: 0; height: 29%; padding: 3cqw 7cqw 6cqw; display: flex; flex-direction: column; justify-content: flex-end; background: linear-gradient(to top, rgba(4,7,13,.97) 50%, rgba(4,7,13,0)); }
-.vcard .f-name { font: 900 12cqw/.92 var(--f-head); text-transform: uppercase; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 1cqw; }
+.vcard .f-name { font: 900 12cqw/.92 var(--f-head); text-transform: uppercase; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 1.4cqw 1cqw 0 0; margin-top: -1.4cqw; }   /* espaço para o acento (PELÉ) dentro do overflow */
 .vcard.k-hero .f-name { text-shadow: .6cqw .6cqw 0 #05080f; }
 .vcard .f-sub { font: 500 4.3cqw/1.25 var(--f-body); color: rgba(234,241,255,.65); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: .8cqw; }
 .vcard .f-rar { display: flex; align-items: center; gap: 1.8cqw; margin-top: 1.6cqw; font: 700 3.6cqw/1 var(--f-body); text-transform: uppercase; letter-spacing: .2em; color: var(--rc); }
@@ -130,3 +130,13 @@
 .c3d__floor { position: absolute; left: 50%; bottom: -13%; width: 92%; height: 13%; translate: -50% 0; border-radius: 50%; background: radial-gradient(closest-side, rgba(51,181,255,.55), rgba(51,181,255,.12) 55%, transparent); filter: blur(6px); transform: scaleX(calc(.4 + var(--shadow, 1) * .6)); opacity: calc(.55 + var(--shadow, 1) * .45); pointer-events: none; }
 .c3d__halo { position: absolute; inset: -22% -30%; border-radius: 50%; background: radial-gradient(closest-side, rgba(46,140,255,.38), rgba(255,122,26,.12) 55%, transparent 72%); filter: blur(10px); pointer-events: none; animation: c3d-halo 6s ease-in-out infinite; }
 @keyframes c3d-halo { 50% { opacity: .65; scale: .94; } }
+
+/* jogadores: foto apoiada na base e a nota (OVR) com a posição no canto */
+.vcard.k-player .f-art { top: 11%; width: 84%; }
+.vcard .f-art.mode-jogador .art-img { object-position: center bottom; }
+.vcard .f-art.mode-cobrir { left: 0; top: 0; width: 100%; height: 100%; translate: none; aspect-ratio: auto; filter: none; }
+.vcard .f-art.mode-cobrir .art-img { object-fit: cover; }
+.vcard .f-ovr { display: flex; flex-direction: column; align-items: center; line-height: .9; }
+.vcard .f-ovr b { font: 900 10.5cqw/.9 var(--f-head); color: #fff; text-shadow: 0 0 3cqw rgba(0,0,0,.8); }
+.vcard .f-ovr i { font: 800 4.4cqw/1 var(--f-head); font-style: normal; color: var(--rc); letter-spacing: .08em; }
+.vcard.r-especial .f-ovr b { background: linear-gradient(180deg, #fff6d0, #ffc940); -webkit-background-clip: text; background-clip: text; color: transparent; }

@@ -86,21 +86,39 @@ PÁGINA INICIAL (index.html):
    "Desenvolvido por Beyond Bits". O link "Card Game" do menu e o slide do topo
    continuam escondidos (marcados com "versatte-cards-off"); o do rodapé aparece.
    TEASER (versatte-cards.html): tela cheia no azul da logo, luzes em degradê e
-   partículas; as cartas do jogo entram voando, abrem em leque, viram um
-   carrossel 3D que acelera e se juntam num clarão; aparecem as logos da Versatte
-   e da Beyond Bits, "Versatte Cards" e "Em breve" (com Instagram, voltar ao site
-   e repetir). No computador as cartas seguem girando atrás, escurecidas; no
-   celular o final fica limpo. "Pular" (ou Esc) vai direto ao final; com
-   "reduzir movimento" ligado no aparelho, a página já abre no final, parada.
-   Arquivos: css/teaser.css, js/teaser.js e js/vitrine-cartas.js (cartas).
-   TROCAR AS CARTAS: edite a lista CARTAS (e HOME, a carta 3D da home) em
-   tools/vitrine-cartas.mjs e rode, na pasta do site:
+   partículas; as cartas (só escudos e jogadores com foto) entram voando, abrem
+   em leque, viram um carrossel 3D que acelera e se juntam num clarão; aparecem
+   as logos da Versatte e da Beyond Bits, "Versatte Cards" e "Em breve" (com
+   Instagram, voltar ao site e repetir) e o convite "Conheça o jogo". "Pular"
+   (ou Esc) vai direto ao final. ROLANDO A PÁGINA, seções que apresentam o jogo
+   (textos tirados do README do jogo):
+     1) O jogo: o texto acende palavra por palavra com a rolagem;
+     2) Pacotes: cena presa na tela em que a rolagem abre um pacote premium (ele
+        treme, rasga, as 4 cartas sobem, se espalham e viram, de Comum a Especial);
+     3) Raridades: as 4 cartas viram ao entrar na tela e brilham com o mouse/dedo,
+        com a chance de cada uma no pacote diário (70/24/5/1%);
+     4) Álbum: 5 coleções e 148 cartas, com os números contando;
+     5) Modo Clube: as cartas entram em campo e mudam de formação com a rolagem
+        (2-1-1, 1-2-1, 1-1-2); depois os 3 campeonatos e seus troféus;
+     6) Online: duas cartas trocando de lugar (troca, amistoso e torneios);
+     7) Final: logos, "Em breve", Instagram, aviso 18+ e "Créditos das imagens"
+        (autor e licença de cada foto; obrigatório pelas licenças CC BY/BY-SA).
+   Os prêmios/brindes do jogo NÃO aparecem no teaser: distribuição de prêmios
+   ligada a sorte pode precisar de autorização (Lei 5.768/1971); ver com o
+   jurídico antes de anunciar. Com "reduzir movimento" ligado no aparelho, tudo
+   aparece pronto, parado. Arquivos: css/teaser.css, js/teaser.js (abertura),
+   js/teaser-secoes.js (seções) e js/vitrine-cartas.js (cartas).
+   TROCAR AS CARTAS: edite HOME (a carta 3D da home), INTRO (a abertura) e SECOES
+   (as cartas de cada seção) em tools/vitrine-cartas.mjs e rode, na pasta do site:
      node tools/vitrine-cartas.mjs "<pasta do Versatte_card_game>"
    Ele gera js/vitrine-cartas.js, troca a carta da home (entre <!-- carta 3D -->
-   e <!-- /carta 3D --> no index.html) e converte os escudos para assets/cards/.
-   Só os clubes usam imagem (escudos em domínio público, assets/cards/LEIA-ME.txt);
-   estádios, mascotes e Juízo Final usam a arte desenhada pelo jogo (as fotos do
-   jogo são de terceiros e não vão para o site). Os escudos são marcas dos clubes:
+   e <!-- /carta 3D --> no index.html) e converte as imagens para assets/cards/.
+   Só entram cartas de clubes e de jogadores cuja imagem esteja na lista LIVRES da
+   ferramenta (licença livre; ela para se aparecer outra). As fotos do elenco 2026
+   e parte dos ídolos do jogo são "todos os direitos reservados" ou de origem
+   desconhecida (só para teste) e não vão para o site. Créditos completos:
+   assets/cards/LEIA-ME.txt. A licença livre vale para a foto; escudos são marcas
+   dos clubes e nome/imagem dos atletas são direito de cada um:
    confirme o uso com o jurídico antes do lançamento.
 8) Fale com a gente (formulário) e rodapé: contatos e crédito Beyond Bits.
 Fixo na tela: botão flutuante do WhatsApp.

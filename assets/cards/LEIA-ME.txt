@@ -1,9 +1,10 @@
-ESCUDOS DAS CARTAS (Versatte Cards na home e em versatte-cards.html)
+IMAGENS DAS CARTAS (Versatte Cards na home e em versatte-cards.html)
 
-Os mesmos escudos usados no jogo (Versatte_card_game, assets/cartas/clubes/), convertidos para WebP
-(512 px). Origem e licença, conforme assets/cartas/CREDITOS.md do jogo: Wikimedia Commons, marcados
-como domínio público (Public domain).
+Geradas por tools/vitrine-cartas.mjs a partir do jogo (Versatte_card_game, assets/cartas/), em WebP.
+No site só entram imagens de LICENÇA LIVRE (a ferramenta para se aparecer outra). Origem, autor e
+licença, conforme assets/cartas/CREDITOS.md do jogo (todas do Wikimedia Commons):
 
+ESCUDOS (domínio público)
   clube-bot.webp  Botafogo       https://commons.wikimedia.org/wiki/File:Botafogo_de_Futebol_e_Regatas_logo.svg
   clube-cam.webp  Atlético-MG    https://commons.wikimedia.org/wiki/File:Clube_Atl%C3%A9tico_Mineiro_logo.svg
   clube-cru.webp  Cruzeiro       https://commons.wikimedia.org/wiki/File:Cruzeiro_Esporte_Clube_(logo).svg
@@ -15,6 +16,44 @@ como domínio público (Public domain).
   clube-san.webp  Santos         https://commons.wikimedia.org/wiki/File:Santos_Futebol_Clube_logo_(with_stars_and_crown).png
   clube-sao.webp  São Paulo      https://commons.wikimedia.org/wiki/File:S%C3%A3o_Paulo_Futebol_Clube_logo_(2022).svg
 
-Domínio público vale para o direito autoral da imagem; o escudo continua sendo marca do clube.
-Antes de lançar o jogo (ou de usar em anúncios), confirme com o jurídico o uso das marcas dos clubes.
-Estádios, mascotes e Juízo Final aparecem com a arte desenhada pelo próprio jogo (sem fotos de terceiros).
+FOTOS DOS JOGADORES
+  jog-pele-prime.webp       Pelé (1970), United Press International, domínio público
+                            https://commons.wikimedia.org/wiki/File:1970_Pele_Scores_World_Cup_Goal_Against_Czechoslovakia.jpg
+  jog-pele.webp             Pelé (1973), autor desconhecido, domínio público
+                            https://commons.wikimedia.org/wiki/File:Huracan_vs_santos_pele_1973.jpg
+  jog-zico-prime.webp       Zico, autor desconhecido, domínio público
+                            https://commons.wikimedia.org/wiki/File:Zico_flamengo_elgrafico.jpg
+  jog-garrincha-prime.webp  Garrincha (1962), autor desconhecido, domínio público
+                            https://commons.wikimedia.org/wiki/File:Garrincha_na_copa_de_1962.jpg
+  jog-garrincha.webp        Garrincha, Hector Maffuche, domínio público
+                            https://commons.wikimedia.org/wiki/File:Garrinchabotafogo.JPG
+  jog-nilton-santos.webp    Nilton Santos, autor desconhecido, domínio público
+                            https://commons.wikimedia.org/wiki/File:Arquivo_Nacional_-_Nilton_Santos_jogando_pelo_Botafogo_nos_anos_60.jpg
+  jog-castilho.webp         Castilho, autor desconhecido, domínio público
+                            https://commons.wikimedia.org/wiki/File:Goleiro_Castilho_defende_p%C3%AAnalti_do_atacante_Pinga_em_partida_entre_Fluminense_e_Vasco_no_Maracan%C3%A3.png
+  jog-falcao.webp           Falcão (1980), El Gráfico, domínio público
+                            https://commons.wikimedia.org/wiki/File:Falcao_1980.jpg
+  jog-dinamite.webp         Roberto Dinamite (1984), El Gráfico, domínio público
+                            https://commons.wikimedia.org/wiki/File:Sabella_roberto_dinamita_1984.jpg
+  jog-renato.webp           Renato Gaúcho (1984), Ayton Moza/El Gráfico, domínio público
+                            https://commons.wikimedia.org/wiki/File:Renato_1984.png
+  jog-rivellino.webp        Rivellino, Correio da Manhã/Arquivo Nacional, domínio público
+                            https://commons.wikimedia.org/wiki/File:Rivelino_no_jogo_Fluminense_X_Corinthians.tif
+  jog-ronaldo-prime.webp    Ronaldo, Alex Carvalho, CC BY-SA 2.0
+                            https://commons.wikimedia.org/wiki/File:Ronaldos_(5121959679).jpg
+  jog-cafu.webp             Cafu, Александр Мельников, CC BY-SA 3.0
+                            https://commons.wikimedia.org/wiki/File:Marcos_Evangelista_de_Moraes.jpg
+  jog-luis-pereira.webp     Luís Pereira, autor desconhecido, CC BY-SA 3.0 DE
+                            https://commons.wikimedia.org/wiki/File:Lu%C3%ADs_Pereira_and_Dra%C5%BEen_Mu%C5%BEini%C4%87.jpg
+  jog-ceni.webp             Rogério Ceni, Bahia Notícias, CC BY 2.0
+                            https://commons.wikimedia.org/wiki/File:BAHIA_X_SP_Brasileir%C3%A3o_2012_Pitua%C3%A7u.jpg
+  jog-fred.webp             Fred, Agência Brasil, CC BY 3.0 BR
+                            https://commons.wikimedia.org/wiki/File:Brazil_and_Croatia_match_at_the_FIFA_World_Cup_2014-06-12_(20).jpg
+  jog-alex.webp             Alex, Serkan Yakin (antu.com), CC0
+                            https://commons.wikimedia.org/wiki/File:Alexsandro_de_Souza.jpg
+  As fotos foram recortadas e colocadas na moldura das cartas. Os créditos também ficam no rodapé de
+  versatte-cards.html ("Créditos das imagens"), como as licenças CC BY e CC BY-SA pedem.
+
+ATENÇÃO: licença livre vale para o direito autoral da FOTO. O escudo continua sendo marca do clube e
+o nome e a imagem de cada atleta são direito dele (ou dos herdeiros). Antes de lançar o jogo, ou de
+usar em anúncios, confirme com o jurídico o licenciamento de marcas e de direito de imagem.

@@ -10,7 +10,8 @@
      8300   as cartas voltam pequenas, girando devagar atrás das logos
    "Pular" leva direto ao final; o botão de repetir roda de novo.
    Com "reduzir movimento" ligado no aparelho, mostra só o final, parado.
-   As cartas vêm de js/vitrine-cartas.js (HTML gerado pelo próprio jogo).
+   As cartas vêm de js/vitrine-cartas.js (HTML gerado pelo próprio jogo); as seções de baixo
+   (rolando a página) ficam em js/teaser-secoes.js.
    ============================================================ */
 (() => {
   const tz = document.querySelector('[data-tz]');
@@ -20,12 +21,13 @@
   const ring = $('[data-tz-ring]'), beam = $('[data-tz-beam]'), flash = $('[data-tz-flash]'), dim = $('[data-tz-dim]');
   const canvas = $('[data-tz-particles]'), skipBtn = $('[data-tz-skip]'), replayBtn = $('[data-tz-replay]');
   const R = n => $(`[data-tz-r="${n}"]`);
-  const CARTAS = window.VERSATTE_VITRINE || [];
+  const V = window.VERSATTE_VITRINE || { intro: [], cartas: {} };
+  const CARTAS = (V.intro || []).map(u => V.cartas[u]).filter(Boolean);
 
   /* ---------- partículas (poeira dourada e azul subindo; faíscas no clarão) ---------- */
   const ctx = canvas.getContext('2d');
   const CORES = ['255,208,138', '255,150,70', '156,203,255', '255,255,255'];
-  let W = 0, H = 0, poeira = [], faiscas = [], quadro = 0, mestre = null, eventos = [];
+  let W = 0, H = 0, poeira = [], faiscas = [], quadro = 0, mestre = null, eventos = [], orbita = [], visivel = true, girando = false;
   const medir = () => {
     const dpr = Math.min(2, window.devicePixelRatio || 1);
     W = canvas.clientWidth; H = canvas.clientHeight;
@@ -65,10 +67,17 @@
     ctx.globalCompositeOperation = 'source-over';
     // eventos da linha do tempo, no relógio da animação (num aparelho lento, tudo atrasa junto)
     if (mestre && eventos.length) { const agora = mestre.currentTime ?? 0; while (eventos.length && agora >= eventos[0].t) eventos.shift().fn(); }
-    if (!reduce) requestAnimationFrame(desenhar);
+    if (!reduce && visivel) requestAnimationFrame(desenhar); else girando = false;
   };
-  medir(); semear(); requestAnimationFrame(desenhar);
-  addEventListener('resize', () => { medir(); semear(); if (reduce) requestAnimationFrame(desenhar); });
+  const ligar = () => { if (!girando) { girando = true; requestAnimationFrame(desenhar); } };
+  medir(); semear(); ligar();
+  // fora da tela (a pessoa rolou para as seções), a abertura para de gastar bateria
+  new IntersectionObserver(([e]) => {
+    visivel = e.isIntersecting;
+    if (visivel && !reduce) ligar();
+    orbita.forEach(a => (visivel ? a.play() : a.pause()));
+  }).observe(tz);
+  addEventListener('resize', () => { medir(); semear(); if (reduce) desenhar(); });
 
   if (reduce || !CARTAS.length || !Element.prototype.animate) return;   // sem animação: o final já está na tela
   tz.classList.add('js');
@@ -78,7 +87,7 @@
   const T = ({ x = 0, y = 0, z = 0, rz = 0, ry = 0, tz = 0, rx = 0, s = 1 }) =>
     `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, ${z.toFixed(1)}px) rotateZ(${rz.toFixed(2)}deg) rotateY(${ry.toFixed(2)}deg) translateZ(${tz.toFixed(1)}px) rotateX(${rx.toFixed(2)}deg) scale(${s.toFixed(3)})`;
   const rnd = (a, b) => a + Math.random() * (b - a);
-  let cartas = [], anims = [], orbita = [], fim = false;
+  let cartas = [], anims = [], fim = false;
 
   const montar = () => {
     ring.textContent = '';
@@ -165,7 +174,7 @@
     } catch { /* navegador sem animação de ::before: as linhas já aparecem */ }
     sobe(R('sub'), 8250);
     sobe(R('acoes'), 8450);
-    sobe(R('idade'), 8650);
+    sobe(R('cue'), 8900, 900, -8);
     depois(8300, () => orbitar(false));
     depois(9400, () => { fim = true; tz.classList.add('is-done'); });
   }
