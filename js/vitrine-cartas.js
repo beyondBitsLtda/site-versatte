@@ -1,4 +1,4 @@
-// GERADO por tools/vitrine-cartas.mjs a partir do jogo (Versatte_card_game, js/cards.js): cartas da página versatte-cards.html.
+// GERADO por tools/vitrine-cartas.mjs a partir do jogo (Versatte_card_game, js/cards.js): cartas da página versatteCards.html.
 // Só escudos (domínio público) e jogadores com foto de licença livre; créditos em assets/cards/LEIA-ME.txt e no rodapé do teaser.
 window.VERSATTE_VITRINE = {
   intro: ["clube-cru-u2","jog-pele-prime","clube-fla-camp","jog-zico-prime","clube-cam-u2","jog-garrincha-prime","clube-bot-hist","jog-ronaldo-prime","clube-flu-hist","jog-cafu","clube-san-hist","jog-rivellino","clube-gre-u2","jog-falcao","clube-int-u2","jog-ceni","clube-sao-u2"],

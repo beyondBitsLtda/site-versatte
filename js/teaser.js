@@ -1,5 +1,5 @@
 /* ============================================================
-   VERSATTE CARDS · TEASER (versatte-cards.html)
+   VERSATTE CARDS · TEASER (versatteCards.html)
    Linha do tempo (ms):
      0      fundo acende e as partículas sobem
      150    feixe de luz abre no centro

@@ -1,4 +1,4 @@
-IMAGENS DAS CARTAS (Versatte Cards na home e em versatte-cards.html)
+IMAGENS DAS CARTAS (Versatte Cards na home e em versatteCards.html)
 
 Geradas por tools/vitrine-cartas.mjs a partir do jogo (Versatte_card_game, assets/cartas/), em WebP.
 No site só entram imagens de LICENÇA LIVRE (a ferramenta para se aparecer outra). Origem, autor e
@@ -51,7 +51,7 @@ FOTOS DOS JOGADORES
   jog-alex.webp             Alex, Serkan Yakin (antu.com), CC0
                             https://commons.wikimedia.org/wiki/File:Alexsandro_de_Souza.jpg
   As fotos foram recortadas e colocadas na moldura das cartas. Os créditos também ficam no rodapé de
-  versatte-cards.html ("Créditos das imagens"), como as licenças CC BY e CC BY-SA pedem.
+  versatteCards.html ("Créditos das imagens"), como as licenças CC BY e CC BY-SA pedem.
 
 ATENÇÃO: licença livre vale para o direito autoral da FOTO. O escudo continua sendo marca do clube e
 o nome e a imagem de cada atleta são direito dele (ou dos herdeiros). Antes de lançar o jogo, ou de

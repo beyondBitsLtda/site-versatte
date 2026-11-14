@@ -4,7 +4,7 @@
 
   Abre o jogo num navegador headless (Edge/Chrome, sem instalar nada), gera o HTML de cada carta com
   o próprio js/cards.js do jogo e grava no site:
-    - js/vitrine-cartas.js        cartas da página versatte-cards.html (INTRO e SECOES abaixo)
+    - js/vitrine-cartas.js        cartas da página versatteCards.html (INTRO e SECOES abaixo)
     - index.html                  a carta da home, entre <!-- carta 3D --> e <!-- /carta 3D -->
     - assets/cards/*.webp         escudos (512 px) e fotos dos jogadores (600 px) usados nas cartas
     - assets/img/beyond-bits-light.webp   logo clara da Beyond Bits (do jogo, assets/logo-beyond.png)
@@ -109,7 +109,7 @@ try {
   const naIntro = new Set(INTRO);
   const cartas = Object.fromEntries(UIDS.filter(u => u !== HOME || naIntro.has(u)).map(u => [u, conv(html[u], !naIntro.has(u))]));
   writeFileSync(path.join(ROOT, 'js', 'vitrine-cartas.js'),
-    `// GERADO por tools/vitrine-cartas.mjs a partir do jogo (Versatte_card_game, js/cards.js): cartas da página versatte-cards.html.
+    `// GERADO por tools/vitrine-cartas.mjs a partir do jogo (Versatte_card_game, js/cards.js): cartas da página versatteCards.html.
 // Só escudos (domínio público) e jogadores com foto de licença livre; créditos em assets/cards/LEIA-ME.txt e no rodapé do teaser.
 window.VERSATTE_VITRINE = {
   intro: ${JSON.stringify(INTRO)},

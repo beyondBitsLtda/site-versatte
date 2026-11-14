@@ -82,10 +82,12 @@ PÁGINA INICIAL (index.html):
    gerado pelo js/cards.js do Versatte_card_game; visual em css/vcard.css), tem
    espessura, gira arrastando (com embalo), inclina e brilha com o mouse, balança
    sozinha e de vez em quando dá uma volta mostrando o verso. Tocar (sem
-   arrastar) ou "Assistir ao teaser" abre versatte-cards.html. Aviso 18+ e
+   arrastar) ou "Assistir ao teaser" abre versatteCards.html. Aviso 18+ e
    "Desenvolvido por Beyond Bits". O link "Card Game" do menu e o slide do topo
    continuam escondidos (marcados com "versatte-cards-off"); o do rodapé aparece.
-   TEASER (versatte-cards.html): tela cheia no azul da logo, luzes em degradê e
+   TEASER (versatteCards.html, aberto no endereço versattesports.com.br/versatteCards,
+   sem o .html, como o catálogo; o endereço antigo versatte-cards.html só redireciona
+   para ele): tela cheia no azul da logo, luzes em degradê e
    partículas; as cartas (só escudos e jogadores com foto) entram voando, abrem
    em leque, viram um carrossel 3D que acelera e se juntam num clarão; aparecem
    as logos da Versatte e da Beyond Bits, "Versatte Cards" e "Em breve" (com

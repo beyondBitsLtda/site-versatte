@@ -988,7 +988,7 @@ body.modal-open { overflow: hidden; }
 .toast { position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom)); z-index: 300; width: max-content; max-width: calc(100% - 32px); translate: -50% 20px; padding: 13px 20px; border-radius: 999px; background: var(--ink); color: var(--cream); font: 500 14.5px/1.35 var(--f-body); box-shadow: 0 16px 40px rgba(0,0,0,.35); opacity: 0; pointer-events: none; transition: opacity .3s, translate .3s; }
 .toast.is-on { opacity: 1; translate: -50% 0; }
 
-/* A CARTA do Versatte Cards (.vcard) fica em css/vcard.css (home e versatte-cards.html). */
+/* A CARTA do Versatte Cards (.vcard) fica em css/vcard.css (home e versatteCards.html). */
 
 /* ============================================================
    MOVIMENTO REDUZIDO

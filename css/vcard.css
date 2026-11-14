@@ -2,7 +2,7 @@
    CARTA · Versatte Cards (portado do jogo, escopo .vcard)
    Mesmo visual do jogo (Versatte_card_game, css/styles.css e
    css/game.css). Usada na home (#card-game, carta 3D) e na página
-   versatte-cards.html. O HTML das cartas vem do próprio jogo
+   versatteCards.html. O HTML das cartas vem do próprio jogo
    (js/vitrine-cartas.js e a carta do Cruzeiro no index.html).
    ============================================================ */
 @property --ang { syntax: '<angle>'; inherits: false; initial-value: 0deg; }

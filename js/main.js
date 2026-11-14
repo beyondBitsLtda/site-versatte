@@ -1002,7 +1002,7 @@
   /* ============================================================
      CARTA 3D (#card-game, carta do Cruzeiro): gira arrastando (com embalo), inclina com o mouse,
      balança sozinha e, parada por uns segundos, dá uma volta inteira (mostra o verso e a espessura).
-     Tocar/clicar sem arrastar segue o link (versatte-cards.html). Visual em css/vcard.css (.c3d).
+     Tocar/clicar sem arrastar segue o link (versatteCards.html). Visual em css/vcard.css (.c3d).
      ============================================================ */
   const c3d = $('[data-c3d]');
   if (c3d) {

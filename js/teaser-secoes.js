@@ -1,5 +1,5 @@
 /* ============================================================
-   VERSATTE CARDS · TEASER · SEÇÕES (rolando versatte-cards.html)
+   VERSATTE CARDS · TEASER · SEÇÕES (rolando versatteCards.html)
    - [data-carta="secao:n"]: recebe a carta n da seção (js/vitrine-cartas.js)
    - .rv e [data-revela]: sobem e aparecem quando entram na tela (os números [data-conta] contam)
    - [data-tilt3d]: a carta inclina e brilha seguindo o mouse/dedo
