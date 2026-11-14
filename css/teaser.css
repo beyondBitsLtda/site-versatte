@@ -1,0 +1,99 @@
+/* ============================================================
+   VERSATTE CARDS · TEASER (versatte-cards.html)
+   Tela cheia no azul da logo da Versatte, com luzes em degradê,
+   partículas e as cartas do jogo. A animação (js/teaser.js):
+   as cartas entram voando, abrem em leque, viram um carrossel 3D,
+   giram, se juntam num clarão e dão lugar às logos da Versatte e
+   da Beyond Bits com o "Em breve". As cartas usam css/vcard.css.
+   ============================================================ */
+.teaser {
+  --tz-navy: #061127; --tz-blue: #2E7BEA; --tz-orange: #F07A12; --tz-gold: #F6B23C; --tz-cream: #F7EFE3;
+  margin: 0; min-height: 100vh; min-height: 100svh; overflow: hidden; background: #040B18; color: var(--tz-cream);
+}
+.teaser::before, .teaser::after { display: none; }   /* sem a textura clara do site */
+html.teaser-page { background: #040B18; scroll-behavior: auto; }
+
+.tz { position: relative; height: 100vh; height: 100svh; overflow: hidden; isolation: isolate; }
+
+/* ---------- fundo: azul da logo + luzes em degradê que respiram ---------- */
+.tz__bg { position: absolute; inset: 0; z-index: -2; background: radial-gradient(120% 90% at 50% 42%, #0F2A52 0%, #0A1C3A 38%, #061127 68%, #030914 100%); }
+.tz__aurora { position: absolute; width: 70vmax; aspect-ratio: 1; border-radius: 50%; filter: blur(70px); opacity: .55; will-change: transform; }
+.tz__aurora--a { left: -18vmax; top: -24vmax; background: radial-gradient(closest-side, rgba(46,123,234,.9), transparent); animation: tz-drift-a 22s ease-in-out infinite alternate; }
+.tz__aurora--b { right: -26vmax; bottom: -30vmax; background: radial-gradient(closest-side, rgba(240,122,18,.75), transparent); opacity: .42; animation: tz-drift-b 26s ease-in-out infinite alternate; }
+.tz__aurora--c { left: 50%; top: 50%; width: 46vmax; translate: -50% -50%; background: radial-gradient(closest-side, rgba(246,178,60,.55), rgba(46,123,234,.25) 60%, transparent); opacity: .35; animation: tz-pulse 9s ease-in-out infinite; }
+@keyframes tz-drift-a { to { transform: translate(14vmax, 10vmax) scale(1.15); } }
+@keyframes tz-drift-b { to { transform: translate(-12vmax, -8vmax) scale(1.2); } }
+@keyframes tz-pulse { 50% { transform: scale(1.18); opacity: .5; } }
+.tz__grid { position: absolute; inset: 0; background: repeating-linear-gradient(45deg, rgba(120,170,255,.06) 0 1px, transparent 1px 34px), repeating-linear-gradient(-45deg, rgba(120,170,255,.06) 0 1px, transparent 1px 34px); -webkit-mask: radial-gradient(60% 55% at 50% 50%, #000, transparent 75%); mask: radial-gradient(60% 55% at 50% 50%, #000, transparent 75%); }
+.tz__vignette { position: absolute; inset: 0; background: radial-gradient(130% 100% at 50% 50%, transparent 55%, rgba(2,6,14,.85) 100%); }
+
+.tz__particles { position: absolute; inset: 0; z-index: -1; width: 100%; height: 100%; pointer-events: none; }
+
+/* feixe de luz que abre a cena */
+.tz__beam { position: absolute; left: 50%; top: 50%; width: min(80vw, 900px); height: 2px; translate: -50% -50%; border-radius: 2px; background: linear-gradient(90deg, transparent, rgba(246,178,60,.9) 30%, #fff 50%, rgba(46,123,234,.9) 70%, transparent); box-shadow: 0 0 24px 4px rgba(246,178,60,.45), 0 0 80px 18px rgba(46,123,234,.25); opacity: 0; pointer-events: none; }
+
+/* ---------- palco 3D das cartas ---------- */
+.tz__stage { position: absolute; inset: 0; perspective: 1400px; perspective-origin: 50% 46%; pointer-events: none; }
+.tz__ring { position: absolute; left: 50%; top: 50%; width: 0; height: 0; transform-style: preserve-3d; }
+/* a cadeia toda é 3D (sem opacidade nos elementos do meio), para o verso aparecer quando a carta vira;
+   as cartas surgem e somem pela escala */
+.tz-card { position: absolute; left: 0; top: 0; width: var(--tw); aspect-ratio: 63 / 88; margin: calc(var(--tw) * -.698) 0 0 calc(var(--tw) * -.5); transform-style: preserve-3d; transform: scale(0); will-change: transform; }
+.tz-card .vcard { --cw: var(--tw); perspective: none; transform-style: preserve-3d; }
+.tz-card .card-tilt { transition: none; }
+/* leveza: na animação, as camadas que se mexem sozinhas ficam paradas */
+.tz-card .f-rays, .tz-card .f-sparkle, .tz-card .f-frame, .tz-card .f-holo, .tz-card .f-name { animation: none !important; }
+.tz-card .face { box-shadow: 0 2cqw 8cqw -2cqw rgba(0,0,0,.7); }
+
+/* véu que escurece as cartas quando elas passam a girar atrás das logos */
+.tz__dim { position: absolute; inset: 0; z-index: 2; pointer-events: none; opacity: 0; background: linear-gradient(90deg, rgba(6,17,39,.35), rgba(6,17,39,.86) 30% 70%, rgba(6,17,39,.35)); }
+/* clarão quando as cartas se juntam */
+.tz__flash { position: absolute; inset: 0; z-index: 3; pointer-events: none; opacity: 0; background: radial-gradient(40% 40% at 50% 48%, rgba(255,250,235,.95), rgba(246,178,60,.55) 35%, rgba(46,123,234,.2) 65%, transparent 80%); }
+
+/* ---------- revelação: logos + Versatte Cards + Em breve ---------- */
+.tz__reveal { position: absolute; inset: 0; z-index: 4; display: grid; place-content: center; justify-items: center; padding: 84px 20px 40px; text-align: center; pointer-events: none; }
+.tz__reveal > * { pointer-events: auto; }
+.tz__halo { position: absolute; left: 50%; top: 44%; width: min(78vmin, 640px); aspect-ratio: 1; translate: -50% -50%; z-index: -1; border-radius: 50%; pointer-events: none !important; opacity: 0;
+  background: radial-gradient(closest-side, rgba(246,178,60,.28), rgba(46,123,234,.18) 55%, transparent 72%); }
+.tz__halo::before { content: ''; position: absolute; inset: 9%; border-radius: 50%; padding: 1px; background: conic-gradient(from var(--ang), transparent 0 20%, rgba(246,178,60,.85) 32%, transparent 44% 70%, rgba(120,190,255,.8) 82%, transparent 94%); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); animation: spin-ang 9s linear infinite; }
+.tz__logos { display: flex; align-items: center; justify-content: center; gap: clamp(16px, 4vmin, 34px); }
+.tz__vs { width: auto; height: clamp(96px, 19vmin, 186px); filter: drop-shadow(0 10px 30px rgba(0,0,0,.55)) drop-shadow(0 0 26px rgba(46,123,234,.45)); }
+.tz__x { position: relative; display: grid; place-items: center; width: 1px; height: clamp(64px, 12vmin, 120px); background: linear-gradient(180deg, transparent, rgba(246,178,60,.85) 30%, transparent 40% 60%, rgba(246,178,60,.85) 70%, transparent); }
+.tz__x::after { content: '×'; position: absolute; font: 300 clamp(18px, 3vmin, 26px)/1 var(--f-body); color: var(--tz-gold); text-shadow: 0 0 12px rgba(246,178,60,.6); }
+.tz__beyond { width: clamp(118px, 24vmin, 236px); height: auto; filter: drop-shadow(0 0 22px rgba(246,178,60,.25)); }
+.tz__title { margin: clamp(18px, 3.4vmin, 30px) 0 0; display: flex; align-items: baseline; justify-content: center; gap: .14em; line-height: .9; }
+.tz__caps { font: 900 clamp(52px, 11vmin, 116px)/.9 var(--f-caps); text-transform: uppercase; letter-spacing: .04em; color: var(--tz-cream); text-shadow: 0 6px 40px rgba(46,123,234,.35); }
+.tz__script { font: 400 clamp(46px, 9.4vmin, 100px)/.9 var(--f-script); padding: 0 .12em .06em 0; background: linear-gradient(100deg, #FF7A1F 10%, #FFC24A 45%, #FF8A1F 80%); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 4px 18px rgba(240,122,18,.45)); }
+.tz__soon { display: flex; align-items: center; gap: 18px; margin: clamp(16px, 3vmin, 26px) 0 0; font: 600 clamp(13px, 1.9vmin, 16px)/1 var(--f-body); letter-spacing: .5em; text-transform: uppercase; padding-left: .5em; }
+.tz__soon::before, .tz__soon::after { content: ''; width: clamp(34px, 9vmin, 90px); height: 1px; background: linear-gradient(90deg, transparent, var(--tz-gold)); }
+.tz__soon::after { background: linear-gradient(90deg, var(--tz-gold), transparent); }
+.tz__soon span { background: linear-gradient(100deg, #F6B23C 20%, #FFF4DA 40%, #F6B23C 60%); background-size: 250% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: shine 3.6s linear infinite; }
+.tz__sub { max-width: 44ch; margin: 18px auto 0; font: 400 clamp(14.5px, 2vmin, 17px)/1.55 var(--f-body); color: rgba(247,239,227,.76); }
+.tz__actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 12px; margin-top: 26px; }
+.tz__replay { display: inline-grid; place-items: center; width: 52px; height: 52px; border-radius: 50%; border: 1px solid rgba(255,255,255,.28); background: rgba(255,255,255,.08); color: var(--tz-cream); cursor: pointer; transition: background .25s, transform .4s; }
+.tz__replay:hover { background: rgba(255,255,255,.18); transform: rotate(-120deg); }
+.tz__replay svg { width: 20px; height: 20px; }
+.tz__age { display: inline-flex; align-items: center; gap: 8px; margin: 22px 0 0; font: 500 12.5px/1 var(--f-body); color: rgba(247,239,227,.6); }
+.tz__age b { display: inline-grid; place-items: center; min-width: 28px; height: 20px; padding: 0 5px; border-radius: 5px; background: var(--orange); color: #1A0B03; font: 900 12px/1 var(--f-caps); }
+
+/* ---------- barra de cima: voltar ao site e pular ---------- */
+.tz__top { position: absolute; left: 0; right: 0; top: 0; z-index: 6; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: max(16px, env(safe-area-inset-top)) max(18px, env(safe-area-inset-right)) 0 max(18px, env(safe-area-inset-left)); }
+.tz__brand { display: inline-flex; align-items: center; gap: 10px; color: var(--tz-cream); text-decoration: none; font: 900 18px/1 var(--f-caps); text-transform: uppercase; letter-spacing: .03em; opacity: .9; }
+.tz__brand img { width: 30px; height: auto; }
+.tz__brand em { font: 400 22px/1 var(--f-script); text-transform: none; color: var(--orange-hi); }
+.tz__brand:hover { opacity: 1; }
+.tz__skip { height: 38px; padding: 0 16px; border-radius: 999px; border: 1px solid rgba(255,255,255,.25); background: rgba(255,255,255,.06); color: rgba(247,239,227,.85); font: 600 12px/1 var(--f-body); letter-spacing: .18em; text-transform: uppercase; cursor: pointer; transition: opacity .4s, background .25s; }
+.tz__skip:hover { background: rgba(255,255,255,.14); }
+.tz.is-done .tz__skip { opacity: 0; pointer-events: none; }
+
+/* elementos que a animação revela começam escondidos (só com JS ligado) */
+.tz.js .tz__reveal > *, .tz.js .tz__halo { opacity: 0; }
+
+@media (max-height: 560px) and (orientation: landscape) {
+  .tz__reveal { padding-top: 60px; }
+  .tz__sub, .tz__age { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tz__aurora, .tz__halo::before, .tz__soon span { animation: none !important; }
+}
+/* durante a animação, os botões ainda invisíveis não recebem clique */
+.tz.js:not(.is-done) .tz__reveal > * { pointer-events: none; }

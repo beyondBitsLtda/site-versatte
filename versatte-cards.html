@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="teaser-page">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Versatte Cards · Em breve · Versatte Sports</title>
+  <meta name="description" content="Versatte Cards: o jogo de cartas colecionáveis de futebol da Versatte, desenvolvido pela Beyond Bits. Em breve.">
+  <meta name="theme-color" content="#061127">
+  <link rel="icon" type="image/png" href="assets/img/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Figtree:wght@300;400;500;600;700&family=Mr+Dafoe&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css?v=20261113-2">
+  <link rel="stylesheet" href="css/vcard.css?v=20261113-2">
+  <link rel="stylesheet" href="css/teaser.css?v=20261113-2">
+  <script src="js/tela.js?v=20261113-2"></script>
+  <script src="js/vitrine-cartas.js?v=20261113-2" defer></script>
+  <script src="js/teaser.js?v=20261113-2" defer></script>
+</head>
+<body class="teaser">
+
+<!-- ============ VERSATTE CARDS · TEASER ============
+     Abre pela carta 3D do Cruzeiro na home (#card-game). As cartas são as do jogo (js/vitrine-cartas.js);
+     a animação está em js/teaser.js e o visual em css/teaser.css. Sem JavaScript (ou com "reduzir
+     movimento" ligado no aparelho), a página mostra direto o final: logos, Versatte Cards e Em breve. -->
+<main class="tz" data-tz>
+  <div class="tz__bg" aria-hidden="true">
+    <div class="tz__aurora tz__aurora--a"></div>
+    <div class="tz__aurora tz__aurora--b"></div>
+    <div class="tz__aurora tz__aurora--c"></div>
+    <div class="tz__grid"></div>
+    <div class="tz__vignette"></div>
+  </div>
+  <canvas class="tz__particles" data-tz-particles aria-hidden="true"></canvas>
+  <div class="tz__beam" data-tz-beam aria-hidden="true"></div>
+  <div class="tz__stage" aria-hidden="true"><div class="tz__ring" data-tz-ring></div></div>
+  <div class="tz__dim" data-tz-dim aria-hidden="true"></div>
+  <div class="tz__flash" data-tz-flash aria-hidden="true"></div>
+
+  <div class="tz__top">
+    <a class="tz__brand" href="/" aria-label="Versatte Sports, voltar ao site">
+      <img src="assets/img/logo-vs.webp" alt="" width="30" height="36">
+      <span>Versatte <em>Sports</em></span>
+    </a>
+    <button class="tz__skip" type="button" data-tz-skip>Pular</button>
+  </div>
+
+  <section class="tz__reveal" aria-labelledby="tz-titulo">
+    <div class="tz__halo" data-tz-r="halo" aria-hidden="true"></div>
+    <div class="tz__logos" data-tz-r="logos">
+      <img class="tz__vs" src="assets/img/logo-vs.webp" alt="Versatte Sports" width="480" height="573">
+      <span class="tz__x" aria-hidden="true"></span>
+      <img class="tz__beyond" src="assets/img/beyond-bits-light.webp" alt="Beyond Bits" width="700" height="330">
+    </div>
+    <h1 class="tz__title" id="tz-titulo" data-tz-r="titulo">
+      <span class="tz__caps">Versatte</span>
+      <span class="tz__script">Cards</span>
+    </h1>
+    <p class="tz__soon" data-tz-r="breve"><span>Em breve</span></p>
+    <p class="tz__sub" data-tz-r="sub">O jogo de cartas colecionáveis de futebol da Versatte, desenvolvido pela Beyond Bits. Abra pacotes, complete o álbum, monte seu time e entre em campo.</p>
+    <div class="tz__actions" data-tz-r="acoes">
+      <a class="btn btn--solid" href="https://www.instagram.com/versatte_sports/" target="_blank" rel="noopener">Acompanhe o lançamento</a>
+      <a class="btn btn--glass" href="/#card-game">Voltar ao site</a>
+      <button class="tz__replay" type="button" data-tz-replay aria-label="Ver a animação de novo">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v4.4h4.4" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+    <p class="tz__age" data-tz-r="idade"><b>18+</b>Jogo para maiores de 18 anos</p>
+  </section>
+</main>
+
+</body>
+</html>

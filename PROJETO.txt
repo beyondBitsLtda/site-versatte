@@ -60,7 +60,7 @@ PÁGINA INICIAL (index.html):
 1) Topo (hero) com slider de 3 slides:
    - Boas-vindas: a cada visita alterna entre 3 combinações de imagem + texto.
    - Campanha "Esquenta Novembro": some sozinha depois de 25/10/2026.
-   - Teaser do Versatte Cards.
+   - Teaser do Versatte Cards (escondido por enquanto; ver item 7).
    Embaixo do topo há uma borda curva com uma faixa de "tecido" laranja que
    acompanha a curva, com texto correndo (desenhada em SVG pelo main.js).
 2) Novidades do Insta: os 4 posts mais recentes do Instagram (js/posts.js). Tocar
@@ -77,8 +77,31 @@ PÁGINA INICIAL (index.html):
 5) Tabela de medidas: faixas de tamanho por modelo
    (Torcedor P ao 4XL, Jogador P ao 3XL, Feminina P ao GG).
 6) Como comprar: 3 passos + botões de Direct e WhatsApp.
-7) Versatte Cards (em breve): faixa fina com as cartas do jogo escapando para
-   fora; as cartas têm efeito 3D/holográfico e viram ao toque.
+7) Versatte Cards (em breve, desde 13/11/2026): faixa no azul da logo com a
+   carta do Cruzeiro em 3D escapando para fora. A carta é a do jogo (mesmo HTML,
+   gerado pelo js/cards.js do Versatte_card_game; visual em css/vcard.css), tem
+   espessura, gira arrastando (com embalo), inclina e brilha com o mouse, balança
+   sozinha e de vez em quando dá uma volta mostrando o verso. Tocar (sem
+   arrastar) ou "Assistir ao teaser" abre versatte-cards.html. Aviso 18+ e
+   "Desenvolvido por Beyond Bits". O link "Card Game" do menu e o slide do topo
+   continuam escondidos (marcados com "versatte-cards-off"); o do rodapé aparece.
+   TEASER (versatte-cards.html): tela cheia no azul da logo, luzes em degradê e
+   partículas; as cartas do jogo entram voando, abrem em leque, viram um
+   carrossel 3D que acelera e se juntam num clarão; aparecem as logos da Versatte
+   e da Beyond Bits, "Versatte Cards" e "Em breve" (com Instagram, voltar ao site
+   e repetir). No computador as cartas seguem girando atrás, escurecidas; no
+   celular o final fica limpo. "Pular" (ou Esc) vai direto ao final; com
+   "reduzir movimento" ligado no aparelho, a página já abre no final, parada.
+   Arquivos: css/teaser.css, js/teaser.js e js/vitrine-cartas.js (cartas).
+   TROCAR AS CARTAS: edite a lista CARTAS (e HOME, a carta 3D da home) em
+   tools/vitrine-cartas.mjs e rode, na pasta do site:
+     node tools/vitrine-cartas.mjs "<pasta do Versatte_card_game>"
+   Ele gera js/vitrine-cartas.js, troca a carta da home (entre <!-- carta 3D -->
+   e <!-- /carta 3D --> no index.html) e converte os escudos para assets/cards/.
+   Só os clubes usam imagem (escudos em domínio público, assets/cards/LEIA-ME.txt);
+   estádios, mascotes e Juízo Final usam a arte desenhada pelo jogo (as fotos do
+   jogo são de terceiros e não vão para o site). Os escudos são marcas dos clubes:
+   confirme o uso com o jurídico antes do lançamento.
 8) Fale com a gente (formulário) e rodapé: contatos e crédito Beyond Bits.
 Fixo na tela: botão flutuante do WhatsApp.
 

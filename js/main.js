@@ -999,6 +999,112 @@
     requestAnimationFrame(loop);
   }
 
+  /* ============================================================
+     CARTA 3D (#card-game, carta do Cruzeiro): gira arrastando (com embalo), inclina com o mouse,
+     balança sozinha e, parada por uns segundos, dá uma volta inteira (mostra o verso e a espessura).
+     Tocar/clicar sem arrastar segue o link (versatte-cards.html). Visual em css/vcard.css (.c3d).
+     ============================================================ */
+  const c3d = $('[data-c3d]');
+  if (c3d) {
+    const card = $('.vcard', c3d), flip = $('.card-flip', card), verso = $('.face.back', flip);
+    for (let k = 1; k <= 6; k++) {   // espessura: 6 camadas entre a frente e o verso
+      const e = document.createElement('div');
+      e.className = 'c3d__edge';
+      e.style.setProperty('--k', (k / 7).toFixed(3));
+      flip.insertBefore(e, verso);
+    }
+    const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+    let ry = -16, rx = 4;        // ângulos atuais (graus)
+    let vy = 0, mode = 'mola';   // 'embalo' depois de arrastar (desacelera); 'mola' volta para a frente
+    let home = 0;                // ângulo da frente (múltiplo de 360): a mola puxa para ele
+    let drag = null, moved = false, hover = null, visible = false, running = false;
+    let idleSince = performance.now();
+    const apply = () => {
+      const a = (ry - home) * Math.PI / 180;
+      const mx = hover ? hover.x * 100 : 50 + Math.sin(a) * 48;
+      const my = hover ? hover.y * 100 : 50 - rx * 2.2;
+      card.style.setProperty('--ry', `${ry.toFixed(2)}deg`);
+      card.style.setProperty('--rx', `${rx.toFixed(2)}deg`);
+      card.style.setProperty('--mx', `${mx.toFixed(1)}%`);
+      card.style.setProperty('--my', `${my.toFixed(1)}%`);
+      card.style.setProperty('--hyp', Math.min(1, Math.hypot(mx - 50, my - 50) / 50).toFixed(3));
+      c3d.style.setProperty('--shadow', Math.abs(Math.cos(a)).toFixed(3));
+    };
+    const frame = t => {
+      if (!visible && !drag && mode !== 'embalo') { running = false; return; }
+      if (!drag || !drag.on) {
+        if (mode === 'embalo') {
+          ry += vy; vy *= .95;
+          rx += (3 - rx) * .08;
+          if (Math.abs(vy) < .35) { mode = 'mola'; home = Math.round(ry / 360) * 360; idleSince = t; }
+        } else {
+          const k = t / 1000;
+          let ty = home, tx = 0, K = .012, D = .88;
+          if (hover) { ty = home + (hover.x - .5) * 34; tx = (.5 - hover.y) * 26; K = .06; D = .72; }
+          else if (!reduceMotion) {
+            ty = home + Math.sin(k * .55) * 18; tx = Math.sin(k * .8) * 5 + 3;
+            if (t - idleSince > 8500) { home += 360; idleSince = t; }   // uma volta inteira de vez em quando
+          }
+          vy += (ty - ry) * K; vy *= D; ry += vy;
+          rx += (tx - rx) * (hover ? .14 : .05);
+        }
+      }
+      apply();
+      requestAnimationFrame(frame);
+    };
+    const start = () => { if (!running) { running = true; requestAnimationFrame(frame); } };
+    new IntersectionObserver(([e]) => { visible = e.isIntersecting; if (visible) { idleSince = performance.now(); start(); } }).observe(c3d);
+    apply();
+
+    c3d.addEventListener('pointerdown', e => {
+      if (e.button !== 0) return;
+      drag = { id: e.pointerId, x: e.clientX, y: e.clientY, ry, rx, lastX: e.clientX, lastT: e.timeStamp, v: 0, on: false };
+      moved = false;
+      start();
+    });
+    c3d.addEventListener('pointermove', e => {
+      if (!drag) {
+        if (e.pointerType !== 'mouse') return;
+        const r = c3d.getBoundingClientRect();
+        hover = { x: clamp((e.clientX - r.left) / r.width, 0, 1), y: clamp((e.clientY - r.top) / r.height, 0, 1) };
+        if (mode === 'embalo') mode = 'mola';
+        start();
+        return;
+      }
+      if (e.pointerId !== drag.id) return;
+      const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+      if (!drag.on) {
+        if (Math.hypot(dx, dy) < 6) return;
+        drag.on = true; moved = true; hover = null;
+        try { c3d.setPointerCapture(e.pointerId); } catch { /* ponteiro já liberado */ }
+        c3d.classList.add('is-dragging');
+      }
+      ry = drag.ry + dx * .55;
+      rx = clamp(drag.rx - dy * .25, -28, 28);
+      const dt = Math.max(1, e.timeStamp - drag.lastT);
+      drag.v = (e.clientX - drag.lastX) * .55 / dt * 16.7;   // graus por quadro
+      drag.lastX = e.clientX; drag.lastT = e.timeStamp;
+      apply();
+    });
+    const soltar = e => {
+      if (!drag || e.pointerId !== drag.id) return;
+      if (drag.on) {
+        c3d.classList.remove('is-dragging');
+        vy = reduceMotion ? 0 : clamp(drag.v, -40, 40);
+        mode = Math.abs(vy) >= .35 ? 'embalo' : 'mola';
+        if (mode === 'mola') home = Math.round(ry / 360) * 360;
+      }
+      drag = null;
+      idleSince = performance.now();
+      start();
+    };
+    c3d.addEventListener('pointerup', soltar);
+    c3d.addEventListener('pointercancel', soltar);
+    c3d.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse' && !drag) hover = null; });
+    c3d.addEventListener('click', e => { if (moved) { e.preventDefault(); moved = false; } });
+    c3d.addEventListener('dragstart', e => e.preventDefault());
+  }
+
   /* ---------- rodapé ---------- */
   $$('[data-year]').forEach(el => { el.textContent = new Date().getFullYear(); });
 })();

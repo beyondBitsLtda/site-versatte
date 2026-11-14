@@ -16,12 +16,13 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Figtree:wght@400;500;600;700&family=Mr+Dafoe&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=20261113-1">
+  <link rel="stylesheet" href="css/style.css?v=20261113-2">
+  <link rel="stylesheet" href="css/vcard.css?v=20261113-2">
   <!-- ajuste do modo "Site para computador" no celular: precisa rodar aqui, sem defer -->
   <script src="js/tela.js?v=20261113-1"></script>
   <script src="js/posts.js?v=20261113-1" defer></script>
   <script src="js/catalogo.js?v=20261113-1" defer></script>
-  <script src="js/main.js?v=20261113-1" defer></script>
+  <script src="js/main.js?v=20261113-2" defer></script>
 </head>
 <body>
 
@@ -147,7 +148,7 @@
       </div>
     </article>
 
-    <!-- Slide 3 · Versatte Cards (teaser) · VERSATTE CARDS ESCONDIDO por enquanto (campanha futura). Para voltar, remova o atributo "hidden" aqui e nos outros 3 lugares marcados com "versatte-cards-off": slide do hero, seção #card-game, menu e rodapé. -->
+    <!-- Slide 3 · Versatte Cards (teaser) · ESCONDIDO: a seção #card-game e o link no rodapé já aparecem (13/11/2026). O link no menu também segue escondido (no computador, com ele os itens do menu quebram em duas linhas). Para mostrar, remova o atributo "hidden". -->
     <article class="slide slide--cards" data-slide data-label="Versatte Cards" aria-roledescription="slide" hidden data-note="versatte-cards-off">
       <div class="slide__media slide__media--cards" aria-hidden="true"></div>
       <div class="slide__content wrap cards-teaser">
@@ -352,25 +353,38 @@
   </div>
 </section>
 
-<!-- ============ VERSATTE CARDS · faixa fina, cartas escapando ============
-     VERSATTE CARDS ESCONDIDO por enquanto (campanha futura). Para voltar, remova o atributo "hidden" aqui e nos outros 3 lugares marcados com "versatte-cards-off": slide do hero, seção #card-game, menu e rodapé. -->
-<section class="game" id="card-game" hidden data-note="versatte-cards-off">
+<!-- ============ VERSATTE CARDS · em breve ============
+     Carta do Cruzeiro em 3D: é o mesmo HTML da carta no jogo (gerado pelo js/cards.js do
+     Versatte_card_game) com o visual de css/vcard.css. Gira arrastando, inclina com o mouse e,
+     ao tocar, abre o teaser versatte-cards.html (js/main.js, "carta 3D"). O slide do hero
+     marcado com "versatte-cards-off" continua escondido. -->
+<section class="game" id="card-game" aria-labelledby="card-game-titulo">
   <div class="game__band">
     <div class="game__net" aria-hidden="true"></div>
+    <div class="game__sparks" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
     <div class="wrap game__inner">
       <div class="game__text reveal">
         <span class="stamp">Em breve</span>
-        <h2 class="display">
+        <h2 class="display" id="card-game-titulo">
           <span class="display__caps">Versatte</span>
           <span class="display__script">Cards</span>
         </h2>
-        <p class="lead">O jogo de cartas colecionáveis da Versatte. Abra pacotes, complete álbuns e troque por brindes de verdade.</p>
-        <a class="btn btn--glass" href="https://www.instagram.com/versatte_sports/" target="_blank" rel="noopener">Acompanhe o lançamento</a>
+        <p class="lead">O jogo de cartas colecionáveis de futebol da Versatte. Abra pacotes, complete o álbum, monte seu time e entre em campo.</p>
+        <div class="game__actions">
+          <a class="btn btn--solid" href="versatte-cards.html">Assistir ao teaser</a>
+          <span class="game__by">Desenvolvido por <img src="assets/img/beyond-bits-light.webp" alt="Beyond Bits" width="92" height="43" loading="lazy"></span>
+        </div>
+        <p class="game__note">
+          <span><b class="game__18">18+</b>Para maiores de 18 anos</span>
+          <span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 0 1 13.7-5.6M20 12a8 8 0 0 1-13.7 5.6M17.7 3v3.4h-3.4M6.3 21v-3.4h3.4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Arraste a carta para girar</span>
+        </p>
       </div>
-      <div class="game__stage" data-fan>
-        <div class="fan fan--left" data-vcard="back"></div>
-        <div class="fan fan--right" data-vcard="galo" data-tilt></div>
-        <div class="fan fan--center" data-vcard="urubu" data-tilt data-flip></div>
+      <div class="game__stage">
+        <a class="c3d" href="versatte-cards.html" data-c3d aria-label="Carta do Cruzeiro do Versatte Cards. Abrir o teaser do jogo">
+          <span class="c3d__halo" aria-hidden="true"></span>
+          <span class="c3d__floor" aria-hidden="true"></span>
+          <!-- carta 3D --><div class="vcard r-rara k-team v-away" style="--c1:#1A3F9C;--c2:#FFFFFF;--rc:#33B5FF"><div class="card-tilt"><div class="card-flip"><div class="face front"><div class="f-bg"></div><div class="f-rays"></div><div class="f-art has-img mode-conter" style="--img-s:1;--img-y:0px"><img class="art-img" src="assets/cards/clube-cru.webp" alt="" draggable="false" loading="lazy" onerror="this.parentNode.classList.add('img-fail')"><div class="art-fallback"><svg class="art-team " viewBox="0 0 200 240" aria-hidden="true"><defs><clipPath id="cl1"><path d="M100 10 L178 32 C181 72 182 112 176 142 C166 190 134 214 100 230 C66 214 34 190 24 142 C18 112 19 72 22 32 Z"/></clipPath><linearGradient id="sh2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".45"/><stop offset=".45" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".35"/></linearGradient><linearGradient id="st3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#05080f" stop-opacity=".88"/><stop offset="1" stop-color="#05080f" stop-opacity=".7"/></linearGradient></defs><path d="M100 10 L178 32 C181 72 182 112 176 142 C166 190 134 214 100 230 C66 214 34 190 24 142 C18 112 19 72 22 32 Z" transform="translate(0 6)" fill="#000" opacity=".45"/><g clip-path="url(#cl1)"><rect width="200" height="240" fill="#FFFFFF"/><path d="M0 170 L200 120 L200 240 L0 240Z" fill="#1A3F9C" opacity=".16"/></g><path d="M100 10 L178 32 C181 72 182 112 176 142 C166 190 134 214 100 230 C66 214 34 190 24 142 C18 112 19 72 22 32 Z" fill="url(#sh2)"/><rect x="14" y="92" width="172" height="58" rx="6" fill="url(#st3)" clip-path="url(#cl1)"/><text x="100" y="138" text-anchor="middle" class="art-abbr">CRU</text><path d="M100 38 l5.9 12 13.2 1.9-9.6 9.3 2.3 13.1L100 68.1l-11.8 6.2 2.3-13.1-9.6-9.3 13.2-1.9Z" fill="#fff" stroke="#05080f" stroke-width="2.5" paint-order="stroke"/><text x="100" y="186" text-anchor="middle" class="art-year">1921</text><path d="M100 10 L178 32 C181 72 182 112 176 142 C166 190 134 214 100 230 C66 214 34 190 24 142 C18 112 19 72 22 32 Z" fill="none" stroke="currentColor" stroke-width="5"/><path d="M100 10 L178 32 C181 72 182 112 176 142 C166 190 134 214 100 230 C66 214 34 190 24 142 C18 112 19 72 22 32 Z" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="1.2" transform="translate(10 10) scale(.9)"/></svg></div></div><img class="f-wm" src="assets/img/logo-vs.webp" alt="" draggable="false"><div class="f-top"><span class="f-num">#09</span><span class="f-col">Clubes</span><span class="f-gem"><svg class="gem" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 1.2 10.8 6 6 10.8 1.2 6Z"/></svg></span></div><div class="f-foot"><div class="f-name">Cruzeiro</div><div class="f-sub">Belo Horizonte · MG</div><div class="f-rar">Uniforme 2 · Rara</div></div><div class="f-holo"></div><div class="f-sparkle"></div><div class="f-frame"></div><div class="f-glare"></div></div><div class="face back"><div class="b-grid"></div><div class="b-ring"></div><img class="b-logo" src="assets/img/logo-vs.webp" alt="" draggable="false"><div class="b-title">VERSATTE<span>Cards</span></div></div></div></div></div><!-- /carta 3D -->
+        </a>
       </div>
     </div>
   </div>
@@ -448,7 +462,7 @@
       <a href="#guia">Guia do manto</a>
       <a href="#tamanhos">Tamanhos</a>
       <a href="#como-comprar">Como comprar</a>
-      <a href="#card-game" hidden data-note="versatte-cards-off">Versatte Cards</a>
+      <a href="#card-game">Versatte Cards</a>
     </div>
 
     <div class="footer__col">

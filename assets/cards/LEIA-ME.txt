@@ -1,0 +1,20 @@
+ESCUDOS DAS CARTAS (Versatte Cards na home e em versatte-cards.html)
+
+Os mesmos escudos usados no jogo (Versatte_card_game, assets/cartas/clubes/), convertidos para WebP
+(512 px). Origem e licença, conforme assets/cartas/CREDITOS.md do jogo: Wikimedia Commons, marcados
+como domínio público (Public domain).
+
+  clube-bot.webp  Botafogo       https://commons.wikimedia.org/wiki/File:Botafogo_de_Futebol_e_Regatas_logo.svg
+  clube-cam.webp  Atlético-MG    https://commons.wikimedia.org/wiki/File:Clube_Atl%C3%A9tico_Mineiro_logo.svg
+  clube-cru.webp  Cruzeiro       https://commons.wikimedia.org/wiki/File:Cruzeiro_Esporte_Clube_(logo).svg
+  clube-fla.webp  Flamengo       https://commons.wikimedia.org/wiki/File:Clube_de_Regatas_do_Flamengo_logo.svg
+  clube-flu.webp  Fluminense     https://commons.wikimedia.org/wiki/File:Fluminense_Football_Club.svg
+  clube-gre.webp  Grêmio         https://commons.wikimedia.org/wiki/File:Gremio_logo.svg
+  clube-int.webp  Internacional  https://commons.wikimedia.org/wiki/File:Escudo_do_Sport_Club_Internacional.svg
+  clube-pal.webp  Palmeiras      https://commons.wikimedia.org/wiki/File:Palmeiras_logo.svg
+  clube-san.webp  Santos         https://commons.wikimedia.org/wiki/File:Santos_Futebol_Clube_logo_(with_stars_and_crown).png
+  clube-sao.webp  São Paulo      https://commons.wikimedia.org/wiki/File:S%C3%A3o_Paulo_Futebol_Clube_logo_(2022).svg
+
+Domínio público vale para o direito autoral da imagem; o escudo continua sendo marca do clube.
+Antes de lançar o jogo (ou de usar em anúncios), confirme com o jurídico o uso das marcas dos clubes.
+Estádios, mascotes e Juízo Final aparecem com a arte desenhada pelo próprio jogo (sem fotos de terceiros).

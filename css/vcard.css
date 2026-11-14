@@ -1,0 +1,132 @@
+/* ============================================================
+   CARTA · Versatte Cards (portado do jogo, escopo .vcard)
+   Mesmo visual do jogo (Versatte_card_game, css/styles.css e
+   css/game.css). Usada na home (#card-game, carta 3D) e na página
+   versatte-cards.html. O HTML das cartas vem do próprio jogo
+   (js/vitrine-cartas.js e a carta do Cruzeiro no index.html).
+   ============================================================ */
+@property --ang { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+.vcard {
+  --rx: 0deg; --ry: 0deg; --mx: 50%; --my: 50%; --hyp: 0;
+  --f-head: 'Big Shoulders Display', 'Arial Narrow', sans-serif;
+  position: relative; width: var(--cw, 260px); aspect-ratio: 63 / 88;
+  container-type: inline-size; perspective: 1000px;
+  user-select: none; -webkit-user-select: none; touch-action: pan-y;
+  font-family: var(--f-body);
+}
+[data-flip] .vcard { cursor: pointer; }
+.vcard .card-float { position: absolute; inset: 0; animation: float 6s ease-in-out infinite; }
+.vcard .card-tilt { position: absolute; inset: 0; transform-style: preserve-3d; transform: rotateX(var(--rx)) rotateY(var(--ry)); transition: transform .5s cubic-bezier(.2,.7,.2,1); }
+.vcard.is-tilting .card-tilt { transition: none; }
+.vcard .card-flip { position: absolute; inset: 0; transform-style: preserve-3d; transition: transform .8s cubic-bezier(.3,1.25,.45,1); }
+.vcard.flipped .card-flip { transform: rotateY(180deg); }
+.vcard .face { position: absolute; inset: 0; border-radius: 4.8cqw; overflow: hidden; -webkit-backface-visibility: hidden; backface-visibility: hidden; transform: translateZ(.1px); box-shadow: 0 6cqw 12cqw -4cqw rgba(0,0,0,.8); }
+.vcard .face.back { transform: rotateY(180deg) translateZ(.1px); }
+.vcard.only-back .face.back { transform: translateZ(.1px); }
+.vcard.only-back .face.front { display: none; }
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2.5cqw); } }
+
+.vcard .f-bg { position: absolute; inset: 0; background: radial-gradient(115% 72% at 50% 34%, color-mix(in srgb, var(--c1) 48%, #0b1426) 0%, #070b14 74%); }
+.vcard .f-bg::after { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(135deg, rgba(255,255,255,.035) 0 1px, transparent 1px 2.4cqw); }
+.vcard.k-hero .f-bg { background: radial-gradient(110% 70% at 50% 34%, color-mix(in srgb, var(--c1) 70%, #7B2CFF) 0%, #0a0414 76%); }
+.vcard.k-hero .f-bg::after { background-image: radial-gradient(circle, rgba(255,255,255,.08) 0 .6cqw, transparent .7cqw); background-size: 3.6cqw 3.6cqw; }
+.vcard .f-rays { position: absolute; inset: -35%; opacity: 0; pointer-events: none; }
+.vcard .f-art { position: absolute; left: 50%; top: 13%; width: 72%; aspect-ratio: 200 / 240; translate: calc(-50% + (50% - var(--mx)) * .14) calc((50% - var(--my)) * .1); color: var(--rc); filter: drop-shadow(0 3cqw 4cqw rgba(0,0,0,.55)); }
+.vcard .f-art svg { width: 100%; height: 100%; overflow: visible; }
+.vcard .art-pow { font: 900 32px var(--f-head); fill: #fff; stroke: #05080f; stroke-width: 5px; paint-order: stroke; }
+.vcard .f-wm { position: absolute; right: 5cqw; top: 54%; width: 13cqw; opacity: .2; filter: grayscale(1) brightness(2.2); pointer-events: none; }
+.vcard .f-top { position: absolute; top: 4.4cqw; left: 6cqw; right: 6cqw; display: flex; align-items: center; justify-content: space-between; gap: 2cqw; }
+.vcard .f-num { font: 900 6.6cqw/1 var(--f-head); color: #fff; text-shadow: 0 0 2cqw rgba(0,0,0,.8); }
+.vcard .f-col { font: 700 3.8cqw/1 var(--f-body); color: rgba(255,255,255,.6); text-transform: uppercase; letter-spacing: .16em; }
+.vcard .f-gem { color: var(--rc); width: 6cqw; height: 6cqw; filter: drop-shadow(0 0 1.5cqw var(--rc)); }
+.vcard .f-gem svg { width: 100%; height: 100%; display: block; }
+.vcard .f-foot { position: absolute; left: 0; right: 0; bottom: 0; height: 29%; padding: 3cqw 7cqw 6cqw; display: flex; flex-direction: column; justify-content: flex-end; background: linear-gradient(to top, rgba(4,7,13,.97) 50%, rgba(4,7,13,0)); }
+.vcard .f-name { font: 900 12cqw/.92 var(--f-head); text-transform: uppercase; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 1cqw; }
+.vcard.k-hero .f-name { text-shadow: .6cqw .6cqw 0 #05080f; }
+.vcard .f-sub { font: 500 4.3cqw/1.25 var(--f-body); color: rgba(234,241,255,.65); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: .8cqw; }
+.vcard .f-rar { display: flex; align-items: center; gap: 1.8cqw; margin-top: 1.6cqw; font: 700 3.6cqw/1 var(--f-body); text-transform: uppercase; letter-spacing: .2em; color: var(--rc); }
+.vcard .f-rar::before { content: ''; width: 5cqw; height: 1px; background: var(--rc); box-shadow: 0 0 1cqw var(--rc); }
+.vcard .f-holo, .vcard .f-sparkle, .vcard .f-glare { position: absolute; inset: 0; pointer-events: none; }
+.vcard .f-holo { opacity: 0; mix-blend-mode: color-dodge; }
+.vcard .f-sparkle { opacity: 0; }
+.vcard .f-glare { mix-blend-mode: overlay; opacity: calc(.18 + var(--hyp) * .7); background: radial-gradient(farthest-corner circle at var(--mx) var(--my), rgba(255,255,255,.6) 0%, rgba(255,255,255,.12) 28%, transparent 58%); }
+.vcard .f-frame { position: absolute; inset: 0; border-radius: inherit; padding: 1.5cqw; background: var(--frame); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); pointer-events: none; }
+.vcard .f-frame::after { content: ''; position: absolute; inset: 2.8cqw; border-radius: 3.2cqw; border: 1px solid rgba(255,255,255,.1); }
+
+/* arte: escudo em imagem (clubes) ou arte gerada pelo jogo (SVG) */
+.vcard .art-abbr { font: 900 58px var(--f-head); fill: #fff; letter-spacing: 1px; }
+.vcard .art-year { font: 800 15px var(--f-head); fill: #fff; letter-spacing: 3px; paint-order: stroke; stroke: rgba(0,0,0,.55); stroke-width: 3px; }
+.vcard .f-art.has-img .art-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; transform: translateY(var(--img-y, 0)) scale(var(--img-s, 1)); }
+.vcard .f-art.has-img .art-fallback { position: absolute; inset: 0; }
+.vcard .f-art.has-img:not(.img-fail) .art-fallback { display: none; }
+.vcard .f-art.img-fail .art-img { display: none; }
+.vcard.k-mascot .f-art { top: 12%; width: 80%; }
+.vcard.k-stadium .f-art { left: 0; top: 0; width: 100%; height: 100%; aspect-ratio: auto; filter: none; translate: calc((50% - var(--mx)) * .04) calc((50% - var(--my)) * .03); scale: 1.06; }
+.vcard.k-stadium .f-foot { height: 32%; }
+.vcard.v-champ .f-art { top: 15%; }
+.vcard.v-retro .f-bg { background: radial-gradient(115% 72% at 50% 34%, #4a3a22 0%, #120d07 76%); }
+.vcard.v-retro .f-bg::after { background: repeating-linear-gradient(0deg, rgba(255,240,210,.04) 0 1px, transparent 1px 1.6cqw); }
+.vcard.v-retro .f-art { filter: sepia(.55) contrast(1.08) drop-shadow(0 3cqw 4cqw rgba(0,0,0,.55)); }
+.vcard.is-villain .f-bg { background: radial-gradient(110% 70% at 50% 34%, #3a0f5c 0%, #050208 76%); }
+.vcard.is-villain .face.front { box-shadow: 0 0 0 1px rgba(61,255,143,.5), 0 0 10cqw rgba(61,255,143,.45); }
+
+/* raridades */
+.vcard.r-comum    { --frame: linear-gradient(145deg, #6f7987, #eef3f9 30%, #8a94a3 50%, #dfe6ee 75%, #6f7987); }
+.vcard.r-rara     { --frame: linear-gradient(145deg, #0a5fe0, #9be9ff 30%, #1677ff 55%, #5fd0ff 80%, #0a5fe0); }
+.vcard.r-rara .face.front { box-shadow: 0 0 0 1px rgba(51,181,255,.35), 0 0 6cqw -1cqw rgba(51,181,255,.55), 0 6cqw 12cqw -4cqw rgba(0,0,0,.8); }
+.vcard.r-rara .f-holo { opacity: calc(.28 + var(--hyp) * .5); background: linear-gradient(115deg, transparent 25%, rgba(70,190,255,.55) 42%, rgba(255,255,255,.7) 50%, rgba(70,190,255,.55) 58%, transparent 75%); background-size: 260% 260%; background-position: var(--mx) var(--my); }
+.vcard.r-especial .f-bg { background: radial-gradient(115% 72% at 50% 34%, color-mix(in srgb, var(--c1) 40%, #3a2600) 0%, #0b0803 76%); }
+.vcard.k-hero.r-especial .f-bg { background: radial-gradient(110% 70% at 50% 34%, color-mix(in srgb, var(--c1) 70%, #7B2CFF) 0%, #0a0414 76%); }
+.vcard.is-villain.r-especial .f-bg { background: radial-gradient(110% 70% at 50% 34%, #3a0f5c 0%, #050208 76%); }
+.vcard.is-villain .f-name { background: linear-gradient(100deg, #b6ffd6, #3dff8f 50%, #b6ffd6); -webkit-background-clip: text; background-clip: text; color: transparent; text-shadow: none; animation: none; filter: none; }
+.vcard.r-muito    { --frame: linear-gradient(145deg, #5a12c8, #f0b6ff 28%, #8b2bff 50%, #7fdcff 72%, #b866ff); }
+.vcard.r-especial { --frame: conic-gradient(from var(--ang), #ffd36b, #fff6d0, #ffae1f, #ff8a1f, #fff6d0, #ffd36b, #ffb21e, #ffd36b); }
+.vcard.r-muito .face.front { box-shadow: 0 0 0 1px rgba(184,102,255,.4), 0 0 8cqw -1cqw rgba(184,102,255,.65), 0 6cqw 12cqw -4cqw rgba(0,0,0,.8); }
+.vcard.r-especial .face.front { box-shadow: 0 0 0 1px rgba(255,201,64,.5), 0 0 10cqw 0 rgba(255,201,64,.5), 0 6cqw 12cqw -4cqw rgba(0,0,0,.8); }
+.vcard.r-muito .f-holo { opacity: calc(.16 + var(--hyp) * .36); background: repeating-linear-gradient(120deg, #ff5ad6 0%, #b866ff 7%, #4f8bff 14%, #39ffe0 21%, #b866ff 28%, #ff5ad6 35%); background-size: 320% 320%; background-position: var(--mx) var(--my); }
+.vcard.r-muito .f-sparkle, .vcard.r-especial .f-sparkle {
+  opacity: .55; mix-blend-mode: screen;
+  background-image: radial-gradient(circle, #fff 0 .5cqw, transparent .8cqw), radial-gradient(circle, #fff 0 .35cqw, transparent .6cqw);
+  background-size: 11cqw 13cqw, 7cqw 9cqw; background-position: 0 0, 3cqw 4cqw;
+  -webkit-mask: radial-gradient(circle at var(--mx) var(--my), #000 0%, transparent 50%); mask: radial-gradient(circle at var(--mx) var(--my), #000 0%, transparent 50%);
+  animation: twinkle 2.4s ease-in-out infinite;
+}
+.vcard.r-muito .f-rays { opacity: .5; background: repeating-conic-gradient(from 0deg, rgba(184,102,255,.16) 0 6deg, transparent 6deg 20deg); -webkit-mask: radial-gradient(circle, #000 15%, transparent 60%); mask: radial-gradient(circle, #000 15%, transparent 60%); animation: rot 24s linear infinite; }
+.vcard.r-especial .f-rays { opacity: 1; background: repeating-conic-gradient(from 0deg, rgba(255,201,64,.24) 0 5deg, transparent 5deg 15deg); -webkit-mask: radial-gradient(circle, #000 10%, transparent 62%); mask: radial-gradient(circle, #000 10%, transparent 62%); animation: rot 24s linear infinite; }
+.vcard.r-especial .f-holo { opacity: calc(.12 + var(--hyp) * .3); background: radial-gradient(circle at var(--mx) var(--my), rgba(255,255,255,.7), transparent 32%), conic-gradient(from var(--ang) at var(--mx) var(--my), #ffcf5a, #ff8a1f, #ff5ad6, #7a6bff, #39d0ff, #53ffb0, #ffcf5a); animation: spin-ang 4s linear infinite; }
+.vcard.r-especial .f-frame { animation: spin-ang 4s linear infinite; }
+.vcard.r-especial .f-sparkle { background-image: radial-gradient(circle, #fff3c4 0 .55cqw, transparent .9cqw), radial-gradient(circle, #ffc940 0 .4cqw, transparent .7cqw); }
+.vcard.r-especial .f-name { background: linear-gradient(100deg, #fff3c4 15%, #ffc940 38%, #fff 50%, #ffb21e 62%, #fff3c4 85%); background-size: 250% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 0 2cqw rgba(255,201,64,.45)); text-shadow: none; animation: shine 3.2s linear infinite; }
+
+/* verso */
+.vcard .face.back { background: radial-gradient(circle at 50% 42%, #133563 0%, #071327 52%, #04070d 100%); box-shadow: inset 0 0 0 1.6cqw #0b1830, inset 0 0 0 2cqw rgba(255,138,31,.55), 0 6cqw 12cqw -4cqw rgba(0,0,0,.8); }
+.vcard .b-grid { position: absolute; inset: 0; background: repeating-linear-gradient(45deg, rgba(46,155,255,.09) 0 1px, transparent 1px 6cqw), repeating-linear-gradient(-45deg, rgba(46,155,255,.09) 0 1px, transparent 1px 6cqw); -webkit-mask: radial-gradient(circle at 50% 42%, transparent 20%, #000 70%); mask: radial-gradient(circle at 50% 42%, transparent 20%, #000 70%); }
+.vcard .b-ring { position: absolute; left: 50%; top: 42%; width: 66cqw; aspect-ratio: 1; translate: -50% -50%; border-radius: 50%; border: 1px solid rgba(255,138,31,.45); box-shadow: 0 0 6cqw rgba(46,155,255,.35), inset 0 0 6cqw rgba(255,138,31,.2); }
+.vcard .b-logo { position: absolute; left: 50%; top: 42%; width: 44cqw; translate: -50% -50%; opacity: .9; filter: drop-shadow(0 0 4cqw rgba(46,155,255,.55)); }
+.vcard .b-title { position: absolute; left: 0; right: 0; bottom: 9cqw; text-align: center; font: 900 9cqw/1 var(--f-head); letter-spacing: .18em; color: rgba(255,255,255,.88); }
+.vcard .b-title span { display: block; font: 400 9cqw/1 var(--f-script); letter-spacing: 0; color: #FF8A1F; margin-top: 0; }
+
+@keyframes spin-ang { to { --ang: 360deg; } }
+@keyframes rot { to { rotate: 360deg; } }
+@keyframes shine { to { background-position: -250% 0; } }
+@keyframes twinkle { 50% { opacity: .2; } }
+
+
+/* ============================================================
+   CARTA 3D (home, #card-game): a carta tem espessura (camadas
+   entre a frente e o verso), gira arrastando e inclina com o
+   mouse; o brilho holográfico acompanha. js/main.js controla.
+   ============================================================ */
+.c3d { position: relative; display: block; width: var(--cw, 280px); aspect-ratio: 63 / 88; color: inherit; text-decoration: none; touch-action: pan-y; cursor: grab; -webkit-tap-highlight-color: transparent; border-radius: 4.8%; }
+.c3d.is-dragging { cursor: grabbing; }
+.c3d:focus-visible { outline: 2px solid var(--orange-hi, #FF7A2E); outline-offset: 12px; }
+.c3d .vcard { --cw: 100%; --t: .85cqw; perspective: 1200px; position: absolute; inset: 0; }
+.c3d .card-tilt { transition: none; will-change: transform; }
+.c3d .face.front { transform: translateZ(var(--t)); }
+.c3d .face.back { transform: rotateY(180deg) translateZ(var(--t)); }
+/* borda da carta: camadas finas empilhadas (aparecem quando a carta fica de lado) */
+.c3d__edge { position: absolute; inset: 0; border-radius: 4.8cqw; transform: translateZ(calc(var(--t) * (2 * var(--k) - 1))); background: linear-gradient(90deg, #5aa9ff, #e6f4ff 45%, #b9dcff 55%, #3d8bf0); }
+/* luz no chão, embaixo da carta: encolhe quando a carta fica de lado */
+.c3d__floor { position: absolute; left: 50%; bottom: -13%; width: 92%; height: 13%; translate: -50% 0; border-radius: 50%; background: radial-gradient(closest-side, rgba(51,181,255,.55), rgba(51,181,255,.12) 55%, transparent); filter: blur(6px); transform: scaleX(calc(.4 + var(--shadow, 1) * .6)); opacity: calc(.55 + var(--shadow, 1) * .45); pointer-events: none; }
+.c3d__halo { position: absolute; inset: -22% -30%; border-radius: 50%; background: radial-gradient(closest-side, rgba(46,140,255,.38), rgba(255,122,26,.12) 55%, transparent 72%); filter: blur(10px); pointer-events: none; animation: c3d-halo 6s ease-in-out infinite; }
+@keyframes c3d-halo { 50% { opacity: .65; scale: .94; } }

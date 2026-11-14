@@ -745,34 +745,62 @@ button { font: inherit; color: inherit; }
   .guide__cta .actions { margin-top: 0; }
 }
 
-/* ---------- Versatte Cards · faixa retangular fina; as cartas escapam para cima e para baixo ---------- */
-.game { position: relative; z-index: 2; overflow: hidden; padding: clamp(150px, calc(42 * var(--vw)), 190px) 0 clamp(60px, calc(8 * var(--vw)), 120px); margin: 20px 0 0; }
-.game__band { position: relative; background: radial-gradient(50% 120% at 75% 50%, rgba(31,92,153,.6), transparent 70%), radial-gradient(30% 90% at 80% 50%, rgba(234,91,12,.25), transparent 70%), linear-gradient(100deg, var(--night) 0%, #0B1626 60%, #0A1322 100%); }
-.game__net { position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(45deg, rgba(120,170,255,.07) 0 1px, transparent 1px 28px), repeating-linear-gradient(-45deg, rgba(120,170,255,.07) 0 1px, transparent 1px 28px); -webkit-mask: radial-gradient(45% 140% at 72% 50%, #000, transparent 80%); mask: radial-gradient(45% 140% at 72% 50%, #000, transparent 80%); }
+/* ---------- Versatte Cards · em breve: faixa no azul da logo, com a carta 3D do Cruzeiro escapando
+   para fora (no celular, para cima; no computador, para cima e para baixo). A carta: css/vcard.css ---------- */
+.game { --cw: min(calc(58 * var(--vw)), 236px); --ch: calc(var(--cw) * 88 / 63); position: relative; z-index: 2; overflow: hidden; padding: calc(var(--ch) * .44 + 34px) 0 clamp(60px, calc(8 * var(--vw)), 110px); margin: 20px 0 0; }
+.game__band { position: relative; isolation: isolate; background:
+  radial-gradient(46% 70% at 50% 0%, rgba(46,128,240,.55), transparent 72%),
+  radial-gradient(34% 46% at 66% 4%, rgba(255,122,26,.3), transparent 70%),
+  radial-gradient(60% 60% at 0% 100%, rgba(26,63,156,.45), transparent 70%),
+  linear-gradient(180deg, #0B1E3C 0%, #08172F 55%, #061127 100%); }
+.game__band::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,170,80,.7), rgba(120,190,255,.7), transparent); }
+.game__net { position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(45deg, rgba(120,170,255,.07) 0 1px, transparent 1px 28px), repeating-linear-gradient(-45deg, rgba(120,170,255,.07) 0 1px, transparent 1px 28px); -webkit-mask: radial-gradient(55% 60% at 50% 10%, #000, transparent 80%); mask: radial-gradient(55% 60% at 50% 10%, #000, transparent 80%); }
+/* faíscas subindo devagar (pontos de luz dourados e azuis) */
+.game__sparks { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.game__sparks i { position: absolute; left: var(--x); top: var(--y); width: var(--s, 3px); aspect-ratio: 1; border-radius: 50%; background: var(--c, #FFD08A); box-shadow: 0 0 10px 2px var(--g, rgba(255,160,60,.55)); opacity: 0; animation: game-spark var(--t, 7s) linear var(--d, 0s) infinite; }
+.game__sparks i:nth-child(1)  { --x: 18%; --y: 70%; --d: -1s; }
+.game__sparks i:nth-child(2)  { --x: 30%; --y: 40%; --d: -4s; --c: #BFE3FF; --g: rgba(80,170,255,.6); --s: 2px; }
+.game__sparks i:nth-child(3)  { --x: 42%; --y: 82%; --d: -2.5s; --t: 9s; }
+.game__sparks i:nth-child(4)  { --x: 56%; --y: 30%; --d: -6s; --c: #BFE3FF; --g: rgba(80,170,255,.6); }
+.game__sparks i:nth-child(5)  { --x: 64%; --y: 64%; --d: -3s; --s: 2px; }
+.game__sparks i:nth-child(6)  { --x: 74%; --y: 22%; --d: -5s; --t: 8s; }
+.game__sparks i:nth-child(7)  { --x: 82%; --y: 76%; --d: -.5s; --c: #BFE3FF; --g: rgba(80,170,255,.6); --s: 2px; }
+.game__sparks i:nth-child(8)  { --x: 90%; --y: 46%; --d: -3.5s; --t: 10s; }
+.game__sparks i:nth-child(9)  { --x: 8%;  --y: 30%; --d: -6.5s; --s: 2px; }
+.game__sparks i:nth-child(10) { --x: 50%; --y: 56%; --d: -2s; --c: #BFE3FF; --g: rgba(80,170,255,.6); --t: 9s; }
+@keyframes game-spark { 0% { opacity: 0; transform: translateY(0) scale(.6); } 15% { opacity: 1; } 70% { opacity: .8; } 100% { opacity: 0; transform: translateY(-90px) scale(1.1); } }
 .game__inner { position: relative; display: grid; }
-.game__text { padding: 26px 0 40px; }
+.game__text { padding: 30px 0 44px; }
 .game .display { font-size: clamp(56px, calc(13 * var(--vw)), 104px); }
-.game .lead { max-width: 40ch; font-size: 16px; margin-top: 14px; }
-.game .btn { margin-top: 22px; }
+.game .lead { max-width: 42ch; font-size: 16px; margin-top: 14px; }
+.game__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 22px; margin-top: 24px; }
+.game__by { display: inline-flex; align-items: center; gap: 10px; font: 500 12px/1 var(--f-body); letter-spacing: .14em; text-transform: uppercase; color: rgba(247,239,227,.7); }
+.game__by img { width: 92px; height: auto; }
+.game__note { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; margin-top: 22px; font: 500 13px/1.4 var(--f-body); color: rgba(247,239,227,.66); }
+.game__note span { display: inline-flex; align-items: center; gap: 8px; }
+.game__18 { display: inline-grid; place-items: center; min-width: 30px; height: 22px; padding: 0 6px; border-radius: 6px; background: var(--orange); color: #1A0B03; font: 900 13px/1 var(--f-caps); letter-spacing: .04em; }
+.game__note svg { width: 18px; height: 18px; color: var(--orange-hi); }
 .stamp { display: inline-block; margin-bottom: 16px; padding: 8px 16px 7px; border-radius: 999px; border: 1.5px solid var(--orange-hi); color: var(--orange-hi); font: 600 12px/1 var(--f-body); letter-spacing: .24em; text-transform: uppercase; transform: rotate(-3deg); }
-/* no celular as cartas ficam em cima e invadem a seção anterior */
-.game__stage { position: relative; order: -1; height: 110px; --cw: min(calc(46 * var(--vw)), 210px); }
-.fan { position: absolute; left: 50%; bottom: 0; translate: -50% 0; transition: transform .8s cubic-bezier(.2,.7,.2,1); }
-.fan--left { transform: translateX(-52%) rotate(-14deg) scale(.84); transform-origin: 50% 100%; z-index: 1; }
-.fan--right { transform: translateX(52%) rotate(13deg) scale(.84); transform-origin: 50% 100%; z-index: 1; }
-.fan--center { z-index: 2; transform: rotate(-2deg); }
+/* no celular a carta fica em cima e sai da faixa para cima */
+.game__stage { position: relative; order: -1; height: calc(var(--ch) * .56); }
+.game__stage .c3d { position: absolute; left: 50%; bottom: 0; translate: -50% 0; }
+@media (min-width: 700px) { .game { --cw: 250px; } }
 @media (min-width: 1000px) {
-  .game__inner { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; height: 300px; }
-  .game__text { padding: 0; }
+  .game { --cw: 310px; padding: 110px 0 120px; }
+  .game__band { background:
+    radial-gradient(34% 90% at 74% 50%, rgba(46,128,240,.55), transparent 72%),
+    radial-gradient(22% 60% at 80% 62%, rgba(255,122,26,.3), transparent 70%),
+    radial-gradient(40% 120% at 0% 100%, rgba(26,63,156,.4), transparent 70%),
+    linear-gradient(100deg, #0B1E3C 0%, #08172F 55%, #061127 100%); }
+  .game__net { -webkit-mask: radial-gradient(40% 130% at 74% 50%, #000, transparent 80%); mask: radial-gradient(40% 130% at 74% 50%, #000, transparent 80%); }
+  .game__inner { grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); align-items: center; min-height: 330px; }
+  .game__text { padding: 34px 0; }
   .game .display { font-size: 84px; flex-direction: row; align-items: baseline; gap: .12em; }
   .game .display__script { margin-top: 0; }
   .game .lead { margin-top: 10px; }
-  .game .btn { margin-top: 18px; }
   .stamp { margin-bottom: 12px; }
-  .game__stage { order: 0; height: 300px; --cw: 330px; }
-  .fan { top: 50%; bottom: auto; translate: -50% -50%; }
-  .fan--left { transform: translateX(-66%) rotate(-15deg) scale(.86); transform-origin: 50% 50%; }
-  .fan--right { transform: translateX(66%) rotate(14deg) scale(.86); transform-origin: 50% 50%; }
+  .game__stage { order: 0; height: 100%; min-height: 330px; }
+  .game__stage .c3d { top: 50%; bottom: auto; translate: -50% -50%; }
 }
 
 /* ============================================================
@@ -960,87 +988,7 @@ body.modal-open { overflow: hidden; }
 .toast { position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom)); z-index: 300; width: max-content; max-width: calc(100% - 32px); translate: -50% 20px; padding: 13px 20px; border-radius: 999px; background: var(--ink); color: var(--cream); font: 500 14.5px/1.35 var(--f-body); box-shadow: 0 16px 40px rgba(0,0,0,.35); opacity: 0; pointer-events: none; transition: opacity .3s, translate .3s; }
 .toast.is-on { opacity: 1; translate: -50% 0; }
 
-/* ============================================================
-   CARTA · Versatte Cards (portado do jogo, escopo .vcard)
-   ============================================================ */
-.vcard {
-  --rx: 0deg; --ry: 0deg; --mx: 50%; --my: 50%; --hyp: 0;
-  --f-head: 'Big Shoulders Display', 'Arial Narrow', sans-serif;
-  position: relative; width: var(--cw, 260px); aspect-ratio: 63 / 88;
-  container-type: inline-size; perspective: 1000px;
-  user-select: none; -webkit-user-select: none; touch-action: pan-y;
-  font-family: var(--f-body);
-}
-[data-flip] .vcard { cursor: pointer; }
-.vcard .card-float { position: absolute; inset: 0; animation: float 6s ease-in-out infinite; }
-.vcard .card-tilt { position: absolute; inset: 0; transform-style: preserve-3d; transform: rotateX(var(--rx)) rotateY(var(--ry)); transition: transform .5s cubic-bezier(.2,.7,.2,1); }
-.vcard.is-tilting .card-tilt { transition: none; }
-.vcard .card-flip { position: absolute; inset: 0; transform-style: preserve-3d; transition: transform .8s cubic-bezier(.3,1.25,.45,1); }
-.vcard.flipped .card-flip { transform: rotateY(180deg); }
-.vcard .face { position: absolute; inset: 0; border-radius: 4.8cqw; overflow: hidden; -webkit-backface-visibility: hidden; backface-visibility: hidden; transform: translateZ(.1px); box-shadow: 0 6cqw 12cqw -4cqw rgba(0,0,0,.8); }
-.vcard .face.back { transform: rotateY(180deg) translateZ(.1px); }
-.vcard.only-back .face.back { transform: translateZ(.1px); }
-.vcard.only-back .face.front { display: none; }
-@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2.5cqw); } }
-
-.vcard .f-bg { position: absolute; inset: 0; background: radial-gradient(115% 72% at 50% 34%, color-mix(in srgb, var(--c1) 48%, #0b1426) 0%, #070b14 74%); }
-.vcard .f-bg::after { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(135deg, rgba(255,255,255,.035) 0 1px, transparent 1px 2.4cqw); }
-.vcard.k-hero .f-bg { background: radial-gradient(110% 70% at 50% 34%, color-mix(in srgb, var(--c1) 70%, #7B2CFF) 0%, #0a0414 76%); }
-.vcard.k-hero .f-bg::after { background-image: radial-gradient(circle, rgba(255,255,255,.08) 0 .6cqw, transparent .7cqw); background-size: 3.6cqw 3.6cqw; }
-.vcard .f-rays { position: absolute; inset: -35%; opacity: 0; pointer-events: none; }
-.vcard .f-art { position: absolute; left: 50%; top: 12%; width: 80%; aspect-ratio: 200 / 240; translate: calc(-50% + (50% - var(--mx)) * .14) calc((50% - var(--my)) * .1); color: var(--rc); filter: drop-shadow(0 3cqw 4cqw rgba(0,0,0,.55)); }
-.vcard .f-art svg { width: 100%; height: 100%; overflow: visible; }
-.vcard .art-pow { font: 900 32px var(--f-head); fill: #fff; stroke: #05080f; stroke-width: 5px; paint-order: stroke; }
-.vcard .f-wm { position: absolute; right: 5cqw; top: 54%; width: 13cqw; opacity: .2; filter: grayscale(1) brightness(2.2); pointer-events: none; }
-.vcard .f-top { position: absolute; top: 4.4cqw; left: 6cqw; right: 6cqw; display: flex; align-items: center; justify-content: space-between; gap: 2cqw; }
-.vcard .f-num { font: 900 6.6cqw/1 var(--f-head); color: #fff; text-shadow: 0 0 2cqw rgba(0,0,0,.8); }
-.vcard .f-col { font: 700 3.8cqw/1 var(--f-body); color: rgba(255,255,255,.6); text-transform: uppercase; letter-spacing: .16em; }
-.vcard .f-gem { color: var(--rc); width: 6cqw; height: 6cqw; filter: drop-shadow(0 0 1.5cqw var(--rc)); }
-.vcard .f-gem svg { width: 100%; height: 100%; display: block; }
-.vcard .f-foot { position: absolute; left: 0; right: 0; bottom: 0; height: 29%; padding: 3cqw 7cqw 6cqw; display: flex; flex-direction: column; justify-content: flex-end; background: linear-gradient(to top, rgba(4,7,13,.97) 50%, rgba(4,7,13,0)); }
-.vcard .f-name { font: 900 12cqw/.92 var(--f-head); text-transform: uppercase; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 1cqw; }
-.vcard.k-hero .f-name { text-shadow: .6cqw .6cqw 0 #05080f; }
-.vcard .f-sub { font: 500 4.3cqw/1.25 var(--f-body); color: rgba(234,241,255,.65); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: .8cqw; }
-.vcard .f-rar { display: flex; align-items: center; gap: 1.8cqw; margin-top: 1.6cqw; font: 700 3.6cqw/1 var(--f-body); text-transform: uppercase; letter-spacing: .2em; color: var(--rc); }
-.vcard .f-rar::before { content: ''; width: 5cqw; height: 1px; background: var(--rc); box-shadow: 0 0 1cqw var(--rc); }
-.vcard .f-holo, .vcard .f-sparkle, .vcard .f-glare { position: absolute; inset: 0; pointer-events: none; }
-.vcard .f-holo { opacity: 0; mix-blend-mode: color-dodge; }
-.vcard .f-sparkle { opacity: 0; }
-.vcard .f-glare { mix-blend-mode: overlay; opacity: calc(.18 + var(--hyp) * .7); background: radial-gradient(farthest-corner circle at var(--mx) var(--my), rgba(255,255,255,.6) 0%, rgba(255,255,255,.12) 28%, transparent 58%); }
-.vcard .f-frame { position: absolute; inset: 0; border-radius: inherit; padding: 1.5cqw; background: var(--frame); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); pointer-events: none; }
-.vcard .f-frame::after { content: ''; position: absolute; inset: 2.8cqw; border-radius: 3.2cqw; border: 1px solid rgba(255,255,255,.1); }
-
-.vcard.r-muito    { --frame: linear-gradient(145deg, #5a12c8, #f0b6ff 28%, #8b2bff 50%, #7fdcff 72%, #b866ff); }
-.vcard.r-especial { --frame: conic-gradient(from var(--ang), #ffd36b, #fff6d0, #ffae1f, #ff8a1f, #fff6d0, #ffd36b, #ffb21e, #ffd36b); }
-.vcard.r-muito .face.front { box-shadow: 0 0 0 1px rgba(184,102,255,.4), 0 0 8cqw -1cqw rgba(184,102,255,.65), 0 6cqw 12cqw -4cqw rgba(0,0,0,.8); }
-.vcard.r-especial .face.front { box-shadow: 0 0 0 1px rgba(255,201,64,.5), 0 0 10cqw 0 rgba(255,201,64,.5), 0 6cqw 12cqw -4cqw rgba(0,0,0,.8); }
-.vcard.r-muito .f-holo { opacity: calc(.16 + var(--hyp) * .36); background: repeating-linear-gradient(120deg, #ff5ad6 0%, #b866ff 7%, #4f8bff 14%, #39ffe0 21%, #b866ff 28%, #ff5ad6 35%); background-size: 320% 320%; background-position: var(--mx) var(--my); }
-.vcard.r-muito .f-sparkle, .vcard.r-especial .f-sparkle {
-  opacity: .55; mix-blend-mode: screen;
-  background-image: radial-gradient(circle, #fff 0 .5cqw, transparent .8cqw), radial-gradient(circle, #fff 0 .35cqw, transparent .6cqw);
-  background-size: 11cqw 13cqw, 7cqw 9cqw; background-position: 0 0, 3cqw 4cqw;
-  -webkit-mask: radial-gradient(circle at var(--mx) var(--my), #000 0%, transparent 50%); mask: radial-gradient(circle at var(--mx) var(--my), #000 0%, transparent 50%);
-  animation: twinkle 2.4s ease-in-out infinite;
-}
-.vcard.r-muito .f-rays { opacity: .5; background: repeating-conic-gradient(from 0deg, rgba(184,102,255,.16) 0 6deg, transparent 6deg 20deg); -webkit-mask: radial-gradient(circle, #000 15%, transparent 60%); mask: radial-gradient(circle, #000 15%, transparent 60%); animation: rot 24s linear infinite; }
-.vcard.r-especial .f-rays { opacity: 1; background: repeating-conic-gradient(from 0deg, rgba(255,201,64,.24) 0 5deg, transparent 5deg 15deg); -webkit-mask: radial-gradient(circle, #000 10%, transparent 62%); mask: radial-gradient(circle, #000 10%, transparent 62%); animation: rot 24s linear infinite; }
-.vcard.r-especial .f-holo { opacity: calc(.12 + var(--hyp) * .3); background: radial-gradient(circle at var(--mx) var(--my), rgba(255,255,255,.7), transparent 32%), conic-gradient(from var(--ang) at var(--mx) var(--my), #ffcf5a, #ff8a1f, #ff5ad6, #7a6bff, #39d0ff, #53ffb0, #ffcf5a); animation: spin-ang 4s linear infinite; }
-.vcard.r-especial .f-frame { animation: spin-ang 4s linear infinite; }
-.vcard.r-especial .f-sparkle { background-image: radial-gradient(circle, #fff3c4 0 .55cqw, transparent .9cqw), radial-gradient(circle, #ffc940 0 .4cqw, transparent .7cqw); }
-.vcard.r-especial .f-name { background: linear-gradient(100deg, #fff3c4 15%, #ffc940 38%, #fff 50%, #ffb21e 62%, #fff3c4 85%); background-size: 250% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 0 2cqw rgba(255,201,64,.45)); text-shadow: none; animation: shine 3.2s linear infinite; }
-
-/* verso */
-.vcard .face.back { background: radial-gradient(circle at 50% 42%, #133563 0%, #071327 52%, #04070d 100%); box-shadow: inset 0 0 0 1.6cqw #0b1830, inset 0 0 0 2cqw rgba(255,138,31,.55), 0 6cqw 12cqw -4cqw rgba(0,0,0,.8); }
-.vcard .b-grid { position: absolute; inset: 0; background: repeating-linear-gradient(45deg, rgba(46,155,255,.09) 0 1px, transparent 1px 6cqw), repeating-linear-gradient(-45deg, rgba(46,155,255,.09) 0 1px, transparent 1px 6cqw); -webkit-mask: radial-gradient(circle at 50% 42%, transparent 20%, #000 70%); mask: radial-gradient(circle at 50% 42%, transparent 20%, #000 70%); }
-.vcard .b-ring { position: absolute; left: 50%; top: 42%; width: 66cqw; aspect-ratio: 1; translate: -50% -50%; border-radius: 50%; border: 1px solid rgba(255,138,31,.45); box-shadow: 0 0 6cqw rgba(46,155,255,.35), inset 0 0 6cqw rgba(255,138,31,.2); }
-.vcard .b-logo { position: absolute; left: 50%; top: 42%; width: 44cqw; translate: -50% -50%; opacity: .9; filter: drop-shadow(0 0 4cqw rgba(46,155,255,.55)); }
-.vcard .b-title { position: absolute; left: 0; right: 0; bottom: 9cqw; text-align: center; font: 900 9cqw/1 var(--f-head); letter-spacing: .18em; color: rgba(255,255,255,.88); }
-.vcard .b-title span { display: block; font: 400 9cqw/1 var(--f-script); letter-spacing: 0; color: #FF8A1F; margin-top: 0; }
-
-@keyframes spin-ang { to { --ang: 360deg; } }
-@keyframes rot { to { rotate: 360deg; } }
-@keyframes shine { to { background-position: -250% 0; } }
-@keyframes twinkle { 50% { opacity: .2; } }
+/* A CARTA do Versatte Cards (.vcard) fica em css/vcard.css (home e versatte-cards.html). */
 
 /* ============================================================
    MOVIMENTO REDUZIDO
