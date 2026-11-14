@@ -94,16 +94,17 @@ PÁGINA INICIAL (index.html):
    (textos tirados do README do jogo):
      1) O jogo: o texto acende palavra por palavra com a rolagem;
      2) Pacotes: cena presa na tela em que a rolagem abre um pacote premium (ele
-        treme, rasga, as 4 cartas sobem, se espalham e viram, de Comum a Especial);
-     3) Raridades: as 4 cartas viram ao entrar na tela e brilham com o mouse/dedo,
-        com a chance de cada uma no pacote diário (70/24/5/1%);
-     4) Álbum: 5 coleções e 148 cartas, com os números contando;
+        treme, rasga, as cartas sobem, se espalham e viram, de Comum a Especial);
+     3) Raridades: as cartas viram ao entrar na tela e brilham com o mouse;
+     4) Álbum: as coleções (clubes, jogadores, estádios, mascotes, Juízo Final);
      5) Modo Clube: as cartas entram em campo e mudam de formação com a rolagem
         (2-1-1, 1-2-1, 1-1-2); depois os 3 campeonatos e seus troféus;
      6) Online: duas cartas trocando de lugar (troca, amistoso e torneios);
      7) Final: logos, "Em breve", Instagram, aviso 18+ e "Créditos das imagens"
         (autor e licença de cada foto; obrigatório pelas licenças CC BY/BY-SA).
-   Os prêmios/brindes do jogo NÃO aparecem no teaser: distribuição de prêmios
+   O teaser NÃO mostra quantidade de cartas, chances, preços, prêmios nem
+   limites (tamanho de pacote, de elenco, de campeonato), a pedido (14/11/2026).
+   Os prêmios/brindes do jogo também não aparecem: distribuição de prêmios
    ligada a sorte pode precisar de autorização (Lei 5.768/1971); ver com o
    jurídico antes de anunciar. Com "reduzir movimento" ligado no aparelho, tudo
    aparece pronto, parado. Arquivos: css/teaser.css, js/teaser.js (abertura),

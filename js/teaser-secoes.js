@@ -92,6 +92,7 @@
       const luz = palco.querySelector('.tzs-pacote__luz'), cartas = $$('.tzs-pc', palco), passos = $$('[data-passo]', el);
       return p => {
         const H = palco.clientHeight, cw = cartas[0].offsetWidth, ch = cw * 88 / 63, pequeno = innerWidth < 900;
+        const emLinha = palco.clientWidth >= cw * 4.6;   // as 4 cartas em fila só se couberem; senão, 2 x 2
         const entra = suave(faixa(p, 0, .13)), treme = faixa(p, .13, .3), rasga = suave(faixa(p, .3, .4)), cai = suave(faixa(p, .5, .66));
         const tremor = treme > 0 && treme < 1 ? Math.sin(p * 1400) * 3.2 * treme : 0;
         const pk = `translateY(${((1 - entra) * 90 + cai * H * .5).toFixed(1)}px) rotate(${tremor.toFixed(2)}deg) scale(${(.84 + entra * .16).toFixed(3)})`;
@@ -107,9 +108,9 @@
           const f = suave(faixa(p, .72 + i * .05, .8 + i * .05));
           const x0 = 0, y0 = ch * .08 - (1 - entra) * -90;
           const x1 = (i - 1.5) * cw * .18, y1 = -ch * .9;
-          const [x2, y2] = pequeno
-            ? [((i % 2) - .5) * cw * 1.1, H * .4 + (Math.floor(i / 2) - .5) * ch * 1.06 - yPacote]
-            : [(i - 1.5) * cw * 1.13, H * .38 - yPacote];
+          const [x2, y2] = emLinha
+            ? [(i - 1.5) * cw * 1.13, H * .38 - yPacote]
+            : [((i % 2) - .5) * cw * 1.1, H * .42 + (Math.floor(i / 2) - .5) * ch * 1.06 - yPacote];
           const xa = x0 + (x1 - x0) * sobe, ya = y0 + (y1 - y0) * sobe + cai * 0;
           const x = xa + (x2 - xa) * abre, y = ya + (y2 - ya) * abre;
           const rot = (i - 1.5) * 7 * sobe * (1 - abre);

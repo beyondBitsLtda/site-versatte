@@ -113,7 +113,7 @@
     mestre = tz.animate([], { duration: 10000, fill: 'forwards' });   // só o relógio
     anims.push(mestre);
     const n = cartas.length, pequeno = innerWidth < 700;
-    const tw = pequeno ? Math.min(118, Math.max(82, innerWidth * .25)) : Math.min(168, Math.max(110, Math.min(innerWidth * .12, innerHeight * .21)));
+    const tw = pequeno ? Math.min(132, Math.max(90, innerWidth * .29)) : Math.min(212, Math.max(120, Math.min(innerWidth * .145, innerHeight * .26)));
     ring.style.setProperty('--tw', `${tw.toFixed(0)}px`);
     const ch = tw * 88 / 63;
     // leque: arco com pivô bem abaixo da tela
