@@ -110,7 +110,7 @@
           const x1 = (i - 1.5) * cw * .18, y1 = -ch * .9;
           const [x2, y2] = emLinha
             ? [(i - 1.5) * cw * 1.13, H * .38 - yPacote]
-            : [((i % 2) - .5) * cw * 1.1, H * .42 + (Math.floor(i / 2) - .5) * ch * 1.06 - yPacote];
+            : [((i % 2) - .5) * cw * 1.1, H * .5 + (Math.floor(i / 2) - .5) * ch * 1.06 - yPacote];
           const xa = x0 + (x1 - x0) * sobe, ya = y0 + (y1 - y0) * sobe + cai * 0;
           const x = xa + (x2 - xa) * abre, y = ya + (y2 - ya) * abre;
           const rot = (i - 1.5) * 7 * sobe * (1 - abre);
@@ -157,6 +157,9 @@
   };
   let pedido = false;
   const agendar = () => { if (!pedido) { pedido = true; requestAnimationFrame(() => { pedido = false; atualizar(); }); } };
+  const camp = document.querySelector('[data-trofeus]');
+  if (camp) import(new URL('js/trofeus3d.js?v=20261114-5', document.baseURI).href).then(m => m.montarTrofeus(camp)).catch(() => { /* fica o ícone de taça */ });
+
   addEventListener('scroll', agendar, { passive: true });
   addEventListener('resize', agendar);
   atualizar();
