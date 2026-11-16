@@ -1,7 +1,7 @@
 // GERADO por tools/catalogo.mjs a partir de catalogo.json. Não edite aqui:
 // mude catalogo.json e rode "node tools/catalogo.mjs".
 window.VERSATTE_CATALOGO = {
-  "atualizado": "2026-11-13",
+  "atualizado": "2026-11-16",
   "tamanhos": ["P","M","G","GG","2XL","3XL","4XL"],
   "modelos": [{"id":"retro","nome":"Retrô","preco":189.9},{"id":"jogador","nome":"Jogador","preco":169.9},{"id":"torcedor","nome":"Torcedor","preco":144.9}],
   "ligas": [{"id":"brasil","nome":"Brasileirão","emblema":"assets/ligas/brasil.svg"},{"id":"selecoes","nome":"Seleções","emblema":"assets/ligas/selecoes.svg"},{"id":"inglaterra","nome":"Premier League","emblema":"assets/ligas/inglaterra.svg"},{"id":"espanha","nome":"La Liga","emblema":"assets/ligas/espanha.svg"},{"id":"italia","nome":"Serie A","emblema":"assets/ligas/italia.svg"},{"id":"alemanha","nome":"Bundesliga","emblema":"assets/ligas/alemanha.svg"},{"id":"franca","nome":"Ligue 1","emblema":"assets/ligas/franca.svg"},{"id":"portugal","nome":"Liga Portugal","emblema":"assets/ligas/portugal.svg"},{"id":"holanda","nome":"Eredivisie","emblema":"assets/ligas/holanda.svg"},{"id":"argentina","nome":"Liga Argentina","emblema":"assets/ligas/argentina.svg"},{"id":"mexico","nome":"Liga MX","emblema":"assets/ligas/mexico.svg"},{"id":"eua","nome":"MLS","emblema":"assets/ligas/eua.svg"},{"id":"chile","nome":"Liga Chilena","emblema":"assets/ligas/chile.svg"},{"id":"escocia","nome":"Escócia","emblema":"assets/ligas/escocia.svg"},{"id":"arabia","nome":"Liga Saudita","emblema":"assets/ligas/arabia.svg"},{"id":"outras","nome":"Outros times","emblema":"assets/ligas/outras.svg"}],
