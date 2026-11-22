@@ -1,0 +1,18 @@
+// Versatte Fotos — Cloudflare Worker que entrega as fotos do catálogo que não ficam no site.
+// Mesma conta Cloudflare da API do Versatte Cards (domínio beyond.dev.br).
+// Segredo (uma vez): npx wrangler secret put FORNECEDORES   → nomes das lojas, na ordem, separados por vírgula
+// Publicar:          npx wrangler deploy   (nesta pasta)
+{
+  "name": "versatte-fotos",
+  "account_id": "7e4b10d80b08fef1f2fcca583577bf2d",
+  "main": "src/index.js",
+  "compatibility_date": "2026-10-01",
+  "workers_dev": true,
+  "preview_urls": false,
+  "routes": [{ "pattern": "fotos-versatte.beyond.dev.br", "custom_domain": true }],
+  "vars": {
+    // sites que podem mostrar as fotos (o site publicado e os testes no computador)
+    "ORIGENS": "https://versattesports.com.br,https://www.versattesports.com.br,http://127.0.0.1,http://localhost"
+  },
+  "observability": { "enabled": true }
+}

@@ -91,6 +91,11 @@ function readConfig() {
     esconder: new Set((cfg.esconder || []).map(String)),
     ajustes: cfg.ajustes || {},
     destaques: (cfg.destaques || []).map(String),
+    // fotos via serviço (Cloudflare Worker em servicos/fotos): as camisas NOVAS dos fornecedores que não
+    // estão em "fotosNoSite" não são baixadas; o catálogo guarda só o código de cada foto ("@2/abc123.jpg")
+    // e o site monta o endereço do serviço. Sem "fotosServico", tudo é baixado como antes.
+    fotosServico: cfg.fotosServico ? String(cfg.fotosServico).replace(/\/?$/, '/') : '',
+    fotosNoSite: new Set((cfg.fotosNoSite || []).map(Number)),
   };
 }
 
@@ -579,6 +584,7 @@ const TIPOS = [   // a primeira que bater vence ("third away" é a terceira cami
   ['Titular', /\bhome\b/],
   ['Reserva', /\baway\b|\bii\b/],
 ];
+const FEMININA = /\b(women'?s?|womens|woman|ladies|lady|female|girls?)\b/;
 const EDICOES = [
   ['Edição especial', /\bspecial\b/],
   ['Edição limitada', /\blimited\b/],
@@ -621,9 +627,13 @@ function lerTitulo(titulo, ligaFonte = '') {
   const apelido = (titulo.match(/["“]([^"”]{2,30})["”]/) || [])[1] || '';
   const patrocinio = /\bno (ads|sponsors?)\b|\bwithout sponsors?\b/.test(t) ? 'sem patrocínios'
     : /\bsponsors?\b/.test(t) ? 'com patrocínios' : '';
-  const detalhe = [temporada(t), tipo, ...edicoes, apelido, ...cores.slice(0, 2), patrocinio].filter(Boolean).join(' · ');
+  // camisa feminina: fica no modelo dela (Torcedor, Jogador, Retrô, com o mesmo preço), com "Feminina" no
+  // nome e até o GG (tabela de medidas do site: Feminina P ao GG)
+  const feminina = FEMININA.test(t);
+  const detalhe = [temporada(t), tipo, feminina && 'Feminina', ...edicoes, apelido, ...cores.slice(0, 2), patrocinio].filter(Boolean).join(' · ');
   const tam = [...t.matchAll(/(?<![a-z])(x{1,5}l|[2-6]xl)(?![a-z])/g)].map(m => TAMANHO_DO_TITULO[m[1]]).filter(Boolean).pop();
-  return { time, liga, detalhe, max: tam || '', temporada: temporada(t) };
+  const max = feminina ? (tam && TAMANHOS.indexOf(tam) < TAMANHOS.indexOf('GG') ? tam : 'GG') : tam || '';
+  return { time, liga, detalhe, max, temporada: temporada(t), feminina };
 }
 
 function classificar(album, cfg) {
@@ -770,16 +780,23 @@ if (simular) {
   process.exit(0);
 }
 
-// 3. baixa as fotos das camisas novas
-const fotosOk = c => c?.capa && [c.capa, ...(c.fotos || [])].every(f => existsSync(path.join(ROOT, f)));
+// 3. baixa as fotos das camisas novas (ou, para os fornecedores via serviço, só anota o código de cada foto)
+const remota = f => typeof f === 'string' && f.startsWith('@');   // "@<fornecedor>/<código>.<ext>": foto via serviço
+const fotosOk = c => c?.capa && [c.capa, ...(c.fotos || [])].every(f => remota(f) || existsSync(path.join(ROOT, f)));
+const viaServico = c => Boolean(cfg.fotosServico) && !cfg.fotosNoSite.has(c.fornecedor || 1);
+const refFoto = (url, fornecedor) => {
+  const m = url.match(/\/([0-9a-f]{6,40})\/(?:small|square|big|medium)\.(jpe?g|png|webp)$/i);
+  return m ? `@${fornecedor}/${m[1].toLowerCase()}.${m[2].toLowerCase()}` : null;
+};
 const limite = +(args.find(a => a.startsWith('--limite=')) || '').split('=')[1] || Infinity;   // para testes
 const minutos = +(args.find(a => a.startsWith('--minutos=')) || '').split('=')[1] || Infinity;
 const prazo = Date.now() + minutos * 60e3;   // depois disso não começa camisa nova (o resto fica para a próxima vez)
-const baixar = local ? [] : camisas.filter(c => tudo || !fotosOk(cache.get(c.id))).slice(0, limite);
+const baixar = local ? [] : camisas.filter(c => (tudo && !viaServico(c)) || !fotosOk(cache.get(c.id))).slice(0, limite);
 let falhas = 0;
 if (baixar.length) {
-  console.log(`Baixando ${baixar.length} camisa(s) nova(s)...`);
-  const browser = await openBrowser();
+  const nServico = baixar.filter(viaServico).length;
+  console.log(`Camisas novas: ${baixar.length}${nServico ? ` (${baixar.length - nServico} baixadas e ${nServico} com fotos via serviço)` : ''}...`);
+  const browser = baixar.some(c => !viaServico(c)) ? await openBrowser() : null;
   let feitas = 0;
   const fila = [...baixar];
   const trabalhador = async () => {
@@ -788,6 +805,14 @@ if (baixar.length) {
         const doAlbum = c.qtd ? await fotosDoAlbum(c.origem, c.id) : [];
         const capaUrl = medio(c.capa);
         const urls = [capaUrl, ...doAlbum.filter(u => u !== capaUrl)].slice(0, cfg.fotos);
+        if (viaServico(c)) {   // nada a baixar: guarda o código das fotos
+          const refs = [...new Set(urls.map(u => refFoto(u, c.fornecedor || 1)).filter(Boolean))];
+          if (!refs.length) throw new Error('não achei as fotos do álbum');
+          cache.set(c.id, { id: c.id, capa: refs[0], fotos: refs });
+          process.stdout.write(`\r  ${++feitas} de ${baixar.length} prontas`);
+          await sleep(150);
+          continue;
+        }
         const dir = path.join(FOTOS_DIR, c.id);
         rmSync(dir, { recursive: true, force: true });
         mkdirSync(dir, { recursive: true });
@@ -803,12 +828,12 @@ if (baixar.length) {
         falhas++;
         console.log(`\n  ${c.id} falhou: ${e.message}`);
       }
-      process.stdout.write(`\r  ${++feitas} de ${baixar.length} baixadas`);
+      process.stdout.write(`\r  ${++feitas} de ${baixar.length} prontas`);
       await sleep(150);
     }
   };
   try { await Promise.all(Array.from({ length: PARALELO }, trabalhador)); }
-  finally { browser.close(); }
+  finally { browser?.close(); }
   process.stdout.write('\n');
   if (fila.length) console.log(`Tempo esgotado (--minutos=${minutos}): ${fila.length} camisa(s) ficaram para a próxima vez.`);
 }
@@ -818,7 +843,7 @@ if (baixar.length) {
 let cortadas = 0;
 for (const c of cache.values()) {
   if (!(c.fotos?.length > cfg.fotos)) continue;
-  for (const f of c.fotos.slice(cfg.fotos)) { rmSync(path.join(ROOT, f), { force: true }); cortadas++; }
+  for (const f of c.fotos.slice(cfg.fotos)) { if (!remota(f)) rmSync(path.join(ROOT, f), { force: true }); cortadas++; }
   c.fotos = c.fotos.slice(0, cfg.fotos);
 }
 if (cortadas) console.log(`Tiradas ${cortadas} foto(s) além de ${cfg.fotos} por camisa ("fotosPorCamisa").`);
@@ -837,7 +862,7 @@ const noCatalogo = new Set(saida.map(c => c.id));
 const destaques = cfg.destaques.filter(id => noCatalogo.has(id));
 const semDestaque = cfg.destaques.filter(id => !noCatalogo.has(id));
 if (semDestaque.length) console.log(`Destaques que não estão no catálogo (ignorados): ${semDestaque.join(', ')}`);
-writeFileSync(DATA_FILE, `${HEADER}{\n  "atualizado": "${hoje}",\n  "tamanhos": ${JSON.stringify(TAMANHOS)},\n  "modelos": ${JSON.stringify(modelos)},\n  "ligas": ${JSON.stringify(ligas)},\n  "destaques": ${JSON.stringify(destaques)},\n  "camisas": [\n${saida.map(c => `    ${JSON.stringify(c)}`).join(',\n')}\n  ]\n};\n`);
+writeFileSync(DATA_FILE, `${HEADER}{\n  "atualizado": "${hoje}",\n${cfg.fotosServico ? `  "fotosServico": ${JSON.stringify(cfg.fotosServico)},\n` : ''}  "tamanhos": ${JSON.stringify(TAMANHOS)},\n  "modelos": ${JSON.stringify(modelos)},\n  "ligas": ${JSON.stringify(ligas)},\n  "destaques": ${JSON.stringify(destaques)},\n  "camisas": [\n${saida.map(c => `    ${JSON.stringify(c)}`).join(',\n')}\n  ]\n};\n`);
 
 // 5. apaga fotos de camisas que saíram da fonte (ou foram escondidas)
 if (!local && existsSync(FOTOS_DIR)) {

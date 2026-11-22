@@ -3,3 +3,7 @@ catalogo.local.json
 
 # prints do site e descrição (material interno; não vai para o site publicado)
 print/
+
+# serviço de fotos (Cloudflare): segredos locais e arquivos do wrangler
+servicos/fotos/.dev.vars
+servicos/fotos/.wrangler/

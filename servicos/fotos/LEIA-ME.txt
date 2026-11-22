@@ -1,0 +1,39 @@
+SERVIÇO DE FOTOS DO CATÁLOGO (Cloudflare Worker "versatte-fotos")
+================================================================================
+Para que serve
+  As camisas novas do 2º fornecedor não são baixadas para o site (o GitHub Pages
+  aceita no máximo 1 GB). O catálogo guarda só o código de cada foto
+  ("@2/abc123.jpg") e o site monta o endereço deste serviço:
+    https://fotos-versatte.beyond.dev.br/f/2/abc123/s.jpg   (pequena: cards)
+    https://fotos-versatte.beyond.dev.br/f/2/abc123/m.jpg   (média: janela da camisa)
+  O serviço busca a foto no fornecedor (que só entrega para quem vem da própria
+  loja dele) e guarda no cache da Cloudflare. Ninguém vê de qual loja é a foto.
+  O 1º fornecedor continua com as fotos baixadas e convertidas para WebP
+  (as fotos dele são PNG muito pesados; ver "fotosNoSite" no catalogo.json).
+
+Onde fica
+  Conta Cloudflare: beyondbitsLisa (a mesma da API do Versatte Cards).
+  Código: src/index.js · configuração: wrangler.jsonc (nesta pasta).
+  Segredo FORNECEDORES: os nomes das lojas, na mesma ordem de CATALOGO_FONTE,
+  separados por vírgula. Fica só na Cloudflare e, no computador, no arquivo
+  .dev.vars desta pasta (fora do Git, ver .gitignore).
+  ORIGENS (no wrangler.jsonc): sites que podem mostrar as fotos; pedido de outro
+  site recebe 403.
+
+Publicar (uma vez, e de novo só se o código mudar), no terminal, nesta pasta:
+  npx wrangler deploy
+  npx wrangler secret put FORNECEDORES
+    (cole o valor que está depois de "FORNECEDORES=" no arquivo .dev.vars)
+  Conferir: https://fotos-versatte.beyond.dev.br/saude  →  {"ok":true,...}
+
+Testar no computador, sem publicar:
+  npx wrangler dev --local --port 8790
+  http://127.0.0.1:8790/f/2/<código>/m.jpg
+
+Custos
+  Plano gratuito dos Workers: 100 mil pedidos por dia. Cada foto carregada conta
+  1 pedido (o cache da Cloudflare evita ir de novo ao fornecedor, não o pedido);
+  o navegador de cada pessoa guarda a foto por 1 ano, então quem volta não conta
+  de novo. Só contam as fotos das camisas via serviço (em 21/11/2026, cerca de
+  380 das ~6 mil camisas); as baixadas para o site não passam por aqui. Folga
+  grande; se um dia passar do limite, o plano pago custa US$ 5 por mês.

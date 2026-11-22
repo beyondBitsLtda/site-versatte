@@ -470,7 +470,13 @@
 
   /* ---------- catálogo: dados (js/catalogo.js, gerado por tools/catalogo.mjs) ---------- */
   const CAT = window.VERSATTE_CATALOGO || { modelos: [], camisas: [] };
-  const MODELOS = [...CAT.modelos].sort((a, b) => a.preco - b.preco);   // abas do mais barato ao mais caro
+  // fotos via serviço (servicos/fotos): "@2/abc123.jpg" vira o endereço do serviço (s = pequena, nos cards;
+  // m = média, na janela da camisa). As fotos baixadas para o site (assets/catalogo/) ficam como estão.
+  if (CAT.fotosServico) {
+    const via = (f, t) => (typeof f === 'string' && f[0] === '@' ? CAT.fotosServico + f.slice(1).replace(/\.(\w+)$/, `/${t}.$1`) : f);
+    for (const c of CAT.camisas) { c.capa = via(c.capa, 's'); c.fotos = (c.fotos || []).map(f => via(f, 'm')); }
+  }
+  const MODELOS =[...CAT.modelos].sort((a, b) => a.preco - b.preco);   // abas do mais barato ao mais caro
   const TAMANHOS = CAT.tamanhos || ['P', 'M', 'G', 'GG', '2XL', '3XL', '4XL'];
   const modeloDe = c => MODELOS.find(m => m.id === c.modelo) || { nome: c.modelo, preco: 0 };
   const doCatalogo = item => Boolean(item && item.modelo && item.capa);
@@ -856,7 +862,7 @@
     css.onload = () => dispatchEvent(new Event('resize'));   // js/tela.js reaplica o ajuste nas regras novas
     document.head.appendChild(css);
     const js = document.createElement('script');
-    js.src = 'js/loja.js?v=20261107-3';
+    js.src = 'js/loja.js?v=20261121-1';
     document.head.appendChild(js);
   })();
 

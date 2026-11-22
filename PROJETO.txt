@@ -248,6 +248,25 @@ volta às seções da home (index.html#guia etc.).
                      da capa (hoje 3: com 4, as ~5.400 camisas passariam de
                      1 GB, o limite do GitHub Pages). Se diminuir, a ferramenta
                      apaga as fotos que sobram sem baixar nada
+      fotosServico   (desde 21/11/2026) endereço do SERVIÇO DE FOTOS na
+                     Cloudflare (servicos/fotos, ver o LEIA-ME de lá). As
+                     camisas NOVAS dos fornecedores que não estão em fotosNoSite
+                     não são baixadas: o catálogo guarda só o código de cada foto
+                     ("@2/abc123.jpg") e o site (main.js e loja.js) monta o
+                     endereço do serviço (s = pequena nos cards, m = média na
+                     janela). Assim o site não cresce e não passa de 1 GB.
+      fotosNoSite    fornecedores cujas fotos continuam baixadas e convertidas
+                     para WebP (hoje [1]: as fotos do 1º são PNG de 300 a 800 KB,
+                     pesadas demais para ir direto; as do 2º são JPG leves).
+                     As camisas já baixadas antes continuam como estão.
+      FEMININAS      (desde 21/11/2026) entram no modelo delas (Torcedor,
+                     Jogador ou Retrô, com o mesmo preço), com "Feminina" no
+                     nome e tamanho até o GG (tabela de medidas do site). As
+                     palavras women/woman/ladies/female saíram de "excluir".
+                     A categoria de camisas femininas do 2º fornecedor e as de
+                     retrô, jogador, goleiro, novidades e promoção entram pela
+                     liga "outras" (a liga de cada camisa continua vindo do
+                     time). Manga longa e infantil continuam de fora.
       modelos        id, nome, preço e palavras do título que identificam o
                      modelo; a primeira regra que bater vence (Retrô: retro,
                      rerro (erro de digitação comum na fonte), vintage,

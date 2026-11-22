@@ -11,6 +11,11 @@
 (() => {
   const CFG = window.VERSATTE_LOJA, CAT = window.VERSATTE_CATALOGO, SITE = window.VERSATTE_SITE;
   if (!CFG || !CAT || !SITE) return;   // página sem catálogo (não vende nada)
+  // fotos via serviço: "@2/abc123.jpg" vira o endereço do serviço (o mesmo que o main.js faz; repetir não estraga)
+  if (CAT.fotosServico) {
+    const via = (f, t) => (typeof f === 'string' && f[0] === '@' ? CAT.fotosServico + f.slice(1).replace(/\.(\w+)$/, `/${t}.$1`) : f);
+    for (const c of CAT.camisas) { c.capa = via(c.capa, 's'); c.fotos = (c.fotos || []).map(f => via(f, 'm')); }
+  }
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
   const { esc, brl, toast } = SITE;
