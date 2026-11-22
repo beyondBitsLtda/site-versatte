@@ -750,7 +750,7 @@ for (const a of [...lista].sort((x, y) => (x.fornecedor || 1) - (y.fornecedor ||
     doFornecedor.set(igual, fornecedor);
   }
   if (!time) semTime.push(`${a.id}  ${a.titulo}`);
-  camisas.push({ ...a, modelo, liga, fornecedor, time: time || 'Outros', detalhe, max: ajuste.max || lido.max });
+  camisas.push({ ...a, modelo, liga, fornecedor, time: time || 'Outros', detalhe, max: ajuste.max || lido.max, feminina: lido.feminina });
 }
 camisas.sort((x, y) => x.ordem - y.ordem);
 
@@ -851,7 +851,7 @@ if (cortadas) console.log(`Tiradas ${cortadas} foto(s) além de ${cfg.fotos} por
 const saida = camisas.filter(c => fotosOk(cache.get(c.id))).map(c => {
   const { capa, fotos } = cache.get(c.id);
   const nome = [c.time === 'Outros' ? '' : c.time, c.detalhe.replaceAll(' · ', ' ')].filter(Boolean).join(' ');
-  return { id: c.id, modelo: c.modelo, liga: c.liga, ligaFonte: c.ligaFonte, time: c.time, detalhe: c.detalhe, nome, max: c.max, titulo: c.titulo, ...(c.fornecedor > 1 && { fornecedor: c.fornecedor }), capa, fotos };
+  return { id: c.id, modelo: c.modelo, liga: c.liga, ligaFonte: c.ligaFonte, time: c.time, detalhe: c.detalhe, nome, max: c.max, titulo: c.titulo, ...(c.fornecedor > 1 && { fornecedor: c.fornecedor }), ...(c.feminina && { feminina: 1 }), capa, fotos };
 });
 const hoje = new Date().toLocaleDateString('sv-SE', { timeZone: 'America/Sao_Paulo' });
 const modelos = cfg.modelos.map(({ id, nome, preco }) => ({ id, nome, preco }));

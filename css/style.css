@@ -443,7 +443,7 @@ button { font: inherit; color: inherit; }
 
 /* ---------- catálogo ---------- */
 .catalog { padding-top: 0; }
-.catalog__tabs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; padding: 6px; border-radius: 28px; background: var(--bg-2); }
+.catalog__tabs { display: grid; grid-template-columns: repeat(var(--abas, 3), minmax(0, 1fr)); gap: 6px; padding: 6px; border-radius: 28px; background: var(--bg-2); }
 .catalog__tab { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; min-height: 64px; padding: 10px 6px; border: 0; border-radius: 22px; background: transparent; color: var(--ink); cursor: pointer; transition: background .25s, color .25s, box-shadow .25s; }
 .catalog__tab b { font: 900 clamp(21px, calc(5.4 * var(--vw)), 30px)/1 var(--f-caps); text-transform: uppercase; letter-spacing: .01em; }
 .catalog__tab span { font: 600 13px/1 var(--f-body); color: var(--orange-text); }
@@ -451,6 +451,8 @@ button { font: inherit; color: inherit; }
 .catalog__tab[aria-selected="true"] { background: var(--ink); color: var(--cream); box-shadow: 0 14px 30px -18px rgba(23,19,15,.8); }
 .catalog__tab[aria-selected="true"] span { color: var(--orange-hi); }
 @media (min-width: 700px) { .catalog__tab { flex-direction: row; gap: 12px; min-height: 66px; } .catalog__tab span { font-size: 14.5px; } }
+/* 4 abas (com a Feminina): no celular ficam 2 x 2 */
+@media (max-width: 559px) { .catalog__tabs { grid-template-columns: repeat(min(var(--abas, 3), 2), minmax(0, 1fr)); } }
 
 /* cards das ligas com os emblemas (topo do catálogo): 4 por linha no celular, 8 numa linha no computador */
 .leagues { margin-bottom: clamp(30px, calc(4.5 * var(--vw)), 48px); }
@@ -564,7 +566,8 @@ button { font: inherit; color: inherit; }
 
 /* home: atalhos para cada modelo (levam ao catálogo completo) + camisas em destaque */
 .catalog__models { display: grid; gap: 12px; }
-@media (min-width: 760px) { .catalog__models { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; } }
+@media (min-width: 760px) { .catalog__models { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; } }
+@media (min-width: 1100px) { .catalog__models { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
 /* card com o texto à esquerda e a foto reta encaixada à direita (mesma moldura dos cards de camisa) */
 .cat-model { display: grid; grid-template-columns: minmax(0, 1fr) 40%; gap: 6px; min-height: 172px; padding: 6px; border-radius: var(--r-lg); background: var(--surface); box-shadow: var(--shadow); color: var(--ink); text-decoration: none; transition: transform .4s cubic-bezier(.2,.7,.2,1), box-shadow .4s; }
 .cat-model:hover { transform: translateY(-4px); box-shadow: 0 1px 2px rgba(23,19,15,.05), 0 30px 60px -32px rgba(23,19,15,.5); }
@@ -577,11 +580,12 @@ button { font: inherit; color: inherit; }
 .cat-model__foot { margin-top: auto; padding-top: 8px; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
 .cat-model__price { font: 900 26px/1 var(--f-caps); }
 .cat-model__price small { font-size: .55em; margin-right: 2px; vertical-align: .55em; color: var(--orange-text); }
+.cat-model__price .cat-model__de { display: block; margin: 0 0 4px; font: 600 12px/1 var(--f-body); vertical-align: 0; text-transform: none; }
 .cat-model__count { display: inline-flex; align-items: center; gap: 6px; font: 600 13.5px/1 var(--f-body); color: var(--orange-text); }
 .cat-model__count svg { width: 16px; height: 16px; transition: translate .3s; }
 .cat-model:hover .cat-model__count svg { translate: 3px 0; }
-/* tablet: três cards estreitos lado a lado, então a foto vai para cima do texto */
-@media (min-width: 760px) and (max-width: 1099px) {
+/* computador: quatro cards estreitos lado a lado, então a foto vai para cima do texto */
+@media (min-width: 1100px) and (max-width: 1399px) {
   .cat-model { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }   /* a foto não estica: o texto fica alinhado nos três */
   .cat-model__foto { order: -1; aspect-ratio: 16 / 10; }
   .cat-model__text { padding: 12px 10px 10px; }

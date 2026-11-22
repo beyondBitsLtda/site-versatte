@@ -479,6 +479,13 @@
   const MODELOS =[...CAT.modelos].sort((a, b) => a.preco - b.preco);   // abas do mais barato ao mais caro
   const TAMANHOS = CAT.tamanhos || ['P', 'M', 'G', 'GG', '2XL', '3XL', '4XL'];
   const modeloDe = c => MODELOS.find(m => m.id === c.modelo) || { nome: c.modelo, preco: 0 };
+  // aba "Feminina": as camisas femininas de todos os modelos (cada uma com o preço do modelo dela);
+  // elas saem das abas Torcedor, Jogador e Retrô para não aparecer duas vezes
+  const FEMININAS = CAT.camisas.filter(c => c.feminina);
+  const ABA_FEM = FEMININAS.length ? { id: 'feminina', nome: 'Feminina', preco: Math.min(...FEMININAS.map(c => modeloDe(c).preco)), aPartir: true } : null;
+  const ABAS = ABA_FEM ? [...MODELOS, ABA_FEM] : MODELOS;
+  const abaDe = c => (c.feminina && ABA_FEM ? 'feminina' : c.modelo);
+  const precoAba = m => `${m.aPartir ? 'a partir de ' : ''}${brl(m.preco)}`;
   const doCatalogo = item => Boolean(item && item.modelo && item.capa);
   const CATALOGO_URL = `${SITE_URL}catalogo`;
   const camisaUrl = c => `${CATALOGO_URL}#camisa-${c.id}`;
@@ -579,7 +586,7 @@
   const POR_PAGINA = 24;   // catálogo completo: camisas por vez ("Ver mais camisas")
   const DESTAQUES = 8;     // home: camisas em destaque
   // frase de cada modelo nos atalhos da home (o id é o do catalogo.json)
-  const FRASE_MODELO = { torcedor: 'Escudo bordado e conforto pro dia a dia', jogador: 'A mesma tecnologia usada em campo', retro: 'Os clássicos que marcaram época' };
+  const FRASE_MODELO = { torcedor: 'Escudo bordado e conforto pro dia a dia', jogador: 'A mesma tecnologia usada em campo', retro: 'Os clássicos que marcaram época', feminina: 'Modelagem feminina, do P ao GG' };
   const semAcento = s => String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
   // ligas (catalogo.json > "ligas"), na ordem em que aparecem no filtro
   const LIGAS = CAT.ligas || [];
@@ -587,7 +594,7 @@
   // a busca também acha pela liga ("premier", "seleção")
   CAT.camisas.forEach(c => { c.busca = semAcento(`${c.nome} ${c.detalhe} ${nomeLiga(c.liga)}${c.liga === 'selecoes' ? ' selecao' : ''}`); });
   const precoHTML = m => `<small>R$</small>${esc(brl(m.preco).replace(/^R\$\s*/, ''))}`;
-  const doModelo = id => CAT.camisas.filter(c => c.modelo === id);
+  const doModelo = id => (id === 'feminina' ? FEMININAS : CAT.camisas.filter(c => c.modelo === id && abaDe(c) === id));
 
   const catCard = (c, comModelo = false) => `
       <li class="cat-card">
@@ -609,7 +616,7 @@
   /* ---------- home: atalhos por modelo e camisas em destaque ---------- */
   const destaquesBox = $('[data-cat-destaques]');
   if (destaquesBox && MODELOS.length) {
-    $('[data-cat-models]').innerHTML = MODELOS.map(m => {
+    $('[data-cat-models]').innerHTML = ABAS.map(m => {
       const camisas = doModelo(m.id);
       return `
       <a class="cat-model" href="/catalogo#${esc(m.id)}">
@@ -617,7 +624,7 @@
           <span class="cat-model__name">${esc(m.nome)}</span>
           <span class="cat-model__desc">${esc(FRASE_MODELO[m.id] || '')}</span>
           <span class="cat-model__foot">
-            <span class="cat-model__price">${precoHTML(m)}</span>
+            <span class="cat-model__price">${m.aPartir ? '<small class="cat-model__de">a partir de</small>' : ''}${precoHTML(m)}</span>
             <span class="cat-model__count">${camisas.length} camisas <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow"/></svg></span>
           </span>
         </span>
@@ -626,7 +633,7 @@
     }).join('');
     // primeiro os escolhidos no catalogo.json ("destaques"); o resto são as mais recentes, alternando os modelos
     const escolhidas = (CAT.destaques || []).map(id => CAT.camisas.find(c => c.id === String(id))).filter(Boolean);
-    const filas = MODELOS.map(m => doModelo(m.id).filter(c => !escolhidas.includes(c)));
+    const filas = ABAS.map(m => doModelo(m.id).filter(c => !escolhidas.includes(c)));
     for (let i = 0; escolhidas.length < DESTAQUES && filas.some(f => f.length); i++) {
       const fila = filas[i % filas.length];
       if (fila.length) escolhidas.push(fila.shift());
@@ -686,21 +693,23 @@
 
   const renderGrid = (soMais = false) => {
     const lista = filtradas();
-    const m = MODELOS.find(x => x.id === cat.modelo);
+    const m = ABAS.find(x => x.id === cat.modelo);
     const visiveis = lista.slice(0, cat.limite);
-    if (soMais) catGrid.insertAdjacentHTML('beforeend', visiveis.slice(catGrid.children.length).map(c => catCard(c)).join(''));
-    else catGrid.innerHTML = visiveis.map(c => catCard(c)).join('');
+    const comModelo = Boolean(m && m.aPartir);   // na aba Feminina, cada card mostra o modelo dela
+    if (soMais) catGrid.insertAdjacentHTML('beforeend', visiveis.slice(catGrid.children.length).map(c => catCard(c, comModelo)).join(''));
+    else catGrid.innerHTML = visiveis.map(c => catCard(c, comModelo)).join('');
+    const s = lista.length > 1 ? 's' : '';
     $('[data-cat-count]').textContent = lista.length
-      ? `${lista.length} camisa${lista.length > 1 ? 's' : ''} ${m ? `${m.nome} · ${brl(m.preco)} cada` : ''}${cat.liga ? ` · ${nomeLiga(cat.liga)}` : ''}${cat.time ? ` · ${cat.time}` : ''}`
+      ? `${lista.length} camisa${s} ${m ? (m.aPartir ? `feminina${s} · a partir de ${brl(m.preco)}` : `${m.nome} · ${brl(m.preco)} cada`) : ''}${cat.liga ? ` · ${nomeLiga(cat.liga)}` : ''}${cat.time ? ` · ${cat.time}` : ''}`
       : '';
     $('[data-cat-more-box]').hidden = visiveis.length >= lista.length;
     // sem resultado: mostra se a busca acha camisas nos outros modelos
     const vazio = !lista.length;
     $('[data-cat-empty]').hidden = !vazio;
     if (vazio) {
-      $('[data-cat-other]').innerHTML = MODELOS.filter(x => x.id !== cat.modelo).map(x => {
+      $('[data-cat-other]').innerHTML = ABAS.filter(x => x.id !== cat.modelo).map(x => {
         const q = daAba(x.id).filter(passa).length;
-        return q ? `<button class="btn btn--line btn--sm" type="button" data-cat-tab="${esc(x.id)}">Ver ${q} no modelo ${esc(x.nome)}</button>` : '';
+        return q ? `<button class="btn btn--line btn--sm" type="button" data-cat-tab="${esc(x.id)}">Ver ${q} ${x.aPartir ? 'na aba' : 'no modelo'} ${esc(x.nome)}</button>` : '';
       }).join('');
     }
   };
@@ -723,15 +732,16 @@
 
   if (catGrid && MODELOS.length) {
     const tabs = $('[data-cat-tabs]');
-    tabs.innerHTML = MODELOS.map(m => `
+    tabs.style.setProperty('--abas', ABAS.length);
+    tabs.innerHTML = ABAS.map(m => `
       <button class="catalog__tab" type="button" role="tab" aria-selected="false" data-cat-tab="${esc(m.id)}">
-        <b>${esc(m.nome)}</b><span>${esc(brl(m.preco))}</span>
+        <b>${esc(m.nome)}</b><span>${esc(precoAba(m))}</span>
       </button>`).join('');
     tabs.addEventListener('keydown', e => {
-      const i = MODELOS.findIndex(m => m.id === cat.modelo);
+      const i = ABAS.findIndex(m => m.id === cat.modelo);
       const dir = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
       if (!dir) return;
-      const prox = MODELOS[(i + dir + MODELOS.length) % MODELOS.length];
+      const prox = ABAS[(i + dir + ABAS.length) % ABAS.length];
       setModelo(prox.id, true);
       $(`[data-cat-tab="${prox.id}"]`, tabs).focus();
     });
@@ -747,7 +757,7 @@
       cat.limite = POR_PAGINA;
       const quantas = m => doModelo(m).filter(c => (!id || c.liga === id) && confere(c)).length;
       if (!quantas(cat.modelo)) {
-        const melhor = [...MODELOS].sort((a, b) => quantas(b.id) - quantas(a.id))[0];
+        const melhor = [...ABAS].sort((a, b) => quantas(b.id) - quantas(a.id))[0];
         if (melhor && quantas(melhor.id)) setModelo(melhor.id, true);
       }
       renderLigas();
@@ -801,9 +811,9 @@
 
     // topo da página: preço de cada modelo (atalho para a aba)
     const headModels = $('[data-cat-head-models]');
-    if (headModels) headModels.innerHTML = MODELOS.map(m => `<li><a href="#${esc(m.id)}">${esc(m.nome)} <b>${esc(brl(m.preco))}</b></a></li>`).join('');
+    if (headModels) headModels.innerHTML = ABAS.map(m => `<li><a href="#${esc(m.id)}">${esc(m.nome)} <b>${esc(precoAba(m))}</b></a></li>`).join('');
 
-    setModelo(MODELOS.find(m => `#${m.id}` === location.hash)?.id || cat.modelo);
+    setModelo(ABAS.find(m => `#${m.id}` === location.hash)?.id || cat.modelo);
   } else if (catGrid) {
     $('#catalogo').hidden = true;   // sem js/catalogo.js, a seção não aparece
   }
@@ -813,12 +823,12 @@
   const abrirDoLink = mudou => {
     const c = CAT.camisas.find(x => `#camisa-${x.id}` === location.hash);
     if (c) {
-      if (catGrid && c.modelo !== cat.modelo) setModelo(c.modelo);
+      if (catGrid && abaDe(c) !== cat.modelo) setModelo(abaDe(c));
       openProduct(c);
       return;
     }
-    const m = catGrid && MODELOS.find(x => `#${x.id}` === location.hash);
-    if (m && mudou) {          // atalhos do topo do catálogo (#torcedor, #jogador, #retro)
+    const m = catGrid && ABAS.find(x => `#${x.id}` === location.hash);
+    if (m && mudou) {          // atalhos do topo do catálogo (#torcedor, #jogador, #retro, #feminina)
       if (m.id !== cat.modelo) setModelo(m.id);
       $('#catalogo').scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth' });
     }
