@@ -1,7 +1,7 @@
 // GERADO por tools/catalogo.mjs a partir de catalogo.json. Não edite aqui:
 // mude catalogo.json e rode "node tools/catalogo.mjs".
 window.VERSATTE_CATALOGO = {
-  "atualizado": "2026-11-23",
+  "atualizado": "2026-11-24",
   "fotosServico": "https://fotos-versatte.beyond.dev.br/f/",
   "tamanhos": ["P","M","G","GG","2XL","3XL","4XL"],
   "modelos": [{"id":"retro","nome":"Retrô","preco":189.9},{"id":"jogador","nome":"Jogador","preco":169.9},{"id":"torcedor","nome":"Torcedor","preco":144.9}],

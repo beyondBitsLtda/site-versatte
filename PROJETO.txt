@@ -340,9 +340,19 @@ volta às seções da home (index.html#guia etc.).
     liga que vem antes). Álbuns sem time e sem temporada no título (capas de
     seção, "....") ficam de fora.
     O código da camisa (número do álbum) NÃO aparece na janela da camisa; ele
-    vai só na mensagem do pedido, junto com o link
-    versattesports.com.br/catalogo#camisa-<código>, que abre a camisa no
-    site: é assim que a equipe sabe qual camisa o cliente quer e onde pedir.
+    vai só na mensagem do pedido, junto com o link curto da camisa:
+    é assim que a equipe sabe qual camisa o cliente quer e onde pedir.
+    COMPARTILHAR UMA CAMISA (desde 24/11/2026): na janela da camisa, o botão
+    de compartilhar (ao lado do WhatsApp) abre o menu do celular/computador
+    (WhatsApp, Instagram...) com o nome, o modelo, o preço e o link curto
+    versattesports.com.br/c/<código>; onde não há esse menu (ex.: Firefox no
+    computador), copia esse texto. O link curto é uma página pequena gerada
+    pelo tools/catalogo.mjs (pasta c/, uma por camisa) com a foto, o nome e o
+    preço para a PRÉVIA do link no WhatsApp/Instagram, e que leva na hora para
+    versattesports.com.br/catalogo#camisa-<código> (a camisa aberta). Com a
+    camisa aberta, o endereço da página também vira #camisa-<código>: copiar
+    a barra de endereço já compartilha a camisa. A sincronização semanal
+    atualiza a pasta c/ junto com o catálogo.
     (Links antigos, versattesports.com.br/#camisa-<código> e
     /catalogo.html#camisa-<código>, continuam abrindo.)
 

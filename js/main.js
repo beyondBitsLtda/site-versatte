@@ -488,7 +488,7 @@
   const precoAba = m => `${m.aPartir ? 'a partir de ' : ''}${brl(m.preco)}`;
   const doCatalogo = item => Boolean(item && item.modelo && item.capa);
   const CATALOGO_URL = `${SITE_URL}catalogo`;
-  const camisaUrl = c => `${CATALOGO_URL}#camisa-${c.id}`;
+  const camisaUrl = c => `${SITE_URL}c/${c.id}`;   // página de prévia (tools/catalogo.mjs) que abre a camisa no catálogo
   const mensagemCatalogo = (c, tamanho = '') => {
     const m = modeloDe(c);
     return `Olá! Vi no catálogo do site da Versatte e quero a camisa ${c.nome} (modelo ${m.nome}${tamanho ? `, tamanho ${tamanho}` : ''}, ${brl(m.preco)}). Cód. ${c.id} ${camisaUrl(c)}`;
@@ -569,8 +569,18 @@
     $('[data-prod-sizes]', product).textContent = faixa(c);
     $('[data-prod-wa]', product).href = waLink(mensagemCatalogo(c));
     $('.ig__box', product).scrollTop = 0;
+    if (location.hash !== `#camisa-${c.id}`) history.replaceState(null, '', `${location.pathname}${location.search}#camisa-${c.id}`);
     openModal(product);
   };
+  // compartilhar a camisa com um cliente: no celular abre o menu do aparelho (WhatsApp, Instagram...);
+  // onde não há esse menu, copia o nome, o preço e o link curto (a prévia mostra a foto da camisa)
+  $('[data-prod-share]', product)?.addEventListener('click', async () => {
+    const c = productItem;
+    if (!c) return;
+    const url = camisaUrl(c), texto = `${c.nome} · Modelo ${modeloDe(c).nome} · ${brl(modeloDe(c).preco)}`;
+    if (navigator.share) { try { await navigator.share({ title: c.nome, text: texto, url }); } catch { /* cancelou */ } return; }
+    toast(await copy(`${texto}\n${url}`) ? 'Link da camisa copiado: é só colar na conversa.' : url);
+  });
   $('[data-product-close]', product).addEventListener('click', () => product.close());
   $('[data-prod-guide]', product).addEventListener('click', () => product.close());
   product.addEventListener('click', e => { if (e.target === product) product.close(); });

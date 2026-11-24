@@ -42,6 +42,7 @@ const CONFIG_FILE = path.join(ROOT, 'catalogo.json');
 const LOCAL_FILE = path.join(ROOT, 'catalogo.local.json');   // fora do Git (.gitignore)
 const DATA_FILE = path.join(ROOT, 'js', 'catalogo.js');
 const FOTOS_DIR = path.join(ROOT, 'assets', 'catalogo');
+const LINKS_DIR = path.join(ROOT, 'c');   // versattesports.com.br/c/<código>: link de cada camisa para compartilhar
 const HEADER = `// GERADO por tools/catalogo.mjs a partir de catalogo.json. Não edite aqui:
 // mude catalogo.json e rode "node tools/catalogo.mjs".
 window.VERSATTE_CATALOGO = `;
@@ -863,6 +864,51 @@ const destaques = cfg.destaques.filter(id => noCatalogo.has(id));
 const semDestaque = cfg.destaques.filter(id => !noCatalogo.has(id));
 if (semDestaque.length) console.log(`Destaques que não estão no catálogo (ignorados): ${semDestaque.join(', ')}`);
 writeFileSync(DATA_FILE, `${HEADER}{\n  "atualizado": "${hoje}",\n${cfg.fotosServico ? `  "fotosServico": ${JSON.stringify(cfg.fotosServico)},\n` : ''}  "tamanhos": ${JSON.stringify(TAMANHOS)},\n  "modelos": ${JSON.stringify(modelos)},\n  "ligas": ${JSON.stringify(ligas)},\n  "destaques": ${JSON.stringify(destaques)},\n  "camisas": [\n${saida.map(c => `    ${JSON.stringify(c)}`).join(',\n')}\n  ]\n};\n`);
+
+// 4b. link curto de cada camisa para compartilhar (versattesports.com.br/c/<código>): uma página pequena com a
+// foto, o nome e o preço para a prévia do WhatsApp/Instagram, que leva direto para a camisa aberta no catálogo
+{
+  const SITE = 'https://versattesports.com.br/';
+  const ate = { torcedor: '4XL', jogador: '3XL', retro: '4XL' };
+  const html = s => String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const fotoGrande = c => {
+    const f = c.fotos[0] || c.capa;
+    return remota(f) ? cfg.fotosServico + f.slice(1).replace(/\.(\w+)$/, '/m.$1') : SITE + f;
+  };
+  mkdirSync(LINKS_DIR, { recursive: true });
+  for (const c of saida) {
+    const m = cfg.modelos.find(x => x.id === c.modelo) || { nome: c.modelo, preco: 0 };
+    const preco = `R$ ${m.preco.toFixed(2).replace('.', ',')}`;
+    const destino = `/catalogo#camisa-${c.id}`;
+    const descricao = `Camisa modelo ${m.nome} · ${preco} · tamanhos P ao ${c.max || ate[c.modelo] || '4XL'}. Peça pelo site da Versatte.`;
+    writeFileSync(path.join(LINKS_DIR, `${c.id}.html`), `<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<!-- GERADO por tools/catalogo.mjs: link para compartilhar a camisa ${c.id}. Leva para ${destino}. -->
+<title>${html(c.nome)} · Versatte Sports</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<meta name="description" content="${html(descricao)}">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Versatte Sports">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:title" content="${html(`${c.nome} · ${preco}`)}">
+<meta property="og:description" content="${html(descricao)}">
+<meta property="og:image" content="${html(fotoGrande(c))}">
+<meta property="og:image:alt" content="${html(c.nome)}">
+<meta property="og:url" content="${SITE}c/${c.id}">
+<meta name="twitter:card" content="summary_large_image">
+<meta http-equiv="refresh" content="0; url=${destino}">
+<script>location.replace(${JSON.stringify(destino)});</script>
+</head>
+<body><p><a href="${destino}">${html(c.nome)} · ${preco}</a></p></body>
+</html>
+`);
+  }
+  const ficam = new Set(saida.map(c => `${c.id}.html`));
+  for (const nome of readdirSync(LINKS_DIR)) if (!ficam.has(nome)) rmSync(path.join(LINKS_DIR, nome), { force: true });
+}
 
 // 5. apaga fotos de camisas que saíram da fonte (ou foram escondidas)
 if (!local && existsSync(FOTOS_DIR)) {

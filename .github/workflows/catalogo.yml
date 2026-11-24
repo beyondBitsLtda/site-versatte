@@ -43,7 +43,7 @@ jobs:
 
       - name: Publica se mudou
         run: |
-          git add js/catalogo.js assets/catalogo
+          git add js/catalogo.js assets/catalogo c
           if git diff --cached --quiet; then echo "Catálogo sem mudanças."; exit 0; fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
